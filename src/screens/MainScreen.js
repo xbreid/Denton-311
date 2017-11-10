@@ -14,19 +14,19 @@ import UserInfo from './UserInfo';
 const Routes = {
   NewRequest: {
     name: 'Request',
-    description: 'Create new non-emergency request',
+    description: 'Report an issue to the City',
     icon: 'md-create',
     screen: NewRequest,
   },
   RecentRequests: {
     name: 'Recent',
-    description: 'Recent requests in the city',
+    description: 'Check recent requests and their status',
     icon: 'md-time',
     screen: RecentRequests,
   },
   UserRequests: {
     name: 'My Requests',
-    description: 'Users recent requests',
+    description: 'Check your requests and their status',
     icon: 'md-paper-plane',
     screen: UserRequests,
   },
@@ -39,15 +39,14 @@ const Routes = {
 };
 
 const MainScreen = ({ navigation }) => (
-  <View style={{ flex: 1, backgroundColor: '#f3f3f3' }}>
+  <ScrollView style={{ flex: 1, backgroundColor: '#f3f3f3' }}>
     <StatusBar
       barStyle="light-content"
     />
-    <View style={{ marginTop: 20 }}>
+    <View>
     {Object.keys(Routes).map((routeName: string) => (
       <TouchableOpacity
         key={routeName}
-        style={{marginHorizontal: 40, marginVertical: 10 }}
         onPress={() => {
           const { path, params, screen } = Routes[routeName];
           const { router } = screen;
@@ -59,20 +58,20 @@ const MainScreen = ({ navigation }) => (
           style={styles.itemContainer}
           forceInset={{ vertical: 'never' }}
         >
+          <View style={{ paddingVertical: 13  }}>
+            <Icon name={Routes[routeName].icon} color="#333" size={50}/>
+          </View>
           <View style={styles.item}>
-            <Icon name={Routes[routeName].icon} color="#333" size={38}/>
             <Text style={styles.title}> {Routes[routeName].name}</Text>
+            <Text style={styles.description}>
+              {Routes[routeName].description}
+            </Text>
           </View>
         </SafeAreaView>
       </TouchableOpacity>
     ))}
     </View>
-    <Image
-      source={require('../../assets/images/dentonskyline.gif')}
-      style={{flex:1, width: null, height: null}}
-      resizeMode="contain"
-    />
-  </View>
+  </ScrollView>
 );
 
 const Main = StackNavigator({
@@ -98,14 +97,19 @@ const Main = StackNavigator({
 
 const styles = StyleSheet.create({
   item: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
     paddingVertical: 12,
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   itemContainer: {
     backgroundColor: '#fff',
+    flexDirection: 'row',
+    //justifyContent: 'center',
+    //alignItems: 'center',
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: '#ddd',
+    paddingHorizontal: 40,
+    paddingVertical: 35
   },
   image: {
     width: 120,
@@ -115,7 +119,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   title: {
-    fontSize: 16,
+    fontSize: 31,
     fontWeight: 'bold',
     color: '#444',
     textAlign: 'center'
@@ -123,6 +127,7 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 13,
     color: '#999',
+    marginLeft: 4
   },
   header: {
     backgroundColor: '#4510A2'
