@@ -32,7 +32,7 @@ const Issues = {
 const RequestScreen = ({ navigation }) => (
   <ScrollView style={{ flex: 1 }} contentInsetAdjustmentBehavior="automatic">
     {Object.keys(Issues).map((routeName: string) => (
-      <View>
+      <View key={routeName}>
         <Text style={{ marginTop: 10, padding: 10, fontSize: 18, color: '#eeac01', fontWeight: 'bold' }}>
           {routeName.toLocaleUpperCase()}
         </Text>
