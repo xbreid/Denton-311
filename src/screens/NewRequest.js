@@ -1,118 +1,91 @@
 import React from 'react';
-import { Platform, StyleSheet, Text, View,
-  ScrollView, TouchableOpacity, Button, Image} from 'react-native';
+import { Platform, StyleSheet, Text, View, KeyboardAvoidingView,
+  ScrollView, TouchableOpacity, Button, Image, TextInput} from 'react-native';
 import { ScreenOrientation } from 'expo';
 import { SafeAreaView, StackNavigator, NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
+import TestClassScreen from './TestScreen';
+
 
 const testScreen = ({ navigation }) => (
-  <SafeAreaView>
-    <Button onPress={() => navigation.goBack(null)} title="Go back" />
-  </SafeAreaView>
+  <TestClassScreen nav={navigation}/>
 );
 
 const Animals = {
   DeadAnimal: {
     name: 'Dead Animal',
     image: require('../../assets/images/cow-skull.png'),
-    screen: testScreen,
+    screen: TestClassScreen,
     navigationOptions: ({navigation}) => ({
-      title: 'Dead Animal',
-      headerLeft: (headerBack(navigation)),
-      headerStyle: styles.header,
-      headerTitleStyle: styles.headerTitle
+      header: null,
     }),
   },
   FoundAnimal: {
     name: 'Found Animal',
     image: require('../../assets/images/found-animal.png'),
-    screen: testScreen,
+    screen: TestClassScreen,
     navigationOptions: ({navigation}) => ({
-      title: 'Found Animal',
-      headerLeft: (headerBack(navigation)),
-      headerStyle: styles.header,
-      headerTitleStyle: styles.headerTitle
+      header: null,
     }),
   },
   LooseAnimal: {
     name: 'Loose Animal',
     image: require('../../assets/images/running-dog-silhouette.png'),
-    screen: testScreen,
+    screen: TestClassScreen,
     navigationOptions: ({navigation}) => ({
-      title: 'Loose Animal',
-      headerLeft: (headerBack(navigation)),
-      headerStyle: styles.header,
-      headerTitleStyle: styles.headerTitle
+      header: null,
     }),
   },
 };
 
 const StreetsSidewalks = {
   Pothole: {
-      name: 'Pothole',
-      image: require('../../assets/images/pothole.png'),
-      screen: testScreen,
-      navigationOptions: ({navigation}) => ({
-        title: 'Pothole',
-        headerLeft: (headerBack(navigation)),
-        headerStyle: styles.header,
-        headerTitleStyle: styles.headerTitle
-      }),
+    name: 'Pothole',
+    image: require('../../assets/images/pothole.png'),
+    screen: TestClassScreen,
+    navigationOptions: ({navigation}) => ({
+      header: null,
+    }),
   },
   StreetSign: {
     name: 'Street Sign',
     image: require('../../assets/images/one-way-street-signal.png'),
-    screen: testScreen,
+    screen: TestClassScreen,
     navigationOptions: ({navigation}) => ({
-      title: 'Street Sign',
-      headerLeft: (headerBack(navigation)),
-      headerStyle: styles.header,
-      headerTitleStyle: styles.headerTitle
+      header: null,
     }),
   },
   TrafficLight: {
     name: 'Traffic Light',
     image: require('../../assets/images/traffic-light.png'),
-    screen: testScreen,
+    screen: TestClassScreen,
     navigationOptions: ({navigation}) => ({
-      title: 'Traffic Light',
-      headerLeft: (headerBack(navigation)),
-      headerStyle: styles.header,
-      headerTitleStyle: styles.headerTitle
+      header: null,
     }),
 
   },
   StreetLight: {
     name: 'Street Light',
     image: require('../../assets/images/lamp-post.png'),
-    screen: testScreen,
+    screen: TestClassScreen,
     navigationOptions: ({navigation}) => ({
-      title: 'Street Light',
-      headerLeft: (headerBack(navigation)),
-      headerStyle: styles.header,
-      headerTitleStyle: styles.headerTitle
+      header: null,
     }),
   },
   BrokenSidewalk: {
     name: 'Broken Sidewalk',
     image: require('../../assets/images/crossing.png'),
-    screen: testScreen,
+    screen: TestClassScreen,
     navigationOptions: ({navigation}) => ({
-      title: 'Broken Sidewalk',
-      headerLeft: (headerBack(navigation)),
-      headerStyle: styles.header,
-      headerTitleStyle: styles.headerTitle
+      header: null,
     }),
   },
   FireHydrant: {
     name: 'Fire Hydrant',
     image: require('../../assets/images/fire-hydrant.png'),
-    screen: testScreen,
+    screen: TestClassScreen,
     navigationOptions: ({navigation}) => ({
-      title: 'Fire Hydrant',
-      headerLeft: (headerBack(navigation)),
-      headerStyle: styles.header,
-      headerTitleStyle: styles.headerTitle
+      header: null,
     }),
   },
 };
@@ -121,45 +94,33 @@ const ParkingVehicles = {
   AbandonedVehicle: {
     name: 'Abandoned Vehicle',
     image: require('../../assets/images/abandoned.png'),
-    screen: testScreen,
+    screen: TestClassScreen,
     navigationOptions: ({navigation}) => ({
-      title: 'Abandoned Vehicle',
-      headerLeft: (headerBack(navigation)),
-      headerStyle: styles.header,
-      headerTitleStyle: styles.headerTitle
+      header: null,
     }),
   },
   BlockedDriveway: {
     name: 'Blocked Driveway',
     image: require('../../assets/images/blocked-sign.png'),
-    screen: testScreen,
+    screen: TestClassScreen,
     navigationOptions: ({navigation}) => ({
-      title: 'Blocked Driveway',
-      headerLeft: (headerBack(navigation)),
-      headerStyle: styles.header,
-      headerTitleStyle: styles.headerTitle
+      header: null,
     }),
   },
   IllegalParking: {
     name: 'Illegal Parking',
     image: require('../../assets/images/no-parking-sign.png'),
-    screen: testScreen,
+    screen: TestClassScreen,
     navigationOptions: ({navigation}) => ({
-      title: 'Illegal Parking',
-      headerLeft: (headerBack(navigation)),
-      headerStyle: styles.header,
-      headerTitleStyle: styles.headerTitle
+      header: null,
     }),
   },
   ParkingMeter: {
     name: 'Parking Meter',
     image: require('../../assets/images/parking-meter.png'),
-    screen: testScreen,
+    screen: TestClassScreen,
     navigationOptions: ({navigation}) => ({
-      title: 'Parking Meter',
-      headerLeft: (headerBack(navigation)),
-      headerStyle: styles.header,
-      headerTitleStyle: styles.headerTitle
+      header: null,
     }),
   },
 };
@@ -168,23 +129,17 @@ const Sanitation = {
   IllegalDumping: {
     name: 'Illegal Dumping',
     image: require('../../assets/images/trash.png'),
-    screen: testScreen,
+    screen: TestClassScreen,
     navigationOptions: ({navigation}) => ({
-      title: 'Illegal Dumping',
-      headerLeft: (headerBack(navigation)),
-      headerStyle: styles.header,
-      headerTitleStyle: styles.headerTitle
+      header: null,
     }),
   },
   BuildingGraffiti: {
     name: 'Building Graffiti',
     image: require('../../assets/images/spray.png'),
-    screen: testScreen,
+    screen: TestClassScreen,
     navigationOptions: ({navigation}) => ({
-      title: 'Building Graffiti',
-      headerLeft: (headerBack(navigation)),
-      headerStyle: styles.header,
-      headerTitleStyle: styles.headerTitle
+      header: null,
     }),
   },
 };
@@ -217,7 +172,7 @@ const IssueButton = (navigation, issueCat, issue, issueIndex, issueArr) => (
 );
 
 const RequestScreen = ({ navigation }) => (
-  <ScrollView style={{ flex: 1 }} contentInsetAdjustmentBehavior="automatic">
+  <ScrollView style={{ flex: 1, backgroundColor: '#fff' }} contentInsetAdjustmentBehavior="automatic">
       <View key="StreetsSidewalks">
         <Text style={styles.categoryTitle}>
           ANIMALS
@@ -253,6 +208,8 @@ const headerBack = (navigation) => (
   </TouchableOpacity>
 );
 
+
+
 const MainStack = StackNavigator(
   {
     ...Animals,
@@ -271,6 +228,8 @@ const MainStack = StackNavigator(
   },
   {
     initialRouteName: 'Index',
+    mode: Platform.OS === 'ios' ? 'modal' : 'card',
+    //mode: 'modal'
   }
 );
 
