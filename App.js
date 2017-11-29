@@ -3,7 +3,7 @@ import { Platform, StyleSheet, Text, View, ScrollView, TouchableOpacity } from '
 import { ScreenOrientation } from 'expo';
 import { SafeAreaView, StackNavigator } from 'react-navigation';
 
-ScreenOrientation.allow(ScreenOrientation.Orientation.ALL);
+ScreenOrientation.allow(ScreenOrientation.Orientation.PORTRAIT_UP);
 
 import MainScreen from './src/screens/MainScreen';
 import NewRequest from './src/screens/NewRequest';
