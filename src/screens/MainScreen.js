@@ -74,26 +74,38 @@ const MainScreen = ({ navigation }) => (
   </ScrollView>
 );
 
+const headerBack = (navigation) => (
+  <TouchableOpacity style={{marginRight: 15}} onPress={() => navigation.goBack(null)}>
+    <Icon name="ios-arrow-back" style={{paddingHorizontal: 15}} color="#f3f3f3" size={26}/>
+  </TouchableOpacity>
+);
+
 const Main = StackNavigator({
-  Main: {
-    screen: MainScreen,
-    navigationOptions: ({navigation}) => ({
-      title: 'Denton 311',
-      headerLeft: (
-        <TouchableOpacity style={{paddingHorizontal: 15}} onPress={() => navigation.goBack(null)}>
-          <Icon name="md-refresh" color="#f3f3f3" size={24}/>
-        </TouchableOpacity>
-      ),
-      headerRight: (
-        <TouchableOpacity style={{paddingHorizontal: 15}} onPress={() => navigation.navigate('NewRequest')}>
-          <Icon name="md-add" color="#f3f3f3" size={24}/>
-        </TouchableOpacity>
-      ),
-      headerStyle: styles.header,
-      headerTitleStyle: styles.headerTitle
-    }),
+    Main: {
+      screen: MainScreen,
+      navigationOptions: ({navigation}) => ({
+        title: 'Denton 311',
+        headerLeft: (
+          <TouchableOpacity style={{paddingHorizontal: 15}} onPress={() => navigation.goBack(null)}>
+            <Icon name="md-refresh" color="#f3f3f3" size={24}/>
+          </TouchableOpacity>
+        ),
+        headerRight: (
+          <TouchableOpacity style={{paddingHorizontal: 15}} onPress={() => navigation.navigate('NewRequest')}>
+            <Icon name="md-add" color="#f3f3f3" size={24}/>
+          </TouchableOpacity>
+        ),
+        headerStyle: styles.header,
+        headerTitleStyle: styles.headerTitle
+      }),
+    },
   },
-});
+  {
+    initialRouteName: 'Main',
+    //headerMode: 'none'
+    //mode: Platform.OS === 'ios' ? 'modal' : 'card',
+  }
+  );
 
 const styles = StyleSheet.create({
   item: {
