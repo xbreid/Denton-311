@@ -6,11 +6,6 @@ import { SafeAreaView, StackNavigator, NavigationActions } from 'react-navigatio
 import Icon from 'react-native-vector-icons/Ionicons';
 import TestClassScreen from './TestScreen';
 
-
-const testScreen = ({ navigation }) => (
-  <TestClassScreen nav={navigation}/>
-);
-
 const Animals = {
   DeadAnimal: {
     name: 'Dead Animal',
@@ -207,8 +202,6 @@ const headerBack = (navigation) => (
     <Icon name="ios-arrow-back" style={{paddingHorizontal: 15}} color="#f3f3f3" size={26}/>
   </TouchableOpacity>
 );
-
-
 
 const MainStack = StackNavigator(
   {
