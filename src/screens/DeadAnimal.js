@@ -44,18 +44,18 @@ class DeadAnimalScreen extends React.Component {
     super(props);
 
     this.state = {
-      text: '',
-      address: '',
+      text: null,
+      address: null,
       imageOne: null,
       imageTwo: null,
       imageThree: null,
       location: null,
       publicSwitch: true,
       contactSwitch: false,
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
+      firstName:null,
+      lastName: null,
+      email: null,
+      phone: null,
       animalType: null,
       animalArea: null,
       animalWithin: null,
@@ -95,7 +95,8 @@ class DeadAnimalScreen extends React.Component {
   }
 
   _saveDetails = () => {
-    console.log('submit report triggered');
+    console.log('submit report triggered for dead animal');
+    console.log(this.state);
     this.props.navigation.goBack(null);
   };
 

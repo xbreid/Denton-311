@@ -37,18 +37,18 @@ class FoundAnimalScreen extends React.Component {
     super(props);
 
     this.state = {
-      additionalDetails: '',
-      address: '',
+      additionalDetails: null,
+      address: null,
       imageOne: null,
       imageTwo: null,
       imageThree: null,
       location: null,
       publicSwitch: true,
       contactSwitch: false,
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
+      firstName: null,
+      lastName: null,
+      email: null,
+      phone: null,
       animalType: null,
       animalGender: null,
     };
@@ -87,7 +87,8 @@ class FoundAnimalScreen extends React.Component {
   }
 
   _saveDetails = () => {
-    console.log('test');
+    console.log('submit report triggered for found animal');
+    console.log(this.state);
     this.props.navigation.goBack(null);
   };
 
