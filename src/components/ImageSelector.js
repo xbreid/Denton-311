@@ -23,8 +23,6 @@ export default class ImageSelector extends React.Component {
       aspect: [4, 3],
     });
 
-    console.log(result);
-
     if (!result.cancelled) {
       if (!this.state.imageOne) {
         this.setState({ imageOne: result.uri });
@@ -55,8 +53,6 @@ export default class ImageSelector extends React.Component {
       allowsEditing: false,
       aspect: [4, 3],
     });
-
-    console.log(result);
 
     if (!result.cancelled) {
       if (!this.state.imageOne) {
