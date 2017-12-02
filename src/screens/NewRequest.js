@@ -5,12 +5,14 @@ import { ScreenOrientation } from 'expo';
 import { SafeAreaView, StackNavigator, NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import TestClassScreen from './TestScreen';
+import DeadAnimalScreen from './DeadAnimal';
+import FoundAnimalScreen from './FoundAnimal';
 
 const Animals = {
   DeadAnimal: {
     name: 'Dead Animal',
     image: require('../../assets/images/cow-skull.png'),
-    screen: TestClassScreen,
+    screen: DeadAnimalScreen,
     navigationOptions: ({navigation}) => ({
       header: null,
     }),
@@ -18,7 +20,7 @@ const Animals = {
   FoundAnimal: {
     name: 'Found Animal',
     image: require('../../assets/images/found-animal.png'),
-    screen: TestClassScreen,
+    screen: FoundAnimalScreen,
     navigationOptions: ({navigation}) => ({
       header: null,
     }),
@@ -120,6 +122,17 @@ const ParkingVehicles = {
   },
 };
 
+const TreesPark = {
+  DamagedTree: {
+    name: 'Damaged Tree',
+    image: require('../../assets/images/tree-silhouette.png'),
+    screen: TestClassScreen,
+    navigationOptions: ({navigation}) => ({
+      header: null,
+    }),
+  },
+};
+
 const Sanitation = {
   IllegalDumping: {
     name: 'Illegal Dumping',
@@ -186,6 +199,12 @@ const RequestScreen = ({ navigation }) => (
         </Text>
         {Object.keys(ParkingVehicles).map((issueCategory: string, i, arr) => (
           IssueButton(navigation, issueCategory, ParkingVehicles[issueCategory], i, arr)
+        ))}
+        <Text style={styles.categoryTitle}>
+          TREES & PARKS
+        </Text>
+        {Object.keys(TreesPark).map((issueCategory: string, i, arr) => (
+          IssueButton(navigation, issueCategory, TreesPark[issueCategory], i, arr)
         ))}
         <Text style={styles.categoryTitle}>
           SANITATION
