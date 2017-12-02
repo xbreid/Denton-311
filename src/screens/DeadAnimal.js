@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image, TextInput, Switch } from 'react-native';
+import { StyleSheet, Keyboard, Text, View, TouchableOpacity, Image, TextInput, Switch } from 'react-native';
 import { SafeAreaView, StackNavigator } from 'react-navigation';
 import { ImagePicker } from 'expo';
 import Ionicon from 'react-native-vector-icons/Ionicons';
@@ -10,6 +10,7 @@ import AnimalTypeScreen from '../components/AnimalType';
 import AnimalAreaScreen from '../components/DeadAnimalArea';
 import AnimalWithinScreen from '../components/DeadAnimalWithin';
 import ImageSelector from '../components/ImageSelector';
+import ContactInfo from '../components/ContactInfo';
 
 const LocationRoute = {
   LocationScreen: {
@@ -105,6 +106,18 @@ class DeadAnimalScreen extends React.Component {
       address: addressString,
     });
     this.props.navigation.goBack(null);
+  };
+
+  _getContactInfo = (value, type) => {
+    if (type === "firstName") {
+      this.setState({ firstName: value });
+    } else if (type === "lastName") {
+      this.setState({ lastName: value });
+    } else if (type === "email") {
+      this.setState({ email: value });
+    } else {
+      this.setState({ phone: value });
+    }
   };
 
   _getAnimalValue = (value, type) => {
@@ -270,7 +283,8 @@ class DeadAnimalScreen extends React.Component {
           placeholder="Additional Details (optional)"
           value={this.state.text}
           multiline={true}
-          returnKeyType={ "next" }
+          returnKeyType={ "done" }
+          //onSubmitEditing={() => { Keyboard.dismiss() }}
         />
         <SafeAreaView
           style={styles.itemContainer}
@@ -302,35 +316,7 @@ class DeadAnimalScreen extends React.Component {
           </View>
         </SafeAreaView>
         <SafeAreaView style={{display: !this.state.contactSwitch ? 'none' : ''}}>
-          <View>
-            <TextInput
-              style={styles.infoTextField}
-              onChangeText={(firstName) => this.setState({firstName})}
-              placeholder="First Name"
-              value={this.state.firstName}
-              returnKeyType={ "next" }
-            />
-            <TextInput
-              style={styles.infoTextField}
-              onChangeText={(lastName) => this.setState({lastName})}
-              placeholder="Last Name"
-              value={this.state.lastName}
-              returnKeyType={ "next" }
-            />
-            <TextInput
-              style={styles.infoTextField}
-              onChangeText={(email) => this.setState({email})}
-              placeholder="Email"
-              value={this.state.ema}
-              returnKeyType={ "next" }
-            />
-            <TextInput
-              style={styles.infoTextField}
-              onChangeText={(phone) => this.setState({phone})}
-              placeholder="Phone"
-              value={this.state.phone}
-            />
-          </View>
+          <ContactInfo saveContactInfo={this._getContactInfo}/>
         </SafeAreaView>
       </KeyboardAwareScrollView>
     );
