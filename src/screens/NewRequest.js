@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import TestClassScreen from './TestScreen';
 import DeadAnimalScreen from './DeadAnimal';
 import FoundAnimalScreen from './FoundAnimal';
+import LooseAnimalScreen from './LooseAnimal';
 
 const Animals = {
   DeadAnimal: {
@@ -28,7 +29,7 @@ const Animals = {
   LooseAnimal: {
     name: 'Loose Animal',
     image: require('../../assets/images/running-dog-silhouette.png'),
-    screen: TestClassScreen,
+    screen: LooseAnimalScreen,
     navigationOptions: ({navigation}) => ({
       header: null,
     }),
