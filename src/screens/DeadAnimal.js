@@ -9,6 +9,7 @@ import DisplayLatLng from '../components/DisplayLatLng';
 import AnimalTypeScreen from '../components/AnimalType';
 import AnimalAreaScreen from '../components/DeadAnimalArea';
 import AnimalWithinScreen from '../components/DeadAnimalWithin';
+import ImageSelector from '../components/ImageSelector';
 
 const LocationRoute = {
   LocationScreen: {
@@ -47,7 +48,6 @@ class DeadAnimalScreen extends React.Component {
       imageOne: null,
       imageTwo: null,
       imageThree: null,
-      imageIndex: 0,
       location: null,
       publicSwitch: true,
       contactSwitch: false,
@@ -90,19 +90,15 @@ class DeadAnimalScreen extends React.Component {
   };
 
   componentDidMount() {
-    // will need to fetch personal info from local database if user has entered any
-    // fetch in componentDidMounts
     this.props.navigation.setParams({ handleSave: this._saveDetails});
   }
 
   _saveDetails = () => {
-    console.log('test');
+    console.log('submit report triggered');
     this.props.navigation.goBack(null);
   };
 
   _getLocation = (address) => {
-    console.log(address);
-    console.log(address[0].name.toString() + ", " + address[0].city.toString());
     let addressString = address[0].name.toString() + ", " + address[0].city.toString();
     this.setState({
       location: address,
@@ -148,51 +144,27 @@ class DeadAnimalScreen extends React.Component {
     this.setState({ contactSwitch: !this.state.contactSwitch });
   };
 
-  _pickImageFromLibrary = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      aspect: [4, 3],
-    });
-
-    console.log(result);
-
-    if (!result.cancelled) {
-      if (!this.state.imageOne) {
-        this.setState({ imageOne: result.uri });
-      } else if (!this.state.imageTwo) {
-        this.setState({ imageTwo: result.uri });
-      } else if (!this.state.imageThee && this.state.imageIndex === 0) {
-        this.setState({ imageThree: result.uri, imageIndex: 1 });
-      } else {
-        if (this.state.imageIndex === 1) {
-          this.setState({ imageOne: result.uri, imageIndex: this.state.imageIndex + 1 });
-        } else if (this.state.imageIndex === 2) {
-          this.setState({ imageTwo: result.uri, imageIndex: this.state.imageIndex + 1 });
-        } else {
-          this.setState({ imageThree: result.uri, imageIndex: 1 });
-        }
-      }
+  _deleteImage = (index) => {
+    if (index === 1) {
+      this.setState({ imageOne: null });
+    } else if (index === 2) {
+      this.setState({ imageTwo: null });
+    } else {
+      this.setState({ imageThree: null });
     }
   };
 
-  _pickImageFromCamera = async () => {
-    let result = await ImagePicker.launchCameraAsync({
-      allowsEditing: false,
-      aspect: [4, 3],
-    });
-
-    console.log(result);
-
-    if (!result.cancelled) {
-      if (!this.state.image) {
-        this.setState({ image: result.uri });
-      }
+  _getImage = (image, index) => {
+    if (index === 1) {
+      this.setState({ imageOne: image });
+    } else if (index === 2) {
+      this.setState({ imageTwo: image });
+    } else {
+      this.setState({ imageThree: image });
     }
   };
 
   render() {
-    let { imageOne, imageTwo, imageThree } = this.state;
-
     const styles = StyleSheet.create({
       item: {
         paddingHorizontal: 20,
@@ -243,36 +215,7 @@ class DeadAnimalScreen extends React.Component {
 
     return(
       <KeyboardAwareScrollView>
-        <SafeAreaView>
-          <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginVertical: 20}}>
-            <TouchableOpacity style={{paddingHorizontal: 10}} onPress={this._pickImageFromLibrary}>
-              <Icon name="upload" size={60} color="#4F8EF7" />
-              <Text style={{textAlign: 'center', marginTop: 10}}>
-                Upload a
-              </Text>
-              <Text style={{textAlign: 'center'}}>
-                Picture
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{paddingHorizontal: 10}} onPress={this._pickImageFromCamera}>
-              <Icon name="camera" size={60} color="#4F8EF7" />
-              <Text style={{textAlign: 'center', marginTop: 10}}>
-                Take a
-              </Text>
-              <Text style={{textAlign: 'center'}}>
-                Picture
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-            {imageOne &&
-            <Image source={{ uri: imageOne }} style={{ width: 75, height: 75, marginBottom: 10 }} />}
-            {imageTwo &&
-            <Image source={{ uri: imageTwo }} style={{ width: 75, height: 75, marginBottom: 10, marginLeft: 10 }} />}
-            {imageThree &&
-            <Image source={{ uri: imageThree }} style={{ width: 75, height: 75, marginBottom: 10, marginLeft: 10 }} />}
-          </View>
-        </SafeAreaView>
+        <ImageSelector saveImage={this._getImage} removeImage={this._deleteImage}/>
         {Object.keys(LocationRoute).map((routeName: string) => (
           <TouchableOpacity
             key={routeName}
