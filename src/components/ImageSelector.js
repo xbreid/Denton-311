@@ -23,6 +23,8 @@ export default class ImageSelector extends React.Component {
       aspect: [4, 3],
     });
 
+    console.log(result);
+
     if (!result.cancelled) {
       if (!this.state.imageOne) {
         this.setState({ imageOne: result.uri });
@@ -53,6 +55,8 @@ export default class ImageSelector extends React.Component {
       allowsEditing: false,
       aspect: [4, 3],
     });
+
+    console.log(result);
 
     if (!result.cancelled) {
       if (!this.state.imageOne) {
@@ -123,7 +127,7 @@ export default class ImageSelector extends React.Component {
             <Image source={{ uri: imageOne }} style={{ width: 75, height: 75, marginBottom: 10 }} />
             <TouchableOpacity
               onPress={() => this._deleteImage(1)}
-              style={{position: 'absolute', top: -20, right: -20, backgroundColor: 'transparent', paddingVertical: 10, paddingHorizontal: 10}}
+              style={{position: 'absolute', top: -20, left: -20, backgroundColor: 'transparent', paddingVertical: 10, paddingHorizontal: 10}}
             >
               <Image
                 source={require('../../assets/images/error.png')}
@@ -137,7 +141,7 @@ export default class ImageSelector extends React.Component {
             <Image source={{ uri: imageTwo }} style={{ width: 75, height: 75, marginBottom: 10 }} />
             <TouchableOpacity
               onPress={() => this._deleteImage(2)}
-              style={{position: 'absolute', top: -20, right: -20, backgroundColor: 'transparent', paddingVertical: 10, paddingHorizontal: 10}}
+              style={{position: 'absolute', top: -20, left: -20, backgroundColor: 'transparent', paddingVertical: 10, paddingHorizontal: 10}}
             >
               <Image
                 source={require('../../assets/images/error.png')}
@@ -151,7 +155,7 @@ export default class ImageSelector extends React.Component {
             <Image source={{ uri: imageThree }} style={{ width: 75, height: 75, marginBottom: 10 }} />
             <TouchableOpacity
               onPress={() => this._deleteImage(3)}
-              style={{position: 'absolute', top: -20, right: -20, backgroundColor: 'transparent', paddingVertical: 10, paddingHorizontal: 10}}
+              style={{position: 'absolute', top: -20, left: -20, backgroundColor: 'transparent', paddingVertical: 10, paddingHorizontal: 10}}
             >
               <Image
                 source={require('../../assets/images/error.png')}

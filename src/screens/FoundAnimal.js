@@ -1,15 +1,14 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image, TextInput, Switch } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Switch } from 'react-native';
 import { SafeAreaView, StackNavigator } from 'react-navigation';
-import { ImagePicker } from 'expo';
 import Ionicon from 'react-native-vector-icons/Ionicons';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import DisplayLatLng from '../components/DisplayLatLng';
 import AnimalTypeScreen from '../components/AnimalType';
 import AnimalGenderScreen from '../components/AnimalGender';
 import ImageSelector from '../components/ImageSelector';
 import ContactInfo from '../components/ContactInfo';
+import Fire from '../fire';
 
 const LocationRoute = {
   LocationScreen: {
@@ -66,7 +65,7 @@ class FoundAnimalScreen extends React.Component {
         color: 'white'
       },
       headerLeft: (
-        <TouchableOpacity style={{marginLeft: 15}} onPress={() => navigation.goBack(null)}>
+        <TouchableOpacity style={{marginLeft: 15}} onPress={() => params.handleCancel()}>
           <Text style={{color: '#f3f3f3', font: 16, fontWeight: 'bold'}}>
             Cancel
           </Text>
@@ -83,8 +82,50 @@ class FoundAnimalScreen extends React.Component {
   };
 
   componentDidMount() {
-    this.props.navigation.setParams({ handleSave: this._saveDetails});
+    Fire.auth().onAuthStateChanged((user) => {
+      console.log(user);
+      this.setState({
+        deviceId: Expo.Constants.deviceId,
+        userIsAnon: user.isAnonymous,
+        userId: user.uid,
+      });
+    });
+    this.props.navigation.setParams({
+      handleSave: this._saveDetails,
+      handleCancel: this._clearDetails,
+    });
   }
+
+  _clearDetails = () => {
+    Object.keys(AnimalRoutes).map((routeName: string) => (
+      AnimalRoutes[routeName].isSet = false
+    ));
+    Object.keys(AnimalRoutes).map((routeName: string) => (
+      AnimalRoutes[routeName].value = null
+    ));
+    this.setState({
+      deviceId: null,
+      userId: null,
+      userIsAnon: null,
+      issueId: null,
+      text: null,
+      address: null,
+      imageOne: null,
+      imageTwo: null,
+      imageThree: null,
+      location: null,
+      publicSwitch: true,
+      contactSwitch: false,
+      firstName:null,
+      lastName: null,
+      email: null,
+      phone: null,
+      animalType: null,
+      animalArea: null,
+      animalWithin: null,
+    });
+    this.props.navigation.goBack(null);
+  };
 
   _saveDetails = () => {
     console.log('submit report triggered for found animal');
