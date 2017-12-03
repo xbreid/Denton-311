@@ -296,7 +296,6 @@ class DeadAnimalScreen extends React.Component {
               Sumbit publicly?
             </Text>
             <Switch
-              style={{ }}
               onValueChange={this._onPublicSwitchChange}
               value={this.state.publicSwitch}
             />

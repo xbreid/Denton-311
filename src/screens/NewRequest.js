@@ -242,7 +242,6 @@ const MainStack = StackNavigator(
   {
     initialRouteName: 'Index',
     mode: Platform.OS === 'ios' ? 'modal' : 'card',
-    //mode: 'modal'
   }
 );
 
