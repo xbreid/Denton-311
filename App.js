@@ -54,19 +54,31 @@ const AppNavigator = StackNavigator(
 
 export default class App extends React.Component {
   componentDidMount() {
-    Fire.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-      .then(function() {
-        // Existing and future Auth states are now persisted in the device
-        // local storage.
+    Fire.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        // User is signed in.
+        console.log(user);
+        let isAnonymous = user.isAnonymous;
+        let uid = user.uid;
         // ...
-        // New sign-in will be persisted with local persistence.
-        return Fire.auth().signInAnonymously();
-      })
-      .catch(function(error) {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-      });
+      } else {
+        // user is logged out somehow, sign them back in
+        Fire.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+          .then(function() {
+            // Existing and future Auth states are now persisted in the device
+            // local storage.
+            // ...
+            // New sign-in will be persisted with local persistence.
+            return Fire.auth().signInAnonymously();
+          })
+          .catch(function(error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+          });
+      }
+      // ...
+    });
   }
 
   render() {
