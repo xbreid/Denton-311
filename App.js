@@ -2,6 +2,7 @@ import React from 'react';
 import { Platform, StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { ScreenOrientation } from 'expo';
 import { SafeAreaView, StackNavigator } from 'react-navigation';
+import Fire from './src/fire';
 
 ScreenOrientation.allow(ScreenOrientation.Orientation.PORTRAIT_UP);
 
@@ -10,6 +11,7 @@ import NewRequest from './src/screens/NewRequest';
 import RecentRequests from './src/screens/RecentRequests';
 import UserRequests from './src/screens/UserRequests';
 import UserInfo from './src/screens/UserInfo';
+
 
 const Routes = {
   MainScreen: {
@@ -49,7 +51,20 @@ const AppNavigator = StackNavigator(
   },
 );
 
+Fire.auth().onAuthStateChanged(function(user) {
+  console.log(user);
+});
+
 export default class App extends React.Component {
+  componentDidMount() {
+    Fire.auth().signInAnonymously().catch(function(error) {
+      // Handle Errors here.
+      let errorCode = error.code;
+      let errorMessage = error.message;
+      // ....
+    });
+  }
+
   render() {
     return <AppNavigator />;
   }
