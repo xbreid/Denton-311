@@ -8,5 +8,5 @@ const firebaseConfig = {
   storageBucket: "denton-311.appspot.com"
 };
 
-let fire = firebase.initializeApp(firebaseConfig);
-export default fire;
+let Fire = firebase.initializeApp(firebaseConfig);
+export default Fire;

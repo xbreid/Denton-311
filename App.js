@@ -3,6 +3,7 @@ import { Platform, StyleSheet, Text, View, ScrollView, TouchableOpacity } from '
 import { ScreenOrientation } from 'expo';
 import { SafeAreaView, StackNavigator } from 'react-navigation';
 import Fire from './src/fire';
+import * as firebase from 'firebase';
 
 ScreenOrientation.allow(ScreenOrientation.Orientation.PORTRAIT_UP);
 
@@ -51,18 +52,21 @@ const AppNavigator = StackNavigator(
   },
 );
 
-Fire.auth().onAuthStateChanged(function(user) {
-  console.log(user);
-});
-
 export default class App extends React.Component {
   componentDidMount() {
-    Fire.auth().signInAnonymously().catch(function(error) {
-      // Handle Errors here.
-      let errorCode = error.code;
-      let errorMessage = error.message;
-      // ....
-    });
+    Fire.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+      .then(function() {
+        // Existing and future Auth states are now persisted in the device
+        // local storage.
+        // ...
+        // New sign-in will be persisted with local persistence.
+        return Fire.auth().signInAnonymously();
+      })
+      .catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+      });
   }
 
   render() {
