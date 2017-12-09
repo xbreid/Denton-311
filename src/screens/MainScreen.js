@@ -74,12 +74,6 @@ const MainScreen = ({ navigation }) => (
   </ScrollView>
 );
 
-const headerBack = (navigation) => (
-  <TouchableOpacity style={{marginRight: 15}} onPress={() => navigation.goBack(null)}>
-    <Icon name="ios-arrow-back" style={{paddingHorizontal: 15}} color="#f3f3f3" size={26}/>
-  </TouchableOpacity>
-);
-
 const Main = StackNavigator({
     Main: {
       screen: MainScreen,
@@ -102,8 +96,6 @@ const Main = StackNavigator({
   },
   {
     initialRouteName: 'Main',
-    //headerMode: 'none'
-    //mode: Platform.OS === 'ios' ? 'modal' : 'card',
   }
   );
 
@@ -116,8 +108,6 @@ const styles = StyleSheet.create({
   itemContainer: {
     backgroundColor: '#fff',
     flexDirection: 'row',
-    //justifyContent: 'center',
-    //alignItems: 'center',
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: '#ddd',
     paddingHorizontal: 40,

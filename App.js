@@ -2,6 +2,8 @@ import React from 'react';
 import { Platform, StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { ScreenOrientation } from 'expo';
 import { SafeAreaView, StackNavigator } from 'react-navigation';
+import Fire from './src/fire';
+import * as firebase from 'firebase';
 
 ScreenOrientation.allow(ScreenOrientation.Orientation.PORTRAIT_UP);
 
@@ -10,6 +12,7 @@ import NewRequest from './src/screens/NewRequest';
 import RecentRequests from './src/screens/RecentRequests';
 import UserRequests from './src/screens/UserRequests';
 import UserInfo from './src/screens/UserInfo';
+
 
 const Routes = {
   MainScreen: {
@@ -46,11 +49,38 @@ const AppNavigator = StackNavigator(
   {
     initialRouteName: 'MainScreen',
     headerMode: 'none',
-    //mode: Platform.OS === 'ios' ? 'modal' : 'card',
   },
 );
 
 export default class App extends React.Component {
+  componentDidMount() {
+    Fire.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        // User is signed in.
+        console.log(user);
+        let isAnonymous = user.isAnonymous;
+        let uid = user.uid;
+        // ...
+      } else {
+        // user is logged out somehow, sign them back in
+        Fire.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+          .then(function() {
+            // Existing and future Auth states are now persisted in the device
+            // local storage.
+            // ...
+            // New sign-in will be persisted with local persistence.
+            return Fire.auth().signInAnonymously();
+          })
+          .catch(function(error) {
+            // Handle Errors here.
+            let errorCode = error.code;
+            let errorMessage = error.message;
+          });
+      }
+      // ...
+    });
+  }
+
   render() {
     return <AppNavigator />;
   }

@@ -3,6 +3,7 @@ import { Platform, StyleSheet, Text, View, ScrollView, TouchableOpacity, Button,
 import { ScreenOrientation } from 'expo';
 import { SafeAreaView, StackNavigator, NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
+import ContactInfo from '../components/ContactInfo';
 
 class MyInfoScreen extends React.Component {
   constructor(props) {
@@ -16,80 +17,65 @@ class MyInfoScreen extends React.Component {
     }
   }
 
+  static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state;
+
+    return {
+      title: "My Info",
+      headerStyle: {
+        backgroundColor: '#4510A2'
+      },
+      headerTitleStyle: {
+        color: 'white'
+      },
+      headerLeft: (
+        <TouchableOpacity onPress={() => navigation.goBack(null)}>
+          <Icon name="ios-arrow-back" style={{paddingHorizontal: 15}} color="#f3f3f3" size={26}/>
+        </TouchableOpacity>
+      ),
+      headerRight: (
+        <TouchableOpacity style={{marginRight: 15}} onPress={() => params.handleSave()} >
+          <Text style={{color: '#f3f3f3', font: 16, fontWeight: 'bold'}}>
+            Done
+          </Text>
+        </TouchableOpacity>
+      )
+    }
+  };
+
+  componentDidMount() {
+    this.props.navigation.setParams({ handleSave: this._saveDetails});
+  }
+
+  _saveDetails = () => {
+    console.log('submit info triggered');
+    this.props.navigation.goBack(null);
+  };
+
+  _getContactInfo = (value, type) => {
+    if (type === "firstName") {
+      this.setState({ firstName: value });
+    } else if (type === "lastName") {
+      this.setState({ lastName: value });
+    } else if (type === "email") {
+      this.setState({ email: value });
+    } else {
+      this.setState({ phone: value });
+    }
+  };
+
   render() {
-
-    const styles = StyleSheet.create({
-      infoTextField: {
-        height: 40,
-        backgroundColor: 'white',
-        fontSize: 16,
-        paddingLeft: 10,
-        borderWidth: StyleSheet.hairlineWidth,
-        borderColor: '#ddd',
-      }
-    });
-
     return(
-      <SafeAreaView>
-        <View style={{marginTop: 30}}>
-        <TextInput
-          style={styles.infoTextField}
-          onChangeText={(firstName) => this.setState({firstName})}
-          placeholder="First Name"
-          value={this.state.text}
-          returnKeyType={ "next" }
-        />
-        <TextInput
-          style={styles.infoTextField}
-          onChangeText={(lastName) => this.setState({lastName})}
-          placeholder="Last Name"
-          value={this.state.text}
-          returnKeyType={ "next" }
-        />
-        <TextInput
-          style={styles.infoTextField}
-          onChangeText={(email) => this.setState({email})}
-          placeholder="Email"
-          value={this.state.text}
-          returnKeyType={ "next" }
-        />
-        <TextInput
-          style={styles.infoTextField}
-          onChangeText={(phone) => this.setState({phone})}
-          placeholder="Phone"
-          value={this.state.text}
-        />
-        </View>
+      <SafeAreaView style={{marginTop: 50 }}>
+        <ContactInfo saveContactInfo={this._getContactInfo}/>
       </SafeAreaView>
     );
   }
-
 }
-
-const headerBack = (navigation) => (
-  <TouchableOpacity onPress={() => navigation.goBack(null)}>
-    <Icon name="ios-arrow-back" style={{paddingHorizontal: 15}} color="#f3f3f3" size={26}/>
-  </TouchableOpacity>
-);
-
-const headerSubmit = (navigation) => (
-  <TouchableOpacity style={{marginRight: 15}} onPress={() => navigation.goBack(null)}>
-    <Text style={{color: '#f3f3f3', fontWeight: 'bold', fontSize: 16}}>
-      Done
-    </Text>
-  </TouchableOpacity>
-);
 
 const SettingsStack = StackNavigator({
   Requests: {
     screen: MyInfoScreen,
-    navigationOptions: ({navigation}) => ({
-      title: 'My Info',
-      headerLeft: headerBack(navigation),
-      headerRight: headerSubmit(navigation),
-      headerStyle: styles.header,
-      headerTitleStyle: styles.headerTitle
-    }),
   },
 });
 

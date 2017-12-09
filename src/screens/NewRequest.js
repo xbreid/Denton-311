@@ -5,17 +5,15 @@ import { ScreenOrientation } from 'expo';
 import { SafeAreaView, StackNavigator, NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import TestClassScreen from './TestScreen';
-
-
-const testScreen = ({ navigation }) => (
-  <TestClassScreen nav={navigation}/>
-);
+import DeadAnimalScreen from './DeadAnimal';
+import FoundAnimalScreen from './FoundAnimal';
+import LooseAnimalScreen from './LooseAnimal';
 
 const Animals = {
   DeadAnimal: {
     name: 'Dead Animal',
     image: require('../../assets/images/cow-skull.png'),
-    screen: TestClassScreen,
+    screen: DeadAnimalScreen,
     navigationOptions: ({navigation}) => ({
       header: null,
     }),
@@ -23,7 +21,7 @@ const Animals = {
   FoundAnimal: {
     name: 'Found Animal',
     image: require('../../assets/images/found-animal.png'),
-    screen: TestClassScreen,
+    screen: FoundAnimalScreen,
     navigationOptions: ({navigation}) => ({
       header: null,
     }),
@@ -31,7 +29,7 @@ const Animals = {
   LooseAnimal: {
     name: 'Loose Animal',
     image: require('../../assets/images/running-dog-silhouette.png'),
-    screen: TestClassScreen,
+    screen: LooseAnimalScreen,
     navigationOptions: ({navigation}) => ({
       header: null,
     }),
@@ -125,6 +123,17 @@ const ParkingVehicles = {
   },
 };
 
+const TreesPark = {
+  DamagedTree: {
+    name: 'Damaged Tree',
+    image: require('../../assets/images/tree-silhouette.png'),
+    screen: TestClassScreen,
+    navigationOptions: ({navigation}) => ({
+      header: null,
+    }),
+  },
+};
+
 const Sanitation = {
   IllegalDumping: {
     name: 'Illegal Dumping',
@@ -193,6 +202,12 @@ const RequestScreen = ({ navigation }) => (
           IssueButton(navigation, issueCategory, ParkingVehicles[issueCategory], i, arr)
         ))}
         <Text style={styles.categoryTitle}>
+          TREES & PARKS
+        </Text>
+        {Object.keys(TreesPark).map((issueCategory: string, i, arr) => (
+          IssueButton(navigation, issueCategory, TreesPark[issueCategory], i, arr)
+        ))}
+        <Text style={styles.categoryTitle}>
           SANITATION
         </Text>
         {Object.keys(Sanitation).map((issueCategory: string, i, arr) => (
@@ -207,8 +222,6 @@ const headerBack = (navigation) => (
     <Icon name="ios-arrow-back" style={{paddingHorizontal: 15}} color="#f3f3f3" size={26}/>
   </TouchableOpacity>
 );
-
-
 
 const MainStack = StackNavigator(
   {
@@ -229,7 +242,6 @@ const MainStack = StackNavigator(
   {
     initialRouteName: 'Index',
     mode: Platform.OS === 'ios' ? 'modal' : 'card',
-    //mode: 'modal'
   }
 );
 
