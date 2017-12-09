@@ -386,7 +386,7 @@ class TestScreen extends React.Component {
         >
           <View style={styles.submitPublicItem}>
             <Text style={styles.title}>
-              Sumbit publicly?
+              Submit publicly?
             </Text>
             <Switch
               style={{ }}

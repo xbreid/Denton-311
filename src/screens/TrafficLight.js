@@ -7,6 +7,7 @@ import DisplayLatLng from '../components/DisplayLatLng';
 import ImageSelector from '../components/ImageSelector';
 import ContactInfo from '../components/ContactInfo';
 import Fire from '../fire';
+import TravelDirectionScreen from '../components/TravelDirection';
 import ListSelector from '../components/ListSelector';
 
 const LocationRoute = {
@@ -15,51 +16,54 @@ const LocationRoute = {
   },
 };
 
-const AnimalTypeRoutes = {
-  Dog: {
-    name: 'Dog',
+const SignalProblemRoutes = {
+  AllOut: {
+    name: 'All out',
   },
-  Cat: {
-    name: 'Cat',
+  BulbOut: {
+    name: 'Bulb Out',
   },
-  Skunk: {
-    name: 'Skunk',
+  ConflictingSignal: {
+    name: 'Conflicting Signal',
   },
-  Armadillo: {
-    name: 'Armadillo',
+  Flashing: {
+    name: 'Flashing',
   },
-  Raccoon: {
-    name: 'Raccoon',
+  Knockdown: {
+    name: 'Knockdown',
   },
-  Squirrel: {
-    name: 'Squirrel',
+  SchoolFlasher: {
+    name: 'School Flasher',
   },
-  Possum: {
-    name: 'Possum',
+  Stuck: {
+    name: 'Stuck',
   },
-  Snake: {
-    name: 'Snake',
+  Timing: {
+    name: 'Timing',
   },
-  Bird: {
-    name: 'Bird',
-  },
-  Deer: {
-    name: 'Deer',
+  Other: {
+    name: 'Other',
   },
 };
 
-const AnimalRoutes = {
-  AnimalTypesScreen: {
+const SignalRoutes = {
+  SignalProblemScreen: {
     screen: ListSelector,
-    display: 'Type?',
-    type: 'type',
+    display: 'Signal Problem?',
+    type: 'problem',
     isSet: false,
     value: null,
-    routes: AnimalTypeRoutes,
+    routes: SignalProblemRoutes
+  },
+  TravelDirectionScreen: {
+    screen: TravelDirectionScreen,
+    display: 'Direction of Travel?',
+    isSet: false,
+    value: null,
   },
 };
 
-class LooseAnimalScreen extends React.Component {
+class TrafficLightScreen extends React.Component {
   constructor(props) {
     super(props);
 
@@ -76,7 +80,8 @@ class LooseAnimalScreen extends React.Component {
       lastName: null,
       email: null,
       phone: null,
-      animalType: null,
+      signalDirection: null,
+      signalProblem: null,
     };
   }
 
@@ -84,7 +89,7 @@ class LooseAnimalScreen extends React.Component {
     const { params = {} } = navigation.state;
 
     return {
-      title: "Loose Animal",
+      title: "Traffic Light",
       headerStyle: {
         backgroundColor: '#4510A2'
       },
@@ -124,11 +129,11 @@ class LooseAnimalScreen extends React.Component {
   }
 
   _clearDetails = () => {
-    Object.keys(AnimalRoutes).map((routeName: string) => (
-      AnimalRoutes[routeName].isSet = false
+    Object.keys(SignalRoutes).map((routeName: string) => (
+      SignalRoutes[routeName].isSet = false
     ));
-    Object.keys(AnimalRoutes).map((routeName: string) => (
-      AnimalRoutes[routeName].value = null
+    Object.keys(SignalRoutes).map((routeName: string) => (
+      SignalRoutes[routeName].value = null
     ));
     this.setState({
       deviceId: null,
@@ -147,16 +152,38 @@ class LooseAnimalScreen extends React.Component {
       lastName: null,
       email: null,
       phone: null,
-      animalType: null,
+      signalDirection: null,
+      signalProblem: null,
     });
     this.props.navigation.goBack(null);
   };
 
   _saveDetails = () => {
-    console.log('submit report triggered for Loose Animal');
+    console.log('submit report triggered for Traffic Light');
     console.log(this.state);
     this.props.navigation.goBack(null);
     this._clearDetails();
+  };
+
+  _getSignalValue = (value, type) => {
+    if (type === 'direction') {
+      Object.keys(SignalRoutes).map((routeName: string, index) => (
+        SignalRoutes['TravelDirectionScreen'].isSet = true
+      ));
+      Object.keys(SignalRoutes).map((routeName: string) => (
+        SignalRoutes['TravelDirectionScreen'].value = value
+      ));
+      this.setState({signalDirection: value});
+    } else if (type === 'problem') {
+      Object.keys(SignalRoutes).map((routeName: string) => (
+        SignalRoutes['SignalProblemScreen'].isSet = true
+      ));
+      Object.keys(SignalRoutes).map((routeName: string) => (
+        SignalRoutes['SignalProblemScreen'].value = value
+      ));
+      this.setState({signalProblem: value});
+    }
+    this.props.navigation.goBack(null);
   };
 
   _getLocation = (address) => {
@@ -180,19 +207,6 @@ class LooseAnimalScreen extends React.Component {
     } else {
       this.setState({ phone: value });
     }
-  };
-
-  _getAnimalValue = (value, type) => {
-    if (type === 'type') {
-      Object.keys(AnimalRoutes).map((routeName: string, index) => (
-        AnimalRoutes['AnimalTypesScreen'].isSet = true
-      ));
-      Object.keys(AnimalRoutes).map((routeName: string) => (
-        AnimalRoutes['AnimalTypesScreen'].value = value
-      ));
-      this.setState({animalType: value});
-    }
-    this.props.navigation.goBack(null);
   };
 
   _onPublicSwitchChange = () => {
@@ -299,20 +313,20 @@ class LooseAnimalScreen extends React.Component {
           </TouchableOpacity>
         ))}
         <View style={{marginTop: 10}}>
-          {Object.keys(AnimalRoutes).map((routeName: string) => (
+          {Object.keys(SignalRoutes).map((routeName: string) => (
             <TouchableOpacity
               key={routeName}
               onPress={() => {
-                const { path, params, screen } = AnimalRoutes[routeName];
+                const { path, params, screen } = SignalRoutes[routeName];
                 const { router } = screen;
                 const action = path && router.getActionForPathAndParams(path, params);
                 this.props.navigation.navigate(
                   routeName,
                   {
-                    saveValues: this._getAnimalValue,
-                    title: AnimalRoutes[routeName].display,
-                    routes: AnimalRoutes[routeName].routes,
-                    type: AnimalRoutes[routeName].type
+                    saveValues: this._getSignalValue,
+                    title: SignalRoutes[routeName].display,
+                    routes: SignalRoutes[routeName].routes,
+                    type: SignalRoutes[routeName].type
                   },
                   action,
                 );
@@ -324,7 +338,7 @@ class LooseAnimalScreen extends React.Component {
               >
                 <View style={styles.submitItem}>
                   <Text style={styles.title}>
-                    {AnimalRoutes[routeName].isSet ? AnimalRoutes[routeName].value : AnimalRoutes[routeName].display}
+                    {SignalRoutes[routeName].isSet ? SignalRoutes[routeName].value : SignalRoutes[routeName].display}
                   </Text>
                   <Ionicon name="ios-arrow-forward" style={{paddingHorizontal: 3}} color="#BDBDBD" size={22}/>
                 </View>
@@ -377,12 +391,12 @@ class LooseAnimalScreen extends React.Component {
   }
 }
 
-const LooseAnimalStack = StackNavigator(
+const TrafficLightStack = StackNavigator(
   {
     ...LocationRoute,
-    ...AnimalRoutes,
+    ...SignalRoutes,
     Index: {
-      screen: LooseAnimalScreen,
+      screen: TrafficLightScreen,
     },
   },
   {
@@ -390,4 +404,4 @@ const LooseAnimalStack = StackNavigator(
   }
 );
 
-export default LooseAnimalStack;
+export default TrafficLightStack;

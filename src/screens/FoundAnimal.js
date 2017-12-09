@@ -4,11 +4,11 @@ import { SafeAreaView, StackNavigator } from 'react-navigation';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import DisplayLatLng from '../components/DisplayLatLng';
-import AnimalTypeScreen from '../components/AnimalType';
-import AnimalGenderScreen from '../components/AnimalGender';
 import ImageSelector from '../components/ImageSelector';
 import ContactInfo from '../components/ContactInfo';
 import Fire from '../fire';
+import ListSelector from '../components/ListSelector';
+
 
 const LocationRoute = {
   LocationScreen: {
@@ -16,21 +16,70 @@ const LocationRoute = {
   },
 };
 
-const AnimalRoutes = {
-  AnimalTypesScreen: {
-    screen: AnimalTypeScreen,
-    display: 'Type?',
-    isSet: false,
-    value: null,
+const AnimalGenderRoutes = {
+  Male: {
+    name: 'Male',
   },
-  AnimalGenderScreen: {
-    screen: AnimalGenderScreen,
-    display: 'Gender?',
-    isSet: false,
-    value: null,
+  Female: {
+    name: 'Female',
+  },
+  Unknown: {
+    name: 'Unknown',
   },
 };
 
+const AnimalTypeRoutes = {
+  Dog: {
+    name: 'Dog',
+  },
+  Cat: {
+    name: 'Cat',
+  },
+  Skunk: {
+    name: 'Skunk',
+  },
+  Armadillo: {
+    name: 'Armadillo',
+  },
+  Raccoon: {
+    name: 'Raccoon',
+  },
+  Squirrel: {
+    name: 'Squirrel',
+  },
+  Possum: {
+    name: 'Possum',
+  },
+  Snake: {
+    name: 'Snake',
+  },
+  Bird: {
+    name: 'Bird',
+  },
+  Deer: {
+    name: 'Deer',
+  },
+};
+
+
+const AnimalRoutes = {
+  AnimalTypesScreen: {
+    screen: ListSelector,
+    display: 'Type?',
+    type: 'type',
+    isSet: false,
+    value: null,
+    routes: AnimalGenderRoutes,
+  },
+  AnimalGenderScreen: {
+    screen: ListSelector,
+    display: 'Gender?',
+    type: 'gender',
+    isSet: false,
+    value: null,
+    routes: AnimalTypeRoutes
+  },
+};
 class FoundAnimalScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -121,8 +170,7 @@ class FoundAnimalScreen extends React.Component {
       email: null,
       phone: null,
       animalType: null,
-      animalArea: null,
-      animalWithin: null,
+      animalGender: null,
     });
     this.props.navigation.goBack(null);
   };
@@ -131,6 +179,7 @@ class FoundAnimalScreen extends React.Component {
     console.log('submit report triggered for found animal');
     console.log(this.state);
     this.props.navigation.goBack(null);
+    this._clearDetails();
   };
 
   _getLocation = (address) => {
@@ -288,7 +337,16 @@ class FoundAnimalScreen extends React.Component {
                 const { path, params, screen } = AnimalRoutes[routeName];
                 const { router } = screen;
                 const action = path && router.getActionForPathAndParams(path, params);
-                this.props.navigation.navigate(routeName, {saveAnimalValue: this._getAnimalValue}, action);
+                this.props.navigation.navigate(
+                  routeName,
+                  {
+                    saveValues: this._getAnimalValue,
+                    title: AnimalRoutes[routeName].display,
+                    routes: AnimalRoutes[routeName].routes,
+                    type: AnimalRoutes[routeName].type
+                  },
+                  action,
+                );
               }}
             >
               <SafeAreaView
@@ -319,7 +377,7 @@ class FoundAnimalScreen extends React.Component {
         >
           <View style={styles.submitPublicItem}>
             <Text style={styles.title}>
-              Sumbit publicly?
+              Submit publicly?
             </Text>
             <Switch
               style={{ }}

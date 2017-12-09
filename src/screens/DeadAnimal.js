@@ -6,12 +6,10 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import DisplayLatLng from '../components/DisplayLatLng';
-import AnimalTypeScreen from '../components/AnimalType';
-import AnimalAreaScreen from '../components/DeadAnimalArea';
-import AnimalWithinScreen from '../components/DeadAnimalWithin';
 import ImageSelector from '../components/ImageSelector';
 import ContactInfo from '../components/ContactInfo';
 import Fire from '../fire';
+import ListSelector from '../components/ListSelector';
 
 const LocationRoute = {
   LocationScreen: {
@@ -19,28 +17,107 @@ const LocationRoute = {
   },
 };
 
-const AnimalRoutes = {
-  AnimalTypesScreen: {
-    screen: AnimalTypeScreen,
-    display: 'Type?',
-    isSet: false,
-    value: null,
+const AnimalTypeRoutes = {
+  Dog: {
+    name: 'Dog',
   },
-  AnimalAreasScreen: {
-    screen: AnimalAreaScreen,
-    display: 'Where?',
-    isSet: false,
-    value: null,
+  Cat: {
+    name: 'Cat',
   },
-  AnimalWithinScreen: {
-    screen: AnimalWithinScreen,
-    display: 'Within?',
-    isSet: false,
-    value: null,
-  }
+  Skunk: {
+    name: 'Skunk',
+  },
+  Armadillo: {
+    name: 'Armadillo',
+  },
+  Raccoon: {
+    name: 'Raccoon',
+  },
+  Squirrel: {
+    name: 'Squirrel',
+  },
+  Possum: {
+    name: 'Possum',
+  },
+  Snake: {
+    name: 'Snake',
+  },
+  Bird: {
+    name: 'Bird',
+  },
+  Deer: {
+    name: 'Deer',
+  },
 };
 
+const AnimalAreaRoutes = {
+  MiddleOfRoad: {
+    name: 'Middle of Road',
+  },
+  Median: {
+    name: 'Median',
+  },
+  SideOfRoad: {
+    name: 'Side of Road',
+  },
+  BikeLane: {
+    name: 'Bike Lane',
+  },
+  Sidewalk: {
+    name: 'Sidewalk',
+  },
+  BusinessParkingLot: {
+    name: 'Business Parking Lot',
+  },
+  Alley: {
+    name: 'Alley',
+  },
+};
 
+const AnimalWithinRoutes = {
+  Box: {
+    name: 'Box',
+  },
+  Bag: {
+    name: 'Bag',
+  },
+  ClothPaper: {
+    name: 'Cloth/Paper',
+  },
+  Other: {
+    name: 'Other',
+  },
+  Nothing: {
+    name: 'Nothing',
+  },
+};
+
+const AnimalRoutes = {
+  AnimalTypesScreen: {
+    screen: ListSelector,
+    display: 'Type?',
+    type: 'type',
+    isSet: false,
+    value: null,
+    routes: AnimalTypeRoutes,
+  },
+  AnimalAreasScreen: {
+    screen: ListSelector,
+    display: 'Where?',
+    type: 'area',
+    isSet: false,
+    value: null,
+    routes: AnimalAreaRoutes,
+  },
+  AnimalWithinScreen: {
+    screen: ListSelector,
+    display: 'Within?',
+    type: 'within',
+    isSet: false,
+    value: null,
+    routes: AnimalWithinRoutes,
+  }
+};
 
 class DeadAnimalScreen extends React.Component {
   constructor(props) {
@@ -147,6 +224,7 @@ class DeadAnimalScreen extends React.Component {
     console.log('submit report triggered for dead animal');
     console.log(this.state);
     this.props.navigation.goBack(null);
+    this._clearDetails();
   };
 
   _getLocation = (address) => {
@@ -310,7 +388,16 @@ class DeadAnimalScreen extends React.Component {
               const { path, params, screen } = AnimalRoutes[routeName];
               const { router } = screen;
               const action = path && router.getActionForPathAndParams(path, params);
-              this.props.navigation.navigate(routeName, {saveAnimalValue: this._getAnimalValue}, action);
+              this.props.navigation.navigate(
+                routeName,
+                {
+                  saveValues: this._getAnimalValue,
+                  title: AnimalRoutes[routeName].display,
+                  routes: AnimalRoutes[routeName].routes,
+                  type: AnimalRoutes[routeName].type
+                },
+                action,
+              );
             }}
           >
             <SafeAreaView
@@ -342,7 +429,7 @@ class DeadAnimalScreen extends React.Component {
         >
           <View style={styles.submitPublicItem}>
             <Text style={styles.title}>
-              Sumbit publicly?
+              Submit publicly?
             </Text>
             <Switch
               onValueChange={this._onPublicSwitchChange}
