@@ -4,45 +4,30 @@ import { SafeAreaView } from 'react-navigation';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 
 
-const AnimalTypeRoutes = {
-  Dog: {
-    name: 'Dog',
+const TravelDirectionRoutes = {
+  East: {
+    name: 'Eastbound',
   },
-  Cat: {
-    name: 'Cat',
+  North: {
+    name: 'Northbound',
   },
-  Skunk: {
-    name: 'Skunk',
+  South: {
+    name: 'Southbound',
   },
-  Armadillo: {
-    name: 'Armadillo',
+  West: {
+    name: 'Westbound',
   },
-  Raccoon: {
-    name: 'Raccoon',
-  },
-  Squirrel: {
-    name: 'Squirrel',
-  },
-  Possum: {
-    name: 'Possum',
-  },
-  Snake: {
-    name: 'Snake',
-  },
-  Bird: {
-    name: 'Bird',
-  },
-  Deer: {
-    name: 'Deer',
+  Unknown: {
+    name: 'Unknown',
   },
 };
 
-export default class AnimalTypeScreen extends React.Component {
+export default class TravelDirectionScreen extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      animalType: null,
+      direction: null,
     }
   }
 
@@ -50,7 +35,7 @@ export default class AnimalTypeScreen extends React.Component {
     const { params = {} } = navigation.state;
 
     return {
-      title: "Type?",
+      title: "Direction of Travel?",
       headerStyle: {
         backgroundColor: '#4510A2'
       },
@@ -66,7 +51,7 @@ export default class AnimalTypeScreen extends React.Component {
   };
 
   componentDidMount() {
-    this.props.navigation.setParams({ animalType: null });
+    this.props.navigation.setParams({ direction: null });
   }
 
   render() {
@@ -88,11 +73,11 @@ export default class AnimalTypeScreen extends React.Component {
 
     return(
       <ScrollView style={{ flex: 1, backgroundColor: 'white' }} contentInsetAdjustmentBehavior="automatic">
-        {Object.keys(AnimalTypeRoutes).map((routeName: string, index, arr) => (
+        {Object.keys(TravelDirectionRoutes).map((routeName: string, index, arr) => (
           <TouchableOpacity
             key={routeName}
             onPress={() => {
-              this.props.navigation.state.params.saveAnimalValue(AnimalTypeRoutes[routeName].name, 'type');
+              this.props.navigation.state.params.saveValues(TravelDirectionRoutes[routeName].name, 'direction');
             }}
           >
             <SafeAreaView
@@ -100,7 +85,7 @@ export default class AnimalTypeScreen extends React.Component {
               forceInset={{ vertical: 'never' }}
             >
               <View style={styles.item}>
-                <Text style={styles.title}>{AnimalTypeRoutes[routeName].name}</Text>
+                <Text style={styles.title}>{TravelDirectionRoutes[routeName].name}</Text>
               </View>
             </SafeAreaView>
           </TouchableOpacity>

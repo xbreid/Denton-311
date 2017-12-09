@@ -15,51 +15,80 @@ const LocationRoute = {
   },
 };
 
-const AnimalTypeRoutes = {
-  Dog: {
-    name: 'Dog',
+const SignProblemRoutes = {
+  Damaged: {
+    name: 'Damaged Sign',
   },
-  Cat: {
-    name: 'Cat',
+  Dangling: {
+    name: 'Dangling Sign',
   },
-  Skunk: {
-    name: 'Skunk',
+  Missing: {
+    name: 'Missing Sign',
   },
-  Armadillo: {
-    name: 'Armadillo',
-  },
-  Raccoon: {
-    name: 'Raccoon',
-  },
-  Squirrel: {
-    name: 'Squirrel',
-  },
-  Possum: {
-    name: 'Possum',
-  },
-  Snake: {
-    name: 'Snake',
-  },
-  Bird: {
-    name: 'Bird',
-  },
-  Deer: {
-    name: 'Deer',
+  Bent: {
+    name: 'Bent Sign',
   },
 };
 
-const AnimalRoutes = {
-  AnimalTypesScreen: {
+const SignTypeRoutes = {
+  AltSideParking: {
+    name: 'Alternate Side Parking',
+  },
+  BusStop: {
+    name: 'Bus Stop',
+  },
+  DoNotEnter: {
+    name: 'Do Not Enter',
+  },
+  NoParking: {
+    name: 'No Parking',
+  },
+  NoStanding: {
+    name: 'No Standing',
+  },
+  OneWay: {
+    name: 'One way',
+  },
+  SchoolZone: {
+    name: 'School Crossing/Zone',
+  },
+  SpeedLimit: {
+    name: 'Speed Limit',
+  },
+  Stop: {
+    name: 'Stop',
+  },
+  StreetName: {
+    name: 'Street Name',
+  },
+  Yield: {
+    name: 'Yield',
+  },
+  OtherUnknown: {
+    name: 'Other/Unknown',
+  },
+};
+
+const SignRoutes = {
+  SignProblemScreen: {
     screen: ListSelector,
-    display: 'Type?',
+    display: 'What is the problem?',
+    type: 'problem',
+    isSet: false,
+    value: null,
+    routes: SignProblemRoutes,
+  },
+  SignTypesScreen: {
+    screen: ListSelector,
+    display: 'What type of sign?',
     type: 'type',
     isSet: false,
     value: null,
-    routes: AnimalTypeRoutes,
+    routes: SignTypeRoutes,
   },
 };
 
-class LooseAnimalScreen extends React.Component {
+class StreetSignScreen extends React.Component {
   constructor(props) {
     super(props);
 
@@ -76,7 +105,8 @@ class LooseAnimalScreen extends React.Component {
       lastName: null,
       email: null,
       phone: null,
-      animalType: null,
+      signType: null,
+      signProblem: null,
     };
   }
 
@@ -84,7 +114,7 @@ class LooseAnimalScreen extends React.Component {
     const { params = {} } = navigation.state;
 
     return {
-      title: "Loose Animal",
+      title: "Street Sign",
       headerStyle: {
         backgroundColor: '#4510A2'
       },
@@ -124,11 +154,11 @@ class LooseAnimalScreen extends React.Component {
   }
 
   _clearDetails = () => {
-    Object.keys(AnimalRoutes).map((routeName: string) => (
-      AnimalRoutes[routeName].isSet = false
+    Object.keys(SignRoutes).map((routeName: string) => (
+      SignRoutes[routeName].isSet = false
     ));
-    Object.keys(AnimalRoutes).map((routeName: string) => (
-      AnimalRoutes[routeName].value = null
+    Object.keys(SignRoutes).map((routeName: string) => (
+      SignRoutes[routeName].value = null
     ));
     this.setState({
       deviceId: null,
@@ -147,13 +177,14 @@ class LooseAnimalScreen extends React.Component {
       lastName: null,
       email: null,
       phone: null,
-      animalType: null,
+      signType: null,
+      signProblem: null,
     });
     this.props.navigation.goBack(null);
   };
 
   _saveDetails = () => {
-    console.log('submit report triggered for Loose Animal');
+    console.log('submit report triggered for Street Sign');
     console.log(this.state);
     this.props.navigation.goBack(null);
     this._clearDetails();
@@ -182,15 +213,23 @@ class LooseAnimalScreen extends React.Component {
     }
   };
 
-  _getAnimalValue = (value, type) => {
+  _getSignValue = (value, type) => {
     if (type === 'type') {
-      Object.keys(AnimalRoutes).map((routeName: string, index) => (
-        AnimalRoutes['AnimalTypesScreen'].isSet = true
+      Object.keys(SignRoutes).map((routeName: string, index) => (
+        SignRoutes['SignTypesScreen'].isSet = true
       ));
-      Object.keys(AnimalRoutes).map((routeName: string) => (
-        AnimalRoutes['AnimalTypesScreen'].value = value
+      Object.keys(SignRoutes).map((routeName: string) => (
+        SignRoutes['SignTypesScreen'].value = value
       ));
-      this.setState({animalType: value});
+      this.setState({signType: value});
+    } else if (type === 'problem') {
+      Object.keys(SignRoutes).map((routeName: string) => (
+        SignRoutes['SignProblemScreen'].isSet = true
+      ));
+      Object.keys(SignRoutes).map((routeName: string) => (
+        SignRoutes['SignProblemScreen'].value = value
+      ));
+      this.setState({signProblem: value});
     }
     this.props.navigation.goBack(null);
   };
@@ -299,20 +338,20 @@ class LooseAnimalScreen extends React.Component {
           </TouchableOpacity>
         ))}
         <View style={{marginTop: 10}}>
-          {Object.keys(AnimalRoutes).map((routeName: string) => (
+          {Object.keys(SignRoutes).map((routeName: string) => (
             <TouchableOpacity
               key={routeName}
               onPress={() => {
-                const { path, params, screen } = AnimalRoutes[routeName];
+                const { path, params, screen } = SignRoutes[routeName];
                 const { router } = screen;
                 const action = path && router.getActionForPathAndParams(path, params);
                 this.props.navigation.navigate(
                   routeName,
                   {
-                    saveValues: this._getAnimalValue,
-                    title: AnimalRoutes[routeName].display,
-                    routes: AnimalRoutes[routeName].routes,
-                    type: AnimalRoutes[routeName].type
+                    saveValues: this._getSignValue,
+                    title: SignRoutes[routeName].display,
+                    routes: SignRoutes[routeName].routes,
+                    type: SignRoutes[routeName].type
                   },
                   action,
                 );
@@ -324,7 +363,7 @@ class LooseAnimalScreen extends React.Component {
               >
                 <View style={styles.submitItem}>
                   <Text style={styles.title}>
-                    {AnimalRoutes[routeName].isSet ? AnimalRoutes[routeName].value : AnimalRoutes[routeName].display}
+                    {SignRoutes[routeName].isSet ? SignRoutes[routeName].value : SignRoutes[routeName].display}
                   </Text>
                   <Ionicon name="ios-arrow-forward" style={{paddingHorizontal: 3}} color="#BDBDBD" size={22}/>
                 </View>
@@ -377,12 +416,12 @@ class LooseAnimalScreen extends React.Component {
   }
 }
 
-const LooseAnimalStack = StackNavigator(
+const StreetSignStack = StackNavigator(
   {
     ...LocationRoute,
-    ...AnimalRoutes,
+    ...SignRoutes,
     Index: {
-      screen: LooseAnimalScreen,
+      screen: StreetSignScreen,
     },
   },
   {
@@ -390,4 +429,4 @@ const LooseAnimalStack = StackNavigator(
   }
 );
 
-export default LooseAnimalStack;
+export default StreetSignStack;

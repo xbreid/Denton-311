@@ -4,24 +4,12 @@ import { SafeAreaView } from 'react-navigation';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 
 
-const AnimalGenderRoutes = {
-  Male: {
-    name: 'Male',
-  },
-  Female: {
-    name: 'Female',
-  },
-  Unknown: {
-    name: 'Unknown',
-  },
-};
-
-export default class AnimalGenderScreen extends React.Component {
+export default class ListSelectorScreen extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      animalGender: null,
+      listValue: null,
     }
   }
 
@@ -29,7 +17,7 @@ export default class AnimalGenderScreen extends React.Component {
     const { params = {} } = navigation.state;
 
     return {
-      title: "Gender?",
+      title: navigation.state.params.title,
       headerStyle: {
         backgroundColor: '#4510A2'
       },
@@ -45,10 +33,12 @@ export default class AnimalGenderScreen extends React.Component {
   };
 
   componentDidMount() {
-    this.props.navigation.setParams({ animalGender: null });
+    this.props.navigation.setParams({ listValue: null });
   }
 
   render() {
+    const Routes = this.props.navigation.state.params.routes;
+
     const styles = StyleSheet.create({
       item: {
         paddingHorizontal: 15,
@@ -67,11 +57,11 @@ export default class AnimalGenderScreen extends React.Component {
 
     return(
       <ScrollView style={{ flex: 1, backgroundColor: 'white' }} contentInsetAdjustmentBehavior="automatic">
-        {Object.keys(AnimalGenderRoutes).map((routeName: string, index, arr) => (
+        {Object.keys(Routes).map((routeName: string, index, arr) => (
           <TouchableOpacity
             key={routeName}
             onPress={() => {
-              this.props.navigation.state.params.saveAnimalValue(AnimalGenderRoutes[routeName].name, 'gender');
+              this.props.navigation.state.params.saveValues(Routes[routeName].name, this.props.navigation.state.params.type);
             }}
           >
             <SafeAreaView
@@ -79,7 +69,7 @@ export default class AnimalGenderScreen extends React.Component {
               forceInset={{ vertical: 'never' }}
             >
               <View style={styles.item}>
-                <Text style={styles.title}>{AnimalGenderRoutes[routeName].name}</Text>
+                <Text style={styles.title}>{Routes[routeName].name}</Text>
               </View>
             </SafeAreaView>
           </TouchableOpacity>

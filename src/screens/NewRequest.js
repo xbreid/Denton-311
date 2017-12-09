@@ -8,6 +8,10 @@ import TestClassScreen from './TestScreen';
 import DeadAnimalScreen from './DeadAnimal';
 import FoundAnimalScreen from './FoundAnimal';
 import LooseAnimalScreen from './LooseAnimal';
+import PotholeScreen from './Pothole';
+import StreetSignScreen from './StreetSign';
+import TrafficLightScreen from './TrafficLight';
+import StreetLightScreen from './StreetLight';
 
 const Animals = {
   DeadAnimal: {
@@ -40,7 +44,7 @@ const StreetsSidewalks = {
   Pothole: {
     name: 'Pothole',
     image: require('../../assets/images/pothole.png'),
-    screen: TestClassScreen,
+    screen: PotholeScreen,
     navigationOptions: ({navigation}) => ({
       header: null,
     }),
@@ -48,7 +52,7 @@ const StreetsSidewalks = {
   StreetSign: {
     name: 'Street Sign',
     image: require('../../assets/images/one-way-street-signal.png'),
-    screen: TestClassScreen,
+    screen: StreetSignScreen,
     navigationOptions: ({navigation}) => ({
       header: null,
     }),
@@ -56,7 +60,7 @@ const StreetsSidewalks = {
   TrafficLight: {
     name: 'Traffic Light',
     image: require('../../assets/images/traffic-light.png'),
-    screen: TestClassScreen,
+    screen: TrafficLightScreen,
     navigationOptions: ({navigation}) => ({
       header: null,
     }),
@@ -65,7 +69,7 @@ const StreetsSidewalks = {
   StreetLight: {
     name: 'Street Light',
     image: require('../../assets/images/lamp-post.png'),
-    screen: TestClassScreen,
+    screen: StreetLightScreen,
     navigationOptions: ({navigation}) => ({
       header: null,
     }),

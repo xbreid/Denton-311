@@ -7,7 +7,6 @@ import DisplayLatLng from '../components/DisplayLatLng';
 import ImageSelector from '../components/ImageSelector';
 import ContactInfo from '../components/ContactInfo';
 import Fire from '../fire';
-import ListSelector from '../components/ListSelector';
 
 const LocationRoute = {
   LocationScreen: {
@@ -15,51 +14,7 @@ const LocationRoute = {
   },
 };
 
-const AnimalTypeRoutes = {
-  Dog: {
-    name: 'Dog',
-  },
-  Cat: {
-    name: 'Cat',
-  },
-  Skunk: {
-    name: 'Skunk',
-  },
-  Armadillo: {
-    name: 'Armadillo',
-  },
-  Raccoon: {
-    name: 'Raccoon',
-  },
-  Squirrel: {
-    name: 'Squirrel',
-  },
-  Possum: {
-    name: 'Possum',
-  },
-  Snake: {
-    name: 'Snake',
-  },
-  Bird: {
-    name: 'Bird',
-  },
-  Deer: {
-    name: 'Deer',
-  },
-};
-
-const AnimalRoutes = {
-  AnimalTypesScreen: {
-    screen: ListSelector,
-    display: 'Type?',
-    type: 'type',
-    isSet: false,
-    value: null,
-    routes: AnimalTypeRoutes,
-  },
-};
-
-class LooseAnimalScreen extends React.Component {
+class PotholeScreen extends React.Component {
   constructor(props) {
     super(props);
 
@@ -76,7 +31,6 @@ class LooseAnimalScreen extends React.Component {
       lastName: null,
       email: null,
       phone: null,
-      animalType: null,
     };
   }
 
@@ -84,7 +38,7 @@ class LooseAnimalScreen extends React.Component {
     const { params = {} } = navigation.state;
 
     return {
-      title: "Loose Animal",
+      title: "Pothole",
       headerStyle: {
         backgroundColor: '#4510A2'
       },
@@ -124,12 +78,6 @@ class LooseAnimalScreen extends React.Component {
   }
 
   _clearDetails = () => {
-    Object.keys(AnimalRoutes).map((routeName: string) => (
-      AnimalRoutes[routeName].isSet = false
-    ));
-    Object.keys(AnimalRoutes).map((routeName: string) => (
-      AnimalRoutes[routeName].value = null
-    ));
     this.setState({
       deviceId: null,
       userId: null,
@@ -147,13 +95,12 @@ class LooseAnimalScreen extends React.Component {
       lastName: null,
       email: null,
       phone: null,
-      animalType: null,
     });
     this.props.navigation.goBack(null);
   };
 
   _saveDetails = () => {
-    console.log('submit report triggered for Loose Animal');
+    console.log('submit report triggered for Pothole');
     console.log(this.state);
     this.props.navigation.goBack(null);
     this._clearDetails();
@@ -180,19 +127,6 @@ class LooseAnimalScreen extends React.Component {
     } else {
       this.setState({ phone: value });
     }
-  };
-
-  _getAnimalValue = (value, type) => {
-    if (type === 'type') {
-      Object.keys(AnimalRoutes).map((routeName: string, index) => (
-        AnimalRoutes['AnimalTypesScreen'].isSet = true
-      ));
-      Object.keys(AnimalRoutes).map((routeName: string) => (
-        AnimalRoutes['AnimalTypesScreen'].value = value
-      ));
-      this.setState({animalType: value});
-    }
-    this.props.navigation.goBack(null);
   };
 
   _onPublicSwitchChange = () => {
@@ -298,40 +232,6 @@ class LooseAnimalScreen extends React.Component {
             </SafeAreaView>
           </TouchableOpacity>
         ))}
-        <View style={{marginTop: 10}}>
-          {Object.keys(AnimalRoutes).map((routeName: string) => (
-            <TouchableOpacity
-              key={routeName}
-              onPress={() => {
-                const { path, params, screen } = AnimalRoutes[routeName];
-                const { router } = screen;
-                const action = path && router.getActionForPathAndParams(path, params);
-                this.props.navigation.navigate(
-                  routeName,
-                  {
-                    saveValues: this._getAnimalValue,
-                    title: AnimalRoutes[routeName].display,
-                    routes: AnimalRoutes[routeName].routes,
-                    type: AnimalRoutes[routeName].type
-                  },
-                  action,
-                );
-              }}
-            >
-              <SafeAreaView
-                style={[styles.itemContainer]}
-                forceInset={{ vertical: 'never' }}
-              >
-                <View style={styles.submitItem}>
-                  <Text style={styles.title}>
-                    {AnimalRoutes[routeName].isSet ? AnimalRoutes[routeName].value : AnimalRoutes[routeName].display}
-                  </Text>
-                  <Ionicon name="ios-arrow-forward" style={{paddingHorizontal: 3}} color="#BDBDBD" size={22}/>
-                </View>
-              </SafeAreaView>
-            </TouchableOpacity>
-          ))}
-        </View>
         <TextInput
           style={{height: 40, backgroundColor: 'white', fontSize: 16, marginVertical: 10, paddingHorizontal: 20, paddingTop: 10}}
           onChangeText={(text) => this.setState({text})}
@@ -377,12 +277,11 @@ class LooseAnimalScreen extends React.Component {
   }
 }
 
-const LooseAnimalStack = StackNavigator(
+const PotholeStack = StackNavigator(
   {
     ...LocationRoute,
-    ...AnimalRoutes,
     Index: {
-      screen: LooseAnimalScreen,
+      screen: PotholeScreen,
     },
   },
   {
@@ -390,4 +289,4 @@ const LooseAnimalStack = StackNavigator(
   }
 );
 
-export default LooseAnimalStack;
+export default PotholeStack;
