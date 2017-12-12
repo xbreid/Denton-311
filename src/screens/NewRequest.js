@@ -12,6 +12,9 @@ import PotholeScreen from './Pothole';
 import StreetSignScreen from './StreetSign';
 import TrafficLightScreen from './TrafficLight';
 import StreetLightScreen from './StreetLight';
+import BrokenSidewalkScreen from './BrokenSidewalk';
+import FireHydrantScreen from './FireHydrant';
+import AbandonedVehicleScreen from './AbandonedVehicle';
 
 const Animals = {
   DeadAnimal: {
@@ -77,7 +80,7 @@ const StreetsSidewalks = {
   BrokenSidewalk: {
     name: 'Broken Sidewalk',
     image: require('../../assets/images/crossing.png'),
-    screen: TestClassScreen,
+    screen: BrokenSidewalkScreen,
     navigationOptions: ({navigation}) => ({
       header: null,
     }),
@@ -85,7 +88,7 @@ const StreetsSidewalks = {
   FireHydrant: {
     name: 'Fire Hydrant',
     image: require('../../assets/images/fire-hydrant.png'),
-    screen: TestClassScreen,
+    screen: FireHydrantScreen,
     navigationOptions: ({navigation}) => ({
       header: null,
     }),
@@ -96,7 +99,7 @@ const ParkingVehicles = {
   AbandonedVehicle: {
     name: 'Abandoned Vehicle',
     image: require('../../assets/images/abandoned.png'),
-    screen: TestClassScreen,
+    screen: AbandonedVehicleScreen,
     navigationOptions: ({navigation}) => ({
       header: null,
     }),
