@@ -7,8 +7,6 @@ import DisplayLatLng from '../components/DisplayLatLng';
 import ImageSelector from '../components/ImageSelector';
 import ContactInfo from '../components/ContactInfo';
 import Fire from '../fire';
-import ListSelector from '../components/ListSelector';
-import ColorSelector from '../components/ColorSelector';
 
 const LocationRoute = {
   LocationScreen: {
@@ -16,54 +14,7 @@ const LocationRoute = {
   },
 };
 
-const VehicleTypeRoutes = {
-  TwoDoor: {
-    name: '2 Door Vehicle',
-  },
-  FourDoor: {
-    name: '4 Door Vehicle',
-  },
-  Bus: {
-    name: 'Bus',
-  },
-  HeavyTruck: {
-    name: 'Heavy Truck',
-  },
-  Motorcycle: {
-    name: 'Motorcycle',
-  },
-  StationWagon: {
-    name: 'Station Wagon',
-  },
-  Trailer: {
-    name: 'Trailer',
-  },
-  Truck: {
-    name: 'Truck',
-  },
-  Van: {
-    name: 'Van',
-  },
-};
-
-
-const AbandonedVehicleRoutes = {
-  VehicleTypesScreen: {
-    screen: ListSelector,
-    display: 'Type?',
-    type: 'type',
-    isSet: false,
-    value: null,
-    routes: VehicleTypeRoutes,
-  },
-  VehicleColorScreen: {
-    screen: ColorSelector,
-    display: 'Color?',
-    isSet: false,
-    value: null,
-  },
-};
-class AbandonedVehicleScreen extends React.Component {
+class BlockedDrivewayScreen extends React.Component {
   constructor(props) {
     super(props);
 
@@ -80,9 +31,8 @@ class AbandonedVehicleScreen extends React.Component {
       lastName: null,
       email: null,
       phone: null,
-      vehicleColor: null,
-      vehicleType: null,
-      make: null,
+      completelyBlocked: false,
+      recurringProblem: false,
     };
   }
 
@@ -90,7 +40,7 @@ class AbandonedVehicleScreen extends React.Component {
     const { params = {} } = navigation.state;
 
     return {
-      title: "Abandoned Vehicle",
+      title: "Blocked Driveway",
       headerStyle: {
         backgroundColor: '#4510A2'
       },
@@ -130,12 +80,6 @@ class AbandonedVehicleScreen extends React.Component {
   }
 
   _clearDetails = () => {
-    Object.keys(AbandonedVehicleRoutes).map((routeName: string) => (
-      AbandonedVehicleRoutes[routeName].isSet = false
-    ));
-    Object.keys(AbandonedVehicleRoutes).map((routeName: string) => (
-      AbandonedVehicleRoutes[routeName].value = null
-    ));
     this.setState({
       deviceId: null,
       userId: null,
@@ -153,15 +97,14 @@ class AbandonedVehicleScreen extends React.Component {
       lastName: null,
       email: null,
       phone: null,
-      vehicleColor: null,
-      vehicleType: null,
-      make: null,
+      CompletelyBlocked: false,
+      RecurringProblem: false,
     });
     this.props.navigation.goBack(null);
   };
 
   _saveDetails = () => {
-    console.log('submit report triggered for abandoned vehicle');
+    console.log('submit report triggered for blocked driveway');
     console.log(this.state);
     this.props.navigation.goBack(null);
     this._clearDetails();
@@ -190,26 +133,6 @@ class AbandonedVehicleScreen extends React.Component {
     }
   };
 
-  _getVehicleValue = (value, type) => {
-    if (type === 'type') {
-      Object.keys(AbandonedVehicleRoutes).map((routeName: string, index) => (
-        AbandonedVehicleRoutes['VehicleTypesScreen'].isSet = true
-      ));
-      Object.keys(AbandonedVehicleRoutes).map((routeName: string) => (
-        AbandonedVehicleRoutes['VehicleTypesScreen'].value = value
-      ));
-      this.setState({vehicleType: value});
-    } else if (type === 'color') {
-      Object.keys(AbandonedVehicleRoutes).map((routeName: string) => (
-        AbandonedVehicleRoutes['VehicleColorScreen'].isSet = true
-      ));
-      Object.keys(AbandonedVehicleRoutes).map((routeName: string) => (
-        AbandonedVehicleRoutes['VehicleColorScreen'].value = value
-      ));
-      this.setState({vehicleColor: value});
-    }
-    this.props.navigation.goBack(null);
-  };
 
   _onPublicSwitchChange = () => {
     this.setState({ publicSwitch: !this.state.publicSwitch });
@@ -217,6 +140,14 @@ class AbandonedVehicleScreen extends React.Component {
 
   _onContactSwitchChange = () => {
     this.setState({ contactSwitch: !this.state.contactSwitch });
+  };
+
+  _onCompletelyBlockedChange = () => {
+    this.setState({ completelyBlocked: !this.state.completelyBlocked });
+  };
+
+  _onRecurringProblemChange = () => {
+    this.setState({ recurringProblem: !this.state.recurringProblem });
   };
 
   _deleteImage = (index) => {
@@ -315,46 +246,35 @@ class AbandonedVehicleScreen extends React.Component {
           </TouchableOpacity>
         ))}
         <View style={{marginTop: 10}}>
-          <TextInput
-            ref="Make"
-            style={styles.infoTextField}
-            onChangeText={(make) => this.setState({make})}
-            placeholder="Make (e.g. Ford)"
-            returnKeyType={ "done" }
-            value={this.state.make}
-          />
-          {Object.keys(AbandonedVehicleRoutes).map((routeName: string) => (
-            <TouchableOpacity
-              key={routeName}
-              onPress={() => {
-                const { path, params, screen } = AbandonedVehicleRoutes[routeName];
-                const { router } = screen;
-                const action = path && router.getActionForPathAndParams(path, params);
-                this.props.navigation.navigate(
-                  routeName,
-                  {
-                    saveValues: this._getVehicleValue,
-                    title: AbandonedVehicleRoutes[routeName].display,
-                    routes: AbandonedVehicleRoutes[routeName].routes,
-                    type: AbandonedVehicleRoutes[routeName].type
-                  },
-                  action,
-                );
-              }}
-            >
-              <SafeAreaView
-                style={[styles.itemContainer]}
-                forceInset={{ vertical: 'never' }}
-              >
-                <View style={styles.submitItem}>
-                  <Text style={styles.title}>
-                    {AbandonedVehicleRoutes[routeName].isSet ? AbandonedVehicleRoutes[routeName].value : AbandonedVehicleRoutes[routeName].display}
-                  </Text>
-                  <Ionicon name="ios-arrow-forward" style={{paddingHorizontal: 3}} color="#BDBDBD" size={22}/>
-                </View>
-              </SafeAreaView>
-            </TouchableOpacity>
-          ))}
+          <SafeAreaView
+            style={styles.itemContainer}
+            forceInset={{ vertical: 'never' }}
+          >
+            <View style={styles.submitPublicItem}>
+              <Text style={styles.title}>
+                Driveway completely blocked?
+              </Text>
+              <Switch
+                style={{ }}
+                onValueChange={this._onCompletelyBlockedChange}
+                value={this.state.completelyBlocked}
+              />
+            </View>
+          </SafeAreaView>
+          <SafeAreaView
+            style={styles.itemContainer}
+            forceInset={{ vertical: 'never' }}
+          >
+            <View style={styles.submitPublicItem}>
+              <Text style={styles.title}>
+                Recurring problem?
+              </Text>
+              <Switch
+                onValueChange={this._onRecurringProblemChange}
+                value={this.state.recurringProblem}
+              />
+            </View>
+          </SafeAreaView>
         </View>
         <TextInput
           style={{height: 40, backgroundColor: 'white', fontSize: 16, marginVertical: 10, paddingHorizontal: 20, paddingTop: 10}}
@@ -404,9 +324,8 @@ class AbandonedVehicleScreen extends React.Component {
 const Stack = StackNavigator(
   {
     ...LocationRoute,
-    ...AbandonedVehicleRoutes,
     Index: {
-      screen: AbandonedVehicleScreen,
+      screen: BlockedDrivewayScreen,
     },
   },
   {

@@ -15,6 +15,7 @@ import StreetLightScreen from './StreetLight';
 import BrokenSidewalkScreen from './BrokenSidewalk';
 import FireHydrantScreen from './FireHydrant';
 import AbandonedVehicleScreen from './AbandonedVehicle';
+import BlockedDrivewayScreen from './BlockedDriveway';
 
 const Animals = {
   DeadAnimal: {
@@ -107,7 +108,7 @@ const ParkingVehicles = {
   BlockedDriveway: {
     name: 'Blocked Driveway',
     image: require('../../assets/images/blocked-sign.png'),
-    screen: TestClassScreen,
+    screen: BlockedDrivewayScreen,
     navigationOptions: ({navigation}) => ({
       header: null,
     }),
