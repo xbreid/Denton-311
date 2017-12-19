@@ -7,8 +7,6 @@ import DisplayLatLng from '../components/DisplayLatLng';
 import ImageSelector from '../components/ImageSelector';
 import ContactInfo from '../components/ContactInfo';
 import Fire from '../fire';
-import TravelDirectionScreen from '../components/TravelDirection';
-import ListSelector from '../components/ListSelector';
 
 const LocationRoute = {
   LocationScreen: {
@@ -16,54 +14,7 @@ const LocationRoute = {
   },
 };
 
-const SignalProblemRoutes = {
-  AllOut: {
-    name: 'All out',
-  },
-  BulbOut: {
-    name: 'Bulb Out',
-  },
-  ConflictingSignal: {
-    name: 'Conflicting Signal',
-  },
-  Flashing: {
-    name: 'Flashing',
-  },
-  Knockdown: {
-    name: 'Knockdown',
-  },
-  SchoolFlasher: {
-    name: 'School Flasher',
-  },
-  Stuck: {
-    name: 'Stuck',
-  },
-  Timing: {
-    name: 'Timing',
-  },
-  Other: {
-    name: 'Other',
-  },
-};
-
-const SignalRoutes = {
-  SignalProblemScreen: {
-    screen: ListSelector,
-    display: 'Signal Problem?',
-    type: 'problem',
-    isSet: false,
-    value: null,
-    routes: SignalProblemRoutes
-  },
-  TravelDirectionScreen: {
-    screen: TravelDirectionScreen,
-    display: 'Direction of Travel?',
-    isSet: false,
-    value: null,
-  },
-};
-
-class TrafficLightScreen extends React.Component {
+class BlockedDrivewayScreen extends React.Component {
   constructor(props) {
     super(props);
 
@@ -80,8 +31,8 @@ class TrafficLightScreen extends React.Component {
       lastName: null,
       email: null,
       phone: null,
-      signalDirection: null,
-      signalProblem: null,
+      completelyBlocked: false,
+      recurringProblem: false,
     };
   }
 
@@ -89,7 +40,7 @@ class TrafficLightScreen extends React.Component {
     const { params = {} } = navigation.state;
 
     return {
-      title: "Traffic Light",
+      title: "Blocked Driveway",
       headerStyle: {
         backgroundColor: '#4510A2'
       },
@@ -129,12 +80,6 @@ class TrafficLightScreen extends React.Component {
   }
 
   _clearDetails = () => {
-    Object.keys(SignalRoutes).map((routeName: string) => (
-      SignalRoutes[routeName].isSet = false
-    ));
-    Object.keys(SignalRoutes).map((routeName: string) => (
-      SignalRoutes[routeName].value = null
-    ));
     this.setState({
       deviceId: null,
       userId: null,
@@ -152,38 +97,17 @@ class TrafficLightScreen extends React.Component {
       lastName: null,
       email: null,
       phone: null,
-      signalDirection: null,
-      signalProblem: null,
+      CompletelyBlocked: false,
+      RecurringProblem: false,
     });
     this.props.navigation.goBack(null);
   };
 
   _saveDetails = () => {
-    console.log('submit report triggered for Traffic Light');
+    console.log('submit report triggered for blocked driveway');
     console.log(this.state);
     this.props.navigation.goBack(null);
     this._clearDetails();
-  };
-
-  _getSignalValue = (value, type) => {
-    if (type === 'direction') {
-      Object.keys(SignalRoutes).map((routeName: string, index) => (
-        SignalRoutes['TravelDirectionScreen'].isSet = true
-      ));
-      Object.keys(SignalRoutes).map((routeName: string) => (
-        SignalRoutes['TravelDirectionScreen'].value = value
-      ));
-      this.setState({signalDirection: value});
-    } else if (type === 'problem') {
-      Object.keys(SignalRoutes).map((routeName: string) => (
-        SignalRoutes['SignalProblemScreen'].isSet = true
-      ));
-      Object.keys(SignalRoutes).map((routeName: string) => (
-        SignalRoutes['SignalProblemScreen'].value = value
-      ));
-      this.setState({signalProblem: value});
-    }
-    this.props.navigation.goBack(null);
   };
 
   _getLocation = (address) => {
@@ -209,12 +133,21 @@ class TrafficLightScreen extends React.Component {
     }
   };
 
+
   _onPublicSwitchChange = () => {
     this.setState({ publicSwitch: !this.state.publicSwitch });
   };
 
   _onContactSwitchChange = () => {
     this.setState({ contactSwitch: !this.state.contactSwitch });
+  };
+
+  _onCompletelyBlockedChange = () => {
+    this.setState({ completelyBlocked: !this.state.completelyBlocked });
+  };
+
+  _onRecurringProblemChange = () => {
+    this.setState({ recurringProblem: !this.state.recurringProblem });
   };
 
   _deleteImage = (index) => {
@@ -313,38 +246,35 @@ class TrafficLightScreen extends React.Component {
           </TouchableOpacity>
         ))}
         <View style={{marginTop: 10}}>
-          {Object.keys(SignalRoutes).map((routeName: string) => (
-            <TouchableOpacity
-              key={routeName}
-              onPress={() => {
-                const { path, params, screen } = SignalRoutes[routeName];
-                const { router } = screen;
-                const action = path && router.getActionForPathAndParams(path, params);
-                this.props.navigation.navigate(
-                  routeName,
-                  {
-                    saveValues: this._getSignalValue,
-                    title: SignalRoutes[routeName].display,
-                    routes: SignalRoutes[routeName].routes,
-                    type: SignalRoutes[routeName].type
-                  },
-                  action,
-                );
-              }}
-            >
-              <SafeAreaView
-                style={[styles.itemContainer]}
-                forceInset={{ vertical: 'never' }}
-              >
-                <View style={styles.submitItem}>
-                  <Text style={styles.title}>
-                    {SignalRoutes[routeName].isSet ? SignalRoutes[routeName].value : SignalRoutes[routeName].display}
-                  </Text>
-                  <Ionicon name="ios-arrow-forward" style={{paddingHorizontal: 3}} color="#BDBDBD" size={22}/>
-                </View>
-              </SafeAreaView>
-            </TouchableOpacity>
-          ))}
+          <SafeAreaView
+            style={styles.itemContainer}
+            forceInset={{ vertical: 'never' }}
+          >
+            <View style={styles.submitPublicItem}>
+              <Text style={styles.title}>
+                Driveway completely blocked?
+              </Text>
+              <Switch
+                style={{ }}
+                onValueChange={this._onCompletelyBlockedChange}
+                value={this.state.completelyBlocked}
+              />
+            </View>
+          </SafeAreaView>
+          <SafeAreaView
+            style={styles.itemContainer}
+            forceInset={{ vertical: 'never' }}
+          >
+            <View style={styles.submitPublicItem}>
+              <Text style={styles.title}>
+                Recurring problem?
+              </Text>
+              <Switch
+                onValueChange={this._onRecurringProblemChange}
+                value={this.state.recurringProblem}
+              />
+            </View>
+          </SafeAreaView>
         </View>
         <TextInput
           style={{height: 40, backgroundColor: 'white', fontSize: 16, marginVertical: 10, paddingHorizontal: 20, paddingTop: 10}}
@@ -391,12 +321,11 @@ class TrafficLightScreen extends React.Component {
   }
 }
 
-const TrafficLightStack = StackNavigator(
+const Stack = StackNavigator(
   {
     ...LocationRoute,
-    ...SignalRoutes,
     Index: {
-      screen: TrafficLightScreen,
+      screen: BlockedDrivewayScreen,
     },
   },
   {
@@ -404,4 +333,4 @@ const TrafficLightStack = StackNavigator(
   }
 );
 
-export default TrafficLightStack;
+export default Stack;

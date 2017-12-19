@@ -69,6 +69,7 @@ export default class App extends React.Component {
             // local storage.
             // ...
             // New sign-in will be persisted with local persistence.
+            console.log('setting persistence, logging in');
             return Fire.auth().signInAnonymously();
           })
           .catch(function(error) {

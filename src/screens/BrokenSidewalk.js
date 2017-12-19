@@ -7,7 +7,6 @@ import DisplayLatLng from '../components/DisplayLatLng';
 import ImageSelector from '../components/ImageSelector';
 import ContactInfo from '../components/ContactInfo';
 import Fire from '../fire';
-import TravelDirectionScreen from '../components/TravelDirection';
 import ListSelector from '../components/ListSelector';
 
 const LocationRoute = {
@@ -16,54 +15,27 @@ const LocationRoute = {
   },
 };
 
-const SignalProblemRoutes = {
-  AllOut: {
-    name: 'All out',
+const ProblemRoutes = {
+  Broken: {
+    name: 'Broken Sidewalk',
   },
-  BulbOut: {
-    name: 'Bulb Out',
-  },
-  ConflictingSignal: {
-    name: 'Conflicting Signal',
-  },
-  Flashing: {
-    name: 'Flashing',
-  },
-  Knockdown: {
-    name: 'Knockdown',
-  },
-  SchoolFlasher: {
-    name: 'School Flasher',
-  },
-  Stuck: {
-    name: 'Stuck',
-  },
-  Timing: {
-    name: 'Timing',
-  },
-  Other: {
-    name: 'Other',
+  Curb: {
+    name: 'Curb Condition',
   },
 };
 
-const SignalRoutes = {
-  SignalProblemScreen: {
+const SidewalkRoutes = {
+  SidewalkProblemScreen: {
     screen: ListSelector,
-    display: 'Signal Problem?',
+    display: 'Problem Type?',
     type: 'problem',
     isSet: false,
     value: null,
-    routes: SignalProblemRoutes
-  },
-  TravelDirectionScreen: {
-    screen: TravelDirectionScreen,
-    display: 'Direction of Travel?',
-    isSet: false,
-    value: null,
+    routes: ProblemRoutes,
   },
 };
 
-class TrafficLightScreen extends React.Component {
+class BrokenSidewalkScreen extends React.Component {
   constructor(props) {
     super(props);
 
@@ -80,8 +52,7 @@ class TrafficLightScreen extends React.Component {
       lastName: null,
       email: null,
       phone: null,
-      signalDirection: null,
-      signalProblem: null,
+      sidewalkProblem: null,
     };
   }
 
@@ -89,7 +60,7 @@ class TrafficLightScreen extends React.Component {
     const { params = {} } = navigation.state;
 
     return {
-      title: "Traffic Light",
+      title: "Broken Sidewalk",
       headerStyle: {
         backgroundColor: '#4510A2'
       },
@@ -129,11 +100,11 @@ class TrafficLightScreen extends React.Component {
   }
 
   _clearDetails = () => {
-    Object.keys(SignalRoutes).map((routeName: string) => (
-      SignalRoutes[routeName].isSet = false
+    Object.keys(SidewalkRoutes).map((routeName: string) => (
+      SidewalkRoutes[routeName].isSet = false
     ));
-    Object.keys(SignalRoutes).map((routeName: string) => (
-      SignalRoutes[routeName].value = null
+    Object.keys(SidewalkRoutes).map((routeName: string) => (
+      SidewalkRoutes[routeName].value = null
     ));
     this.setState({
       deviceId: null,
@@ -152,38 +123,16 @@ class TrafficLightScreen extends React.Component {
       lastName: null,
       email: null,
       phone: null,
-      signalDirection: null,
-      signalProblem: null,
+      sidewalkProblem: null,
     });
     this.props.navigation.goBack(null);
   };
 
   _saveDetails = () => {
-    console.log('submit report triggered for Traffic Light');
+    console.log('submit report triggered for Broken Sidewalk');
     console.log(this.state);
     this.props.navigation.goBack(null);
     this._clearDetails();
-  };
-
-  _getSignalValue = (value, type) => {
-    if (type === 'direction') {
-      Object.keys(SignalRoutes).map((routeName: string, index) => (
-        SignalRoutes['TravelDirectionScreen'].isSet = true
-      ));
-      Object.keys(SignalRoutes).map((routeName: string) => (
-        SignalRoutes['TravelDirectionScreen'].value = value
-      ));
-      this.setState({signalDirection: value});
-    } else if (type === 'problem') {
-      Object.keys(SignalRoutes).map((routeName: string) => (
-        SignalRoutes['SignalProblemScreen'].isSet = true
-      ));
-      Object.keys(SignalRoutes).map((routeName: string) => (
-        SignalRoutes['SignalProblemScreen'].value = value
-      ));
-      this.setState({signalProblem: value});
-    }
-    this.props.navigation.goBack(null);
   };
 
   _getLocation = (address) => {
@@ -207,6 +156,19 @@ class TrafficLightScreen extends React.Component {
     } else {
       this.setState({ phone: value });
     }
+  };
+
+  _getSidewalkValue = (value, type) => {
+    if (type === 'problem') {
+      Object.keys(SidewalkRoutes).map((routeName: string, index) => (
+        SidewalkRoutes['SidewalkProblemScreen'].isSet = true
+      ));
+      Object.keys(SidewalkRoutes).map((routeName: string) => (
+        SidewalkRoutes['SidewalkProblemScreen'].value = value
+      ));
+      this.setState({sidewalkProblem: value});
+    }
+    this.props.navigation.goBack(null);
   };
 
   _onPublicSwitchChange = () => {
@@ -313,20 +275,20 @@ class TrafficLightScreen extends React.Component {
           </TouchableOpacity>
         ))}
         <View style={{marginTop: 10}}>
-          {Object.keys(SignalRoutes).map((routeName: string) => (
+          {Object.keys(SidewalkRoutes).map((routeName: string) => (
             <TouchableOpacity
               key={routeName}
               onPress={() => {
-                const { path, params, screen } = SignalRoutes[routeName];
+                const { path, params, screen } = SidewalkRoutes[routeName];
                 const { router } = screen;
                 const action = path && router.getActionForPathAndParams(path, params);
                 this.props.navigation.navigate(
                   routeName,
                   {
-                    saveValues: this._getSignalValue,
-                    title: SignalRoutes[routeName].display,
-                    routes: SignalRoutes[routeName].routes,
-                    type: SignalRoutes[routeName].type
+                    saveValues: this._getSidewalkValue,
+                    title: SidewalkRoutes[routeName].display,
+                    routes: SidewalkRoutes[routeName].routes,
+                    type: SidewalkRoutes[routeName].type
                   },
                   action,
                 );
@@ -338,7 +300,7 @@ class TrafficLightScreen extends React.Component {
               >
                 <View style={styles.submitItem}>
                   <Text style={styles.title}>
-                    {SignalRoutes[routeName].isSet ? SignalRoutes[routeName].value : SignalRoutes[routeName].display}
+                    {SidewalkRoutes[routeName].isSet ? SidewalkRoutes[routeName].value : SidewalkRoutes[routeName].display}
                   </Text>
                   <Ionicon name="ios-arrow-forward" style={{paddingHorizontal: 3}} color="#BDBDBD" size={22}/>
                 </View>
@@ -391,12 +353,12 @@ class TrafficLightScreen extends React.Component {
   }
 }
 
-const TrafficLightStack = StackNavigator(
+const BrokenSidewalkStack = StackNavigator(
   {
     ...LocationRoute,
-    ...SignalRoutes,
+    ...SidewalkRoutes,
     Index: {
-      screen: TrafficLightScreen,
+      screen: BrokenSidewalkScreen,
     },
   },
   {
@@ -404,4 +366,4 @@ const TrafficLightStack = StackNavigator(
   }
 );
 
-export default TrafficLightStack;
+export default BrokenSidewalkStack;

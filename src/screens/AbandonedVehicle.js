@@ -7,8 +7,8 @@ import DisplayLatLng from '../components/DisplayLatLng';
 import ImageSelector from '../components/ImageSelector';
 import ContactInfo from '../components/ContactInfo';
 import Fire from '../fire';
-import TravelDirectionScreen from '../components/TravelDirection';
 import ListSelector from '../components/ListSelector';
+import ColorSelector from '../components/ColorSelector';
 
 const LocationRoute = {
   LocationScreen: {
@@ -16,54 +16,54 @@ const LocationRoute = {
   },
 };
 
-const SignalProblemRoutes = {
-  AllOut: {
-    name: 'All out',
+const VehicleTypeRoutes = {
+  TwoDoor: {
+    name: '2 Door Vehicle',
   },
-  BulbOut: {
-    name: 'Bulb Out',
+  FourDoor: {
+    name: '4 Door Vehicle',
   },
-  ConflictingSignal: {
-    name: 'Conflicting Signal',
+  Bus: {
+    name: 'Bus',
   },
-  Flashing: {
-    name: 'Flashing',
+  HeavyTruck: {
+    name: 'Heavy Truck',
   },
-  Knockdown: {
-    name: 'Knockdown',
+  Motorcycle: {
+    name: 'Motorcycle',
   },
-  SchoolFlasher: {
-    name: 'School Flasher',
+  StationWagon: {
+    name: 'Station Wagon',
   },
-  Stuck: {
-    name: 'Stuck',
+  Trailer: {
+    name: 'Trailer',
   },
-  Timing: {
-    name: 'Timing',
+  Truck: {
+    name: 'Truck',
   },
-  Other: {
-    name: 'Other',
+  Van: {
+    name: 'Van',
   },
 };
 
-const SignalRoutes = {
-  SignalProblemScreen: {
+
+const AbandonedVehicleRoutes = {
+  VehicleTypesScreen: {
     screen: ListSelector,
-    display: 'Signal Problem?',
-    type: 'problem',
+    display: 'Type?',
+    type: 'type',
     isSet: false,
     value: null,
-    routes: SignalProblemRoutes
+    routes: VehicleTypeRoutes,
   },
-  TravelDirectionScreen: {
-    screen: TravelDirectionScreen,
-    display: 'Direction of Travel?',
+  VehicleColorScreen: {
+    screen: ColorSelector,
+    display: 'Color?',
     isSet: false,
     value: null,
   },
 };
-
-class TrafficLightScreen extends React.Component {
+class AbandonedVehicleScreen extends React.Component {
   constructor(props) {
     super(props);
 
@@ -80,8 +80,9 @@ class TrafficLightScreen extends React.Component {
       lastName: null,
       email: null,
       phone: null,
-      signalDirection: null,
-      signalProblem: null,
+      vehicleColor: null,
+      vehicleType: null,
+      make: null,
     };
   }
 
@@ -89,7 +90,7 @@ class TrafficLightScreen extends React.Component {
     const { params = {} } = navigation.state;
 
     return {
-      title: "Traffic Light",
+      title: "Abandoned Vehicle",
       headerStyle: {
         backgroundColor: '#4510A2'
       },
@@ -129,11 +130,11 @@ class TrafficLightScreen extends React.Component {
   }
 
   _clearDetails = () => {
-    Object.keys(SignalRoutes).map((routeName: string) => (
-      SignalRoutes[routeName].isSet = false
+    Object.keys(AbandonedVehicleRoutes).map((routeName: string) => (
+      AbandonedVehicleRoutes[routeName].isSet = false
     ));
-    Object.keys(SignalRoutes).map((routeName: string) => (
-      SignalRoutes[routeName].value = null
+    Object.keys(AbandonedVehicleRoutes).map((routeName: string) => (
+      AbandonedVehicleRoutes[routeName].value = null
     ));
     this.setState({
       deviceId: null,
@@ -152,38 +153,18 @@ class TrafficLightScreen extends React.Component {
       lastName: null,
       email: null,
       phone: null,
-      signalDirection: null,
-      signalProblem: null,
+      vehicleColor: null,
+      vehicleType: null,
+      make: null,
     });
     this.props.navigation.goBack(null);
   };
 
   _saveDetails = () => {
-    console.log('submit report triggered for Traffic Light');
+    console.log('submit report triggered for abandoned vehicle');
     console.log(this.state);
     this.props.navigation.goBack(null);
     this._clearDetails();
-  };
-
-  _getSignalValue = (value, type) => {
-    if (type === 'direction') {
-      Object.keys(SignalRoutes).map((routeName: string, index) => (
-        SignalRoutes['TravelDirectionScreen'].isSet = true
-      ));
-      Object.keys(SignalRoutes).map((routeName: string) => (
-        SignalRoutes['TravelDirectionScreen'].value = value
-      ));
-      this.setState({signalDirection: value});
-    } else if (type === 'problem') {
-      Object.keys(SignalRoutes).map((routeName: string) => (
-        SignalRoutes['SignalProblemScreen'].isSet = true
-      ));
-      Object.keys(SignalRoutes).map((routeName: string) => (
-        SignalRoutes['SignalProblemScreen'].value = value
-      ));
-      this.setState({signalProblem: value});
-    }
-    this.props.navigation.goBack(null);
   };
 
   _getLocation = (address) => {
@@ -207,6 +188,27 @@ class TrafficLightScreen extends React.Component {
     } else {
       this.setState({ phone: value });
     }
+  };
+
+  _getVehicleValue = (value, type) => {
+    if (type === 'type') {
+      Object.keys(AbandonedVehicleRoutes).map((routeName: string, index) => (
+        AbandonedVehicleRoutes['VehicleTypesScreen'].isSet = true
+      ));
+      Object.keys(AbandonedVehicleRoutes).map((routeName: string) => (
+        AbandonedVehicleRoutes['VehicleTypesScreen'].value = value
+      ));
+      this.setState({vehicleType: value});
+    } else if (type === 'color') {
+      Object.keys(AbandonedVehicleRoutes).map((routeName: string) => (
+        AbandonedVehicleRoutes['VehicleColorScreen'].isSet = true
+      ));
+      Object.keys(AbandonedVehicleRoutes).map((routeName: string) => (
+        AbandonedVehicleRoutes['VehicleColorScreen'].value = value
+      ));
+      this.setState({vehicleColor: value});
+    }
+    this.props.navigation.goBack(null);
   };
 
   _onPublicSwitchChange = () => {
@@ -313,20 +315,28 @@ class TrafficLightScreen extends React.Component {
           </TouchableOpacity>
         ))}
         <View style={{marginTop: 10}}>
-          {Object.keys(SignalRoutes).map((routeName: string) => (
+          <TextInput
+            ref="Make"
+            style={styles.infoTextField}
+            onChangeText={(make) => this.setState({make})}
+            placeholder="Make (e.g. Ford)"
+            returnKeyType={ "done" }
+            value={this.state.make}
+          />
+          {Object.keys(AbandonedVehicleRoutes).map((routeName: string) => (
             <TouchableOpacity
               key={routeName}
               onPress={() => {
-                const { path, params, screen } = SignalRoutes[routeName];
+                const { path, params, screen } = AbandonedVehicleRoutes[routeName];
                 const { router } = screen;
                 const action = path && router.getActionForPathAndParams(path, params);
                 this.props.navigation.navigate(
                   routeName,
                   {
-                    saveValues: this._getSignalValue,
-                    title: SignalRoutes[routeName].display,
-                    routes: SignalRoutes[routeName].routes,
-                    type: SignalRoutes[routeName].type
+                    saveValues: this._getVehicleValue,
+                    title: AbandonedVehicleRoutes[routeName].display,
+                    routes: AbandonedVehicleRoutes[routeName].routes,
+                    type: AbandonedVehicleRoutes[routeName].type
                   },
                   action,
                 );
@@ -338,7 +348,7 @@ class TrafficLightScreen extends React.Component {
               >
                 <View style={styles.submitItem}>
                   <Text style={styles.title}>
-                    {SignalRoutes[routeName].isSet ? SignalRoutes[routeName].value : SignalRoutes[routeName].display}
+                    {AbandonedVehicleRoutes[routeName].isSet ? AbandonedVehicleRoutes[routeName].value : AbandonedVehicleRoutes[routeName].display}
                   </Text>
                   <Ionicon name="ios-arrow-forward" style={{paddingHorizontal: 3}} color="#BDBDBD" size={22}/>
                 </View>
@@ -391,12 +401,12 @@ class TrafficLightScreen extends React.Component {
   }
 }
 
-const TrafficLightStack = StackNavigator(
+const Stack = StackNavigator(
   {
     ...LocationRoute,
-    ...SignalRoutes,
+    ...AbandonedVehicleRoutes,
     Index: {
-      screen: TrafficLightScreen,
+      screen: AbandonedVehicleScreen,
     },
   },
   {
@@ -404,4 +414,4 @@ const TrafficLightStack = StackNavigator(
   }
 );
 
-export default TrafficLightStack;
+export default Stack;

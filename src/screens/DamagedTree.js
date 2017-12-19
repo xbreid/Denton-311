@@ -7,7 +7,6 @@ import DisplayLatLng from '../components/DisplayLatLng';
 import ImageSelector from '../components/ImageSelector';
 import ContactInfo from '../components/ContactInfo';
 import Fire from '../fire';
-import TravelDirectionScreen from '../components/TravelDirection';
 import ListSelector from '../components/ListSelector';
 
 const LocationRoute = {
@@ -16,54 +15,57 @@ const LocationRoute = {
   },
 };
 
-const SignalProblemRoutes = {
-  AllOut: {
-    name: 'All out',
+const ProblemRoutes = {
+  BicycleChainedToTree: {
+    name: 'Bicycle Chained to Tree',
   },
-  BulbOut: {
-    name: 'Bulb Out',
+  BranchesDamaged: {
+    name: 'Branches Damaged',
   },
-  ConflictingSignal: {
-    name: 'Conflicting Signal',
+  CrackedBranches: {
+    name: 'Cracked Branches',
   },
-  Flashing: {
-    name: 'Flashing',
+  FallenBranch: {
+    name: 'Fallen Branch',
   },
-  Knockdown: {
-    name: 'Knockdown',
+  FallenTree: {
+    name: 'Fallen Tree',
   },
-  SchoolFlasher: {
-    name: 'School Flasher',
+  RootsDamaged: {
+    name: 'Roots Damaged',
   },
-  Stuck: {
-    name: 'Stuck',
+  SickPoorCondition: {
+    name: 'Sick/Poor Condition'
   },
-  Timing: {
-    name: 'Timing',
+  SplitTrunk: {
+    name: 'Split Trunk'
   },
-  Other: {
-    name: 'Other',
+  TrunkDamaged: {
+    name: 'Trunk Damaged',
+  },
+  UnauthorizedTreePruning: {
+    name: 'Unauthorized Tree Pruning',
+  },
+  UnauthorizedTreeRemoval: {
+    name: 'Unauthorized Tree Removal'
+  },
+  UnstableTree: {
+    name: 'Unstable Tree'
   },
 };
 
-const SignalRoutes = {
-  SignalProblemScreen: {
+const Routes = {
+  ProblemScreen: {
     screen: ListSelector,
-    display: 'Signal Problem?',
+    display: 'Problem Type?',
     type: 'problem',
     isSet: false,
     value: null,
-    routes: SignalProblemRoutes
-  },
-  TravelDirectionScreen: {
-    screen: TravelDirectionScreen,
-    display: 'Direction of Travel?',
-    isSet: false,
-    value: null,
+    routes: ProblemRoutes,
   },
 };
 
-class TrafficLightScreen extends React.Component {
+class DamagedTreeScreen extends React.Component {
   constructor(props) {
     super(props);
 
@@ -80,8 +82,7 @@ class TrafficLightScreen extends React.Component {
       lastName: null,
       email: null,
       phone: null,
-      signalDirection: null,
-      signalProblem: null,
+      problemType: null,
     };
   }
 
@@ -89,7 +90,7 @@ class TrafficLightScreen extends React.Component {
     const { params = {} } = navigation.state;
 
     return {
-      title: "Traffic Light",
+      title: "Damaged Tree",
       headerStyle: {
         backgroundColor: '#4510A2'
       },
@@ -129,11 +130,11 @@ class TrafficLightScreen extends React.Component {
   }
 
   _clearDetails = () => {
-    Object.keys(SignalRoutes).map((routeName: string) => (
-      SignalRoutes[routeName].isSet = false
+    Object.keys(Routes).map((routeName: string) => (
+      Routes[routeName].isSet = false
     ));
-    Object.keys(SignalRoutes).map((routeName: string) => (
-      SignalRoutes[routeName].value = null
+    Object.keys(Routes).map((routeName: string) => (
+      Routes[routeName].value = null
     ));
     this.setState({
       deviceId: null,
@@ -152,38 +153,16 @@ class TrafficLightScreen extends React.Component {
       lastName: null,
       email: null,
       phone: null,
-      signalDirection: null,
-      signalProblem: null,
+      problemType: null,
     });
     this.props.navigation.goBack(null);
   };
 
   _saveDetails = () => {
-    console.log('submit report triggered for Traffic Light');
+    console.log('submit report triggered for Damaged Tree');
     console.log(this.state);
     this.props.navigation.goBack(null);
     this._clearDetails();
-  };
-
-  _getSignalValue = (value, type) => {
-    if (type === 'direction') {
-      Object.keys(SignalRoutes).map((routeName: string, index) => (
-        SignalRoutes['TravelDirectionScreen'].isSet = true
-      ));
-      Object.keys(SignalRoutes).map((routeName: string) => (
-        SignalRoutes['TravelDirectionScreen'].value = value
-      ));
-      this.setState({signalDirection: value});
-    } else if (type === 'problem') {
-      Object.keys(SignalRoutes).map((routeName: string) => (
-        SignalRoutes['SignalProblemScreen'].isSet = true
-      ));
-      Object.keys(SignalRoutes).map((routeName: string) => (
-        SignalRoutes['SignalProblemScreen'].value = value
-      ));
-      this.setState({signalProblem: value});
-    }
-    this.props.navigation.goBack(null);
   };
 
   _getLocation = (address) => {
@@ -207,6 +186,19 @@ class TrafficLightScreen extends React.Component {
     } else {
       this.setState({ phone: value });
     }
+  };
+
+  _getValue = (value, type) => {
+    if (type === 'problem') {
+      Object.keys(Routes).map((routeName: string, index) => (
+        Routes['ProblemScreen'].isSet = true
+      ));
+      Object.keys(Routes).map((routeName: string) => (
+        Routes['ProblemScreen'].value = value
+      ));
+      this.setState({problemType: value});
+    }
+    this.props.navigation.goBack(null);
   };
 
   _onPublicSwitchChange = () => {
@@ -313,20 +305,20 @@ class TrafficLightScreen extends React.Component {
           </TouchableOpacity>
         ))}
         <View style={{marginTop: 10}}>
-          {Object.keys(SignalRoutes).map((routeName: string) => (
+          {Object.keys(Routes).map((routeName: string) => (
             <TouchableOpacity
               key={routeName}
               onPress={() => {
-                const { path, params, screen } = SignalRoutes[routeName];
+                const { path, params, screen } = Routes[routeName];
                 const { router } = screen;
                 const action = path && router.getActionForPathAndParams(path, params);
                 this.props.navigation.navigate(
                   routeName,
                   {
-                    saveValues: this._getSignalValue,
-                    title: SignalRoutes[routeName].display,
-                    routes: SignalRoutes[routeName].routes,
-                    type: SignalRoutes[routeName].type
+                    saveValues: this._getValue,
+                    title: Routes[routeName].display,
+                    routes: Routes[routeName].routes,
+                    type: Routes[routeName].type
                   },
                   action,
                 );
@@ -338,7 +330,7 @@ class TrafficLightScreen extends React.Component {
               >
                 <View style={styles.submitItem}>
                   <Text style={styles.title}>
-                    {SignalRoutes[routeName].isSet ? SignalRoutes[routeName].value : SignalRoutes[routeName].display}
+                    {Routes[routeName].isSet ? Routes[routeName].value : Routes[routeName].display}
                   </Text>
                   <Ionicon name="ios-arrow-forward" style={{paddingHorizontal: 3}} color="#BDBDBD" size={22}/>
                 </View>
@@ -352,7 +344,6 @@ class TrafficLightScreen extends React.Component {
           placeholder="Additional Details (optional)"
           value={this.state.additionalDetails}
           multiline={true}
-          //returnKeyType={ "next" }
         />
         <SafeAreaView
           style={styles.itemContainer}
@@ -391,12 +382,12 @@ class TrafficLightScreen extends React.Component {
   }
 }
 
-const TrafficLightStack = StackNavigator(
+const Stack = StackNavigator(
   {
     ...LocationRoute,
-    ...SignalRoutes,
+    ...Routes,
     Index: {
-      screen: TrafficLightScreen,
+      screen: DamagedTreeScreen,
     },
   },
   {
@@ -404,4 +395,4 @@ const TrafficLightStack = StackNavigator(
   }
 );
 
-export default TrafficLightStack;
+export default Stack;

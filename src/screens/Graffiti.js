@@ -7,7 +7,6 @@ import DisplayLatLng from '../components/DisplayLatLng';
 import ImageSelector from '../components/ImageSelector';
 import ContactInfo from '../components/ContactInfo';
 import Fire from '../fire';
-import TravelDirectionScreen from '../components/TravelDirection';
 import ListSelector from '../components/ListSelector';
 
 const LocationRoute = {
@@ -16,54 +15,86 @@ const LocationRoute = {
   },
 };
 
-const SignalProblemRoutes = {
-  AllOut: {
-    name: 'All out',
+const OnRoutes = {
+  Hydrant: {
+    name: 'Hydrant',
   },
-  BulbOut: {
-    name: 'Bulb Out',
+  Mailbox: {
+    name: 'Mailbox',
   },
-  ConflictingSignal: {
-    name: 'Conflicting Signal',
+  Rail: {
+    name: 'Rail',
   },
-  Flashing: {
-    name: 'Flashing',
+  DrivewaySidewalk: {
+    name: 'Driveway / Sidewalk',
   },
-  Knockdown: {
-    name: 'Knockdown',
+  ParkingMeters: {
+    name: 'Parking Meters',
   },
-  SchoolFlasher: {
-    name: 'School Flasher',
+  Wall: {
+    name: 'Wall',
   },
-  Stuck: {
-    name: 'Stuck',
+  Building: {
+    name: 'Building'
   },
-  Timing: {
-    name: 'Timing',
+  FenceWired: {
+    name: 'Fence-Wired'
+  },
+  FenceWooden: {
+    name: 'Fence-Wooden',
+  },
+  Pole: {
+    name: 'Pole',
+  },
+  BusStop: {
+    name: 'Bus Stop'
+  },
+};
+
+const SurfaceTypeRoutes = {
+  Concrete: {
+    name: 'Concrete',
+  },
+  WoodenClapboard: {
+    name: 'Wooden Clapboard',
+  },
+  Metal: {
+    name: 'Metal',
+  },
+  BrickCinderBlock: {
+    name: 'Brick / Cinderblock',
+  },
+  Stucco: {
+    name: 'Stucco',
+  },
+  Wood: {
+    name: 'Wood',
   },
   Other: {
-    name: 'Other',
+    name: 'Other'
   },
 };
 
-const SignalRoutes = {
-  SignalProblemScreen: {
+const Routes = {
+  OnScreen: {
     screen: ListSelector,
-    display: 'Signal Problem?',
-    type: 'problem',
+    display: 'On?',
+    type: 'on',
     isSet: false,
     value: null,
-    routes: SignalProblemRoutes
+    routes: OnRoutes,
   },
-  TravelDirectionScreen: {
-    screen: TravelDirectionScreen,
-    display: 'Direction of Travel?',
+  SurfaceTypeScreen: {
+    screen: ListSelector,
+    display: 'Surface Type?',
+    type: 'surface',
     isSet: false,
     value: null,
+    routes: SurfaceTypeRoutes,
   },
 };
 
-class TrafficLightScreen extends React.Component {
+class GraffitiScreen extends React.Component {
   constructor(props) {
     super(props);
 
@@ -80,8 +111,9 @@ class TrafficLightScreen extends React.Component {
       lastName: null,
       email: null,
       phone: null,
-      signalDirection: null,
-      signalProblem: null,
+      onType: null,
+      surfaceType: null,
+      heightFromGround: null,
     };
   }
 
@@ -89,7 +121,7 @@ class TrafficLightScreen extends React.Component {
     const { params = {} } = navigation.state;
 
     return {
-      title: "Traffic Light",
+      title: "Graffiti",
       headerStyle: {
         backgroundColor: '#4510A2'
       },
@@ -129,11 +161,11 @@ class TrafficLightScreen extends React.Component {
   }
 
   _clearDetails = () => {
-    Object.keys(SignalRoutes).map((routeName: string) => (
-      SignalRoutes[routeName].isSet = false
+    Object.keys(Routes).map((routeName: string) => (
+      Routes[routeName].isSet = false
     ));
-    Object.keys(SignalRoutes).map((routeName: string) => (
-      SignalRoutes[routeName].value = null
+    Object.keys(Routes).map((routeName: string) => (
+      Routes[routeName].value = null
     ));
     this.setState({
       deviceId: null,
@@ -152,38 +184,16 @@ class TrafficLightScreen extends React.Component {
       lastName: null,
       email: null,
       phone: null,
-      signalDirection: null,
-      signalProblem: null,
+      onType: null,
     });
     this.props.navigation.goBack(null);
   };
 
   _saveDetails = () => {
-    console.log('submit report triggered for Traffic Light');
+    console.log('submit report triggered for Graffiti');
     console.log(this.state);
     this.props.navigation.goBack(null);
     this._clearDetails();
-  };
-
-  _getSignalValue = (value, type) => {
-    if (type === 'direction') {
-      Object.keys(SignalRoutes).map((routeName: string, index) => (
-        SignalRoutes['TravelDirectionScreen'].isSet = true
-      ));
-      Object.keys(SignalRoutes).map((routeName: string) => (
-        SignalRoutes['TravelDirectionScreen'].value = value
-      ));
-      this.setState({signalDirection: value});
-    } else if (type === 'problem') {
-      Object.keys(SignalRoutes).map((routeName: string) => (
-        SignalRoutes['SignalProblemScreen'].isSet = true
-      ));
-      Object.keys(SignalRoutes).map((routeName: string) => (
-        SignalRoutes['SignalProblemScreen'].value = value
-      ));
-      this.setState({signalProblem: value});
-    }
-    this.props.navigation.goBack(null);
   };
 
   _getLocation = (address) => {
@@ -207,6 +217,27 @@ class TrafficLightScreen extends React.Component {
     } else {
       this.setState({ phone: value });
     }
+  };
+
+  _getValue = (value, type) => {
+    if (type === 'on') {
+      Object.keys(Routes).map((routeName: string, index) => (
+        Routes['OnScreen'].isSet = true
+      ));
+      Object.keys(Routes).map((routeName: string) => (
+        Routes['OnScreen'].value = value
+      ));
+      this.setState({onType: value});
+    } else if (type === 'surface') {
+      Object.keys(Routes).map((routeName: string, index) => (
+        Routes['SurfaceTypeScreen'].isSet = true
+      ));
+      Object.keys(Routes).map((routeName: string) => (
+        Routes['SurfaceTypeScreen'].value = value
+      ));
+      this.setState({surfaceType: value});
+    }
+    this.props.navigation.goBack(null);
   };
 
   _onPublicSwitchChange = () => {
@@ -313,20 +344,20 @@ class TrafficLightScreen extends React.Component {
           </TouchableOpacity>
         ))}
         <View style={{marginTop: 10}}>
-          {Object.keys(SignalRoutes).map((routeName: string) => (
+          {Object.keys(Routes).map((routeName: string) => (
             <TouchableOpacity
               key={routeName}
               onPress={() => {
-                const { path, params, screen } = SignalRoutes[routeName];
+                const { path, params, screen } = Routes[routeName];
                 const { router } = screen;
                 const action = path && router.getActionForPathAndParams(path, params);
                 this.props.navigation.navigate(
                   routeName,
                   {
-                    saveValues: this._getSignalValue,
-                    title: SignalRoutes[routeName].display,
-                    routes: SignalRoutes[routeName].routes,
-                    type: SignalRoutes[routeName].type
+                    saveValues: this._getValue,
+                    title: Routes[routeName].display,
+                    routes: Routes[routeName].routes,
+                    type: Routes[routeName].type
                   },
                   action,
                 );
@@ -338,13 +369,19 @@ class TrafficLightScreen extends React.Component {
               >
                 <View style={styles.submitItem}>
                   <Text style={styles.title}>
-                    {SignalRoutes[routeName].isSet ? SignalRoutes[routeName].value : SignalRoutes[routeName].display}
+                    {Routes[routeName].isSet ? Routes[routeName].value : Routes[routeName].display}
                   </Text>
                   <Ionicon name="ios-arrow-forward" style={{paddingHorizontal: 3}} color="#BDBDBD" size={22}/>
                 </View>
               </SafeAreaView>
             </TouchableOpacity>
           ))}
+          <TextInput
+            style={{height: 40, backgroundColor: 'white', fontSize: 16, marginBottom: 10, paddingHorizontal: 20}}
+            onChangeText={(heightFromGround) => this.setState({heightFromGround})}
+            placeholder="Height from ground (optional)"
+            value={this.state.heightFromGround}
+          />
         </View>
         <TextInput
           style={{height: 40, backgroundColor: 'white', fontSize: 16, marginVertical: 10, paddingHorizontal: 20, paddingTop: 10}}
@@ -352,7 +389,6 @@ class TrafficLightScreen extends React.Component {
           placeholder="Additional Details (optional)"
           value={this.state.additionalDetails}
           multiline={true}
-          //returnKeyType={ "next" }
         />
         <SafeAreaView
           style={styles.itemContainer}
@@ -391,12 +427,12 @@ class TrafficLightScreen extends React.Component {
   }
 }
 
-const TrafficLightStack = StackNavigator(
+const Stack = StackNavigator(
   {
     ...LocationRoute,
-    ...SignalRoutes,
+    ...Routes,
     Index: {
-      screen: TrafficLightScreen,
+      screen: GraffitiScreen,
     },
   },
   {
@@ -404,4 +440,4 @@ const TrafficLightStack = StackNavigator(
   }
 );
 
-export default TrafficLightStack;
+export default Stack;

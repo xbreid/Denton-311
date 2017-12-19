@@ -12,6 +12,15 @@ import PotholeScreen from './Pothole';
 import StreetSignScreen from './StreetSign';
 import TrafficLightScreen from './TrafficLight';
 import StreetLightScreen from './StreetLight';
+import BrokenSidewalkScreen from './BrokenSidewalk';
+import FireHydrantScreen from './FireHydrant';
+import AbandonedVehicleScreen from './AbandonedVehicle';
+import BlockedDrivewayScreen from './BlockedDriveway';
+import IllegalParkingScreen from './IllegalParking';
+import ParkingMeterScreen from './ParkingMeter';
+import DamagedTreeScreen from './DamagedTree';
+import IllegalDumpingScreen from './IllegalDumping';
+import GraffitiScreen from './Graffiti';
 
 const Animals = {
   DeadAnimal: {
@@ -77,7 +86,7 @@ const StreetsSidewalks = {
   BrokenSidewalk: {
     name: 'Broken Sidewalk',
     image: require('../../assets/images/crossing.png'),
-    screen: TestClassScreen,
+    screen: BrokenSidewalkScreen,
     navigationOptions: ({navigation}) => ({
       header: null,
     }),
@@ -85,7 +94,7 @@ const StreetsSidewalks = {
   FireHydrant: {
     name: 'Fire Hydrant',
     image: require('../../assets/images/fire-hydrant.png'),
-    screen: TestClassScreen,
+    screen: FireHydrantScreen,
     navigationOptions: ({navigation}) => ({
       header: null,
     }),
@@ -96,7 +105,7 @@ const ParkingVehicles = {
   AbandonedVehicle: {
     name: 'Abandoned Vehicle',
     image: require('../../assets/images/abandoned.png'),
-    screen: TestClassScreen,
+    screen: AbandonedVehicleScreen,
     navigationOptions: ({navigation}) => ({
       header: null,
     }),
@@ -104,7 +113,7 @@ const ParkingVehicles = {
   BlockedDriveway: {
     name: 'Blocked Driveway',
     image: require('../../assets/images/blocked-sign.png'),
-    screen: TestClassScreen,
+    screen: BlockedDrivewayScreen,
     navigationOptions: ({navigation}) => ({
       header: null,
     }),
@@ -112,7 +121,7 @@ const ParkingVehicles = {
   IllegalParking: {
     name: 'Illegal Parking',
     image: require('../../assets/images/no-parking-sign.png'),
-    screen: TestClassScreen,
+    screen: IllegalParkingScreen,
     navigationOptions: ({navigation}) => ({
       header: null,
     }),
@@ -120,7 +129,7 @@ const ParkingVehicles = {
   ParkingMeter: {
     name: 'Parking Meter',
     image: require('../../assets/images/parking-meter.png'),
-    screen: TestClassScreen,
+    screen: ParkingMeterScreen,
     navigationOptions: ({navigation}) => ({
       header: null,
     }),
@@ -131,7 +140,7 @@ const TreesPark = {
   DamagedTree: {
     name: 'Damaged Tree',
     image: require('../../assets/images/tree-silhouette.png'),
-    screen: TestClassScreen,
+    screen: DamagedTreeScreen,
     navigationOptions: ({navigation}) => ({
       header: null,
     }),
@@ -142,15 +151,15 @@ const Sanitation = {
   IllegalDumping: {
     name: 'Illegal Dumping',
     image: require('../../assets/images/trash.png'),
-    screen: TestClassScreen,
+    screen: IllegalDumpingScreen,
     navigationOptions: ({navigation}) => ({
       header: null,
     }),
   },
-  BuildingGraffiti: {
-    name: 'Building Graffiti',
+  Graffiti: {
+    name: 'Graffiti',
     image: require('../../assets/images/spray.png'),
-    screen: TestClassScreen,
+    screen: GraffitiScreen,
     navigationOptions: ({navigation}) => ({
       header: null,
     }),
@@ -232,6 +241,7 @@ const MainStack = StackNavigator(
     ...Animals,
     ...StreetsSidewalks,
     ...ParkingVehicles,
+    ...TreesPark,
     ...Sanitation,
     Index: {
       screen: RequestScreen,

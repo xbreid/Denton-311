@@ -165,7 +165,7 @@ class StreetSignScreen extends React.Component {
       userId: null,
       userIsAnon: null,
       issueId: null,
-      text: null,
+      additionalDetails: null,
       address: null,
       imageOne: null,
       imageTwo: null,
@@ -373,11 +373,11 @@ class StreetSignScreen extends React.Component {
         </View>
         <TextInput
           style={{height: 40, backgroundColor: 'white', fontSize: 16, marginVertical: 10, paddingHorizontal: 20, paddingTop: 10}}
-          onChangeText={(text) => this.setState({text})}
+          onChangeText={(additionalDetails) => this.setState({additionalDetails})}
           placeholder="Additional Details (optional)"
           value={this.state.additionalDetails}
           multiline={true}
-          returnKeyType={ "next" }
+          //returnKeyType={ "next" }
         />
         <SafeAreaView
           style={styles.itemContainer}
