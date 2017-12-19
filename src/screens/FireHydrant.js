@@ -161,7 +161,7 @@ class FireHydrantScreen extends React.Component {
     }
   };
 
-  _getSidewalkValue = (value, type) => {
+  _getValue = (value, type) => {
     if (type === 'problem') {
       Object.keys(FireHydrantRoutes).map((routeName: string, index) => (
         FireHydrantRoutes['FireHydrantProblemScreen'].isSet = true
@@ -288,7 +288,7 @@ class FireHydrantScreen extends React.Component {
                 this.props.navigation.navigate(
                   routeName,
                   {
-                    saveValues: this._getSidewalkValue,
+                    saveValues: this._getValue,
                     title: FireHydrantRoutes[routeName].display,
                     routes: FireHydrantRoutes[routeName].routes,
                     type: FireHydrantRoutes[routeName].type
