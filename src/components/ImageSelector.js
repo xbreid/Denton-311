@@ -21,6 +21,7 @@ export default class ImageSelector extends React.Component {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       aspect: [4, 3],
+      base64: true,
     });
 
     console.log(result);
@@ -28,23 +29,23 @@ export default class ImageSelector extends React.Component {
     if (!result.cancelled) {
       if (!this.state.imageOne) {
         this.setState({ imageOne: result.uri });
-        this.props.saveImage(result.uri, 1);
+        this.props.saveImage(result.base64, 1);
       } else if (!this.state.imageTwo) {
         this.setState({ imageTwo: result.uri });
-        this.props.saveImage(result.uri, 2);
+        this.props.saveImage(result.base64, 2);
       } else if (!this.state.imageThee && this.state.imageIndex === 0) {
         this.setState({ imageThree: result.uri, imageIndex: 1 });
-        this.props.saveImage(result.uri, 3);
+        this.props.saveImage(result.base64, 3);
       } else {
         if (this.state.imageIndex === 1) {
           this.setState({ imageOne: result.uri, imageIndex: this.state.imageIndex + 1 });
-          this.props.saveImage(result.uri, 1);
+          this.props.saveImage(result.base64, 1);
         } else if (this.state.imageIndex === 2) {
           this.setState({ imageTwo: result.uri, imageIndex: this.state.imageIndex + 1 });
-          this.props.saveImage(result.uri, 2);
+          this.props.saveImage(result.base64, 2);
         } else {
           this.setState({ imageThree: result.uri, imageIndex: 1 });
-          this.props.saveImage(result.uri, 3);
+          this.props.saveImage(result.base64, 3);
         }
       }
     }
@@ -54,6 +55,7 @@ export default class ImageSelector extends React.Component {
     let result = await ImagePicker.launchCameraAsync({
       allowsEditing: false,
       aspect: [4, 3],
+      base64: true,
     });
 
     console.log(result);
@@ -61,23 +63,23 @@ export default class ImageSelector extends React.Component {
     if (!result.cancelled) {
       if (!this.state.imageOne) {
         this.setState({ imageOne: result.uri });
-        this.props.saveImage(result.uri, 1);
+        this.props.saveImage(result.base64, 1);
       } else if (!this.state.imageTwo) {
         this.setState({ imageTwo: result.uri });
-        this.props.saveImage(result.uri, 2);
+        this.props.saveImage(result.base64, 2);
       } else if (!this.state.imageThee && this.state.imageIndex === 0) {
         this.setState({ imageThree: result.uri, imageIndex: 1 });
-        this.props.saveImage(result.uri, 3);
+        this.props.saveImage(result.base64, 3);
       } else {
         if (this.state.imageIndex === 1) {
           this.setState({ imageOne: result.uri, imageIndex: this.state.imageIndex + 1 });
-          this.props.saveImage(result.uri, 1);
+          this.props.saveImage(result.base64, 1);
         } else if (this.state.imageIndex === 2) {
           this.setState({ imageTwo: result.uri, imageIndex: this.state.imageIndex + 1 });
-          this.props.saveImage(result.uri, 2);
+          this.props.saveImage(result.base64, 2);
         } else {
           this.setState({ imageThree: result.uri, imageIndex: 1 });
-          this.props.saveImage(result.uri, 3);
+          this.props.saveImage(result.base64, 3);
         }
       }
     }
