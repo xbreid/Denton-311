@@ -9,6 +9,7 @@ import ContactInfo from '../components/ContactInfo';
 import Fire from '../fire';
 import ListSelector from '../components/ListSelector';
 import ColorSelector from '../components/ColorSelector';
+import moment from 'moment';
 
 const LocationRoute = {
   LocationScreen: {
@@ -68,7 +69,9 @@ class AbandonedVehicleScreen extends React.Component {
     super(props);
 
     this.state = {
+      deviceId: null,
       additionalDetails: null,
+      dateCreated: null,
       address: null,
       imageOne: null,
       imageTwo: null,
@@ -121,6 +124,7 @@ class AbandonedVehicleScreen extends React.Component {
         deviceId: Expo.Constants.deviceId,
         userIsAnon: user.isAnonymous,
         userId: user.uid,
+        dateCreated: moment().format(),
       });
     });
     this.props.navigation.setParams({
@@ -138,6 +142,7 @@ class AbandonedVehicleScreen extends React.Component {
     ));
     this.setState({
       deviceId: null,
+      dateCreated: null,
       userId: null,
       userIsAnon: null,
       issueId: null,

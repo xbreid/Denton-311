@@ -8,6 +8,7 @@ import ImageSelector from '../components/ImageSelector';
 import ContactInfo from '../components/ContactInfo';
 import Fire from '../fire';
 import ListSelector from '../components/ListSelector';
+import moment from 'moment';
 
 const LocationRoute = {
   LocationScreen: {
@@ -41,6 +42,8 @@ class IllegalDumpingScreen extends React.Component {
 
     this.state = {
       additionalDetails: null,
+      dateCreated: null,
+      deviceId: null,
       address: null,
       imageOne: null,
       imageTwo: null,
@@ -92,6 +95,7 @@ class IllegalDumpingScreen extends React.Component {
         deviceId: Expo.Constants.deviceId,
         userIsAnon: user.isAnonymous,
         userId: user.uid,
+        dateCreated: moment().format(),
       });
     });
     this.props.navigation.setParams({
@@ -109,6 +113,7 @@ class IllegalDumpingScreen extends React.Component {
     ));
     this.setState({
       deviceId: null,
+      dateCreated: null,
       userId: null,
       userIsAnon: null,
       issueId: null,

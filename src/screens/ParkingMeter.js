@@ -8,6 +8,7 @@ import ImageSelector from '../components/ImageSelector';
 import ContactInfo from '../components/ContactInfo';
 import Fire from '../fire';
 import ListSelector from '../components/ListSelector';
+import moment from 'moment';
 
 const LocationRoute = {
   LocationScreen: {
@@ -110,6 +111,7 @@ class ParkingMeterScreen extends React.Component {
         deviceId: Expo.Constants.deviceId,
         userIsAnon: user.isAnonymous,
         userId: user.uid,
+        dateCreated: moment().format(),
       });
     });
     this.props.navigation.setParams({
