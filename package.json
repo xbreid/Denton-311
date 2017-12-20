@@ -21,6 +21,7 @@
   "dependencies": {
     "expo": "^23.0.0",
     "firebase": "^4.7.0",
+    "moment": "^2.20.1",
     "react": "16.0.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-23.0.0.tar.gz",
     "react-native-image-picker": "^0.26.7",
