@@ -5,7 +5,8 @@ import { Platform, Dimensions, StyleSheet, Text, View, Alert,
 import { ScreenOrientation } from 'expo';
 import { SafeAreaView, StackNavigator, NavigationActions } from 'react-navigation';
 import { ImagePicker, Permissions, MapView, Location } from 'expo';
-
+import ActionButton from 'react-native-action-button';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const { width, height } = Dimensions.get('window');
 
@@ -208,7 +209,10 @@ export default class DisplayLatLng extends React.Component {
         margin: 7,
         borderRadius: 3,
         textAlign: 'center'
-      }
+      },
+      actionButtonIcon: {
+        color: '#333',
+      },
     });
 
     let isLocationError = false;
@@ -246,19 +250,13 @@ export default class DisplayLatLng extends React.Component {
             />
           </View>
         </SafeAreaView>
-        <View style={[styles.bubble, styles.latlng]}>
-          <Text style={{ textAlign: 'center' }}>
-            {this.state.region.latitude.toPrecision(7)},
-            {this.state.region.longitude.toPrecision(7)}
-          </Text>
-        </View>
-        <View style={[styles.bubble, styles.latlng]}>
-          <TouchableOpacity onPress={() => this._getLocationAsync()}>
-            <Text style={{ textAlign: 'center' }}>
-              Get Location
-            </Text>
-          </TouchableOpacity>
-        </View>
+        {/* Rest of the app comes ABOVE the action button component !*/}
+          <ActionButton
+            icon={<Icon name="md-locate" size="25" style={styles.actionButtonIcon} />}
+            buttonColor='#f3f3f3'
+            onPress={() => this._getLocationAsync()}
+            position="right"
+          />
         <View style={[styles.bubble, styles.latlng, {display: isLocationError ? '' : 'none'}]}>
           <Text style={{ textAlign: 'center' }}>
             {isLocationError ? this.state.errorMessage : ''}
