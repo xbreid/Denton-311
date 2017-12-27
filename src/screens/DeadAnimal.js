@@ -198,7 +198,6 @@ class DeadAnimalScreen extends React.Component {
   getLatestIssueId() {
     return Fire.database().ref().child('reports').limitToLast(1).on('value', (snapshot) => {
       snapshot.forEach((child) => {
-        console.log(child.val().reportNumber);
         this.setState({reportNumber: child.val().reportNumber});
       });
       if (!snapshot) {
@@ -280,20 +279,22 @@ class DeadAnimalScreen extends React.Component {
   };
 
   _saveDetails = () => {
-    console.log('submit report triggered for dead animal');
-    console.log(this.state);
-    this.writeNewReport();
-    this.props.navigation.goBack(null);
-    this._clearDetails();
+    if (this.state.location) {
+      this.writeNewReport();
+      this.props.navigation.goBack(null);
+      this._clearDetails();
+    }
   };
 
   _getLocation = (address) => {
-    let addressString = address[0].name.toString() + ", " + address[0].city.toString();
-    this.setState({
-      location: address,
-      address: addressString,
-    });
-    this.props.navigation.goBack(null);
+    if (address) {
+      let addressString = address[0].name.toString() + ", " + address[0].city.toString();
+      this.setState({
+        location: address,
+        address: addressString,
+      });
+      this.props.navigation.goBack(null);
+    }
   };
 
   _getContactInfo = (value, type) => {
