@@ -8,7 +8,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 export default class ImageSelector extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       imageOne: null,
       imageTwo: null,

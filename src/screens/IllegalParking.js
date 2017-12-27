@@ -70,6 +70,7 @@ class IllegalParkingScreen extends React.Component {
       phone: null,
       parkingViolation: null,
       recurringProblem: false,
+      reportNumber: null,
     };
   }
 
@@ -115,6 +116,59 @@ class IllegalParkingScreen extends React.Component {
       handleSave: this._saveDetails,
       handleCancel: this._clearDetails,
     });
+    this.getLatestIssueId();
+  }
+
+  // might be a bug here
+  // if there is no query back for some reason, the report number will default to 0
+  getLatestIssueId() {
+    return Fire.database().ref().child('reports').limitToLast(1).on('value', (snapshot) => {
+      snapshot.forEach((child) => {
+        this.setState({reportNumber: child.val().reportNumber});
+      });
+      if (!snapshot) {
+        this.setState({reportNumber: 0});
+      }
+
+    });
+  }
+
+  writeNewReport() {
+    reportNum = this.state.reportNumber + 1;
+
+    // A report entry.
+    let reportData = {
+      title: 'Illegal Parking',
+      deviceId: this.state.deviceId,
+      dateCreated: this.state.dateCreated,
+      uid: Fire.auth().currentUser.uid,
+      userIsAnon: this.state.userIsAnon,
+      reportNumber: reportNum,
+      additionalDetails: this.state.additionalDetails,
+      address: this.state.address,
+      imageOne: this.state.imageOne,
+      imageTwo: this.state.imageTwo,
+      imageThree: this.state.imageThree,
+      location: this.state.location,
+      submitPublicly: this.state.publicSwitch,
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      email: this.state.email,
+      phone: this.state.phone,
+      parkingViolation: this.state.parkingViolation,
+      recurringProblem: this.state.recurringProblem,
+      status: 'submitted'
+    };
+
+    // Get a key for a new Post.
+    let newReportKey = Fire.database().ref().child('reports').push().key;
+
+    // Write the new post's data simultaneously in the posts list and the user's post list.
+    let updates = {};
+    updates['/reports/' + newReportKey] = reportData;
+    updates['/user-reports/' + this.state.userId + '/' + newReportKey] = reportData;
+
+    return Fire.database().ref().update(updates);
   }
 
   _clearDetails = () => {
@@ -143,6 +197,7 @@ class IllegalParkingScreen extends React.Component {
       phone: null,
       parkingViolation: null,
       recurringProblem: false,
+      reportNumber: null,
     });
     this.props.navigation.goBack(null);
   };
@@ -150,6 +205,7 @@ class IllegalParkingScreen extends React.Component {
   _saveDetails = () => {
     console.log('submit report triggered for Illegal Parking');
     console.log(this.state);
+    this.writeNewReport();
     this.props.navigation.goBack(null);
     this._clearDetails();
   };
