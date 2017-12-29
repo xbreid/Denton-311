@@ -45,23 +45,33 @@ export default class Report extends React.Component {
 
   render() {
     const styles = StyleSheet.create({
-
+      titleContainer: {
+        paddingHorizontal: 15,
+        paddingVertical: 15,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+      }
     });
 
 
     return (
-      <View style={{ paddingHorizontal: 15,
-        paddingVertical: 15,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'}}>
-        <Text >
-          {this.state.report.title}
-        </Text>
-        <Text >
-          {'#' + this.state.report.reportNumber}
-        </Text>
-      </View>
+      <ScrollView>
+        <View style={styles.titleContainer}>
+          <Text >
+            {this.state.report.title}
+          </Text>
+          <Text >
+            {'#' + this.state.report.reportNumber}
+          </Text>
+        </View>
+        <View style={{alignItems: 'center', marginHorizontal: 20, marginVertical: 15}}>
+          <Text >
+            {!this.state.report.additionalDetails ? '' : this.state.report.additionalDetails}
+            {' ' + this.state.report.address}
+          </Text>
+        </View>
+      </ScrollView>
     );
   }
 }
