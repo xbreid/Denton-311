@@ -110,7 +110,7 @@ class ReportMap extends React.Component {
     super(props);
 
     this.state = {
-      reports: [],
+      reports: []
     }
   }
 
@@ -120,29 +120,14 @@ class ReportMap extends React.Component {
 
   getLatest100Reports() {
     return Fire.database().ref().child('reports').limitToLast(100).on('value', (snapshot) => {
-      let temp = [];
+      let reports= [];
       snapshot.forEach((child) => {
-        temp.unshift(child.val());
+        reports.unshift(child.val());
       });
-      this.setState({ reports: temp });
+      this.setState({ reports: reports });
     });
   }
 
-  async _geocodeCoords(address) {
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status !== 'granted') {
-      this.setState({
-        errorMessage: 'Permission to access location was denied',
-      });
-    }
-
-    let geocodeCoords = await Location.geocodeAsync(address);
-    return {
-      latitude: geocodeCoords[0].latitude,
-      longitude: geocodeCoords[0].longitude
-    };
-    //this.props.navigation.setParams({ address: geocodeAddress});
-  };
 
   render() {
     const styles = StyleSheet.create({
@@ -186,9 +171,9 @@ class ReportMap extends React.Component {
       >
         {Array.from(this.state.reports).map((report, index, arr) => (
           <MapView.Marker
-            coordinate={cords}
-            title='issue name'
-            description='address'
+            coordinate={report.coords}
+            title={report.title}
+            description={report.address}
             onCalloutPress={() => {
               const { path, params, screen } = ReportRoute['ReportScreen'];
               const { router } = screen;
