@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, ScrollView, View } from 'react-native';
 import { SafeAreaView, StackNavigator, TabNavigator } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { MapView } from 'expo';
+import { MapView, Permissions, Location } from 'expo';
 import Fire from '../fire';
 import ReportTemplate from '../components/Report';
 import moment from 'moment';
@@ -105,24 +105,102 @@ class ReportList extends React.Component {
   }
 }
 
-const MapTab = ({ navigation }) => (
-  <MapView
-    style={{ flex: 1 }}
-    initialRegion={{
-      latitude: 33.2543416,
-      longitude: -97.15247219999998,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    }}
-  >
-    <MapView.Marker
-      coordinate={cords}
-      title='issue name'
-      description='address'
-      onPress={() => navigation.navigate('ParkingLot')}
-    />
-  </MapView>
-);
+class ReportMap extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      reports: [],
+    }
+  }
+
+  componentDidMount() {
+    this.getLatest100Reports();
+  }
+
+  getLatest100Reports() {
+    return Fire.database().ref().child('reports').limitToLast(100).on('value', (snapshot) => {
+      let temp = [];
+      snapshot.forEach((child) => {
+        temp.unshift(child.val());
+      });
+      this.setState({ reports: temp });
+    });
+  }
+
+  async _geocodeCoords(address) {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      this.setState({
+        errorMessage: 'Permission to access location was denied',
+      });
+    }
+
+    let geocodeCoords = await Location.geocodeAsync(address);
+    return {
+      latitude: geocodeCoords[0].latitude,
+      longitude: geocodeCoords[0].longitude
+    };
+    //this.props.navigation.setParams({ address: geocodeAddress});
+  };
+
+  render() {
+    const styles = StyleSheet.create({
+      item: {
+        paddingHorizontal: 20,
+        paddingVertical: 25,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flex: 1,
+        alignSelf: 'flex-start'
+      },
+      itemContainer: {
+        backgroundColor: '#fff',
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderBottomColor: '#ddd',
+      },
+      title: {
+        fontSize: 20,
+        color: '#444',
+      },
+      infoTextField: {
+        height: 40,
+        backgroundColor: 'white',
+        fontSize: 16,
+        paddingLeft: 20,
+        borderWidth: StyleSheet.hairlineWidth,
+        borderColor: '#ddd',
+      }
+    });
+
+    return (
+      <MapView
+        style={{ flex: 1 }}
+        initialRegion={{
+          latitude: 33.2543416,
+          longitude: -97.15247219999998,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
+      >
+        {Array.from(this.state.reports).map((report, index, arr) => (
+          <MapView.Marker
+            coordinate={cords}
+            title='issue name'
+            description='address'
+            onCalloutPress={() => {
+              const { path, params, screen } = ReportRoute['ReportScreen'];
+              const { router } = screen;
+              const action = path && router.getActionForPathAndParams(path, params);
+              this.props.navigation.navigate('ReportScreen', {report: report}, action);
+            }}
+          />
+        ))}
+      </MapView>
+    );
+  }
+}
 
 const RecentRequestsTabs = TabNavigator({
   ListTab: {
@@ -140,7 +218,7 @@ const RecentRequestsTabs = TabNavigator({
     }
   },
   MapTab: {
-    screen: MapTab,
+    screen: ReportMap,
     path: '/map',
     navigationOptions: {
       tabBarLabel: 'Map',
