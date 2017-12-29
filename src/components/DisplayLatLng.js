@@ -27,6 +27,7 @@ export default class DisplayLatLng extends React.Component {
       longitude: null,
       errorMessage: null,
       address: null,
+      coords: null,
       region: {
         latitude: LATITUDE,
         longitude: LONGITUDE,
@@ -55,7 +56,7 @@ export default class DisplayLatLng extends React.Component {
         </TouchableOpacity>
       ),
       headerRight: (
-        <TouchableOpacity style={{marginRight: 15}} onPress={() => params.saveLocation(params.address)} >
+        <TouchableOpacity style={{marginRight: 15}} onPress={() => params.saveLocation(params.address, params.coords)} >
           <Text style={{color: '#f3f3f3', font: 16, fontWeight: 'bold'}}>
             Done
           </Text>
@@ -65,7 +66,10 @@ export default class DisplayLatLng extends React.Component {
   };
 
   componentDidMount() {
-    this.props.navigation.setParams({ address: null });
+    this.props.navigation.setParams({
+      address: null,
+      coords: null,
+    });
   }
 
   _getLocationAsync = async () => {
@@ -99,18 +103,19 @@ export default class DisplayLatLng extends React.Component {
       this.setState({
         errorMessage: 'Your location is not in Denton, select location in Denton area'
       });
-      console.log('not in lat range');
     } else if (location.coords.longitude > (LONGITUDE + .12) || location.coords.longitude < (LONGITUDE - .12)) {
       this.setState({
         errorMessage: 'Your location is not in Denton, select location in Denton area'
       });
-      console.log('not in long range');
     } else {
       this.map.animateToRegion(newRegion);
       this._geocodeCoords(coords);
       this.setState({
-        marker: coords,
+        coords: coords,
         region: newRegion,
+      });
+      this.props.navigation.setParams({
+        coords: coords
       });
     }
   };
@@ -129,7 +134,9 @@ export default class DisplayLatLng extends React.Component {
       text: address,
       address: geocodeAddress
     });
-    this.props.navigation.setParams({ address: geocodeAddress});
+    this.props.navigation.setParams({
+      address: geocodeAddress
+    });
   };
 
   onRegionChange(region) {
@@ -166,8 +173,11 @@ export default class DisplayLatLng extends React.Component {
       this.map.animateToRegion(newRegion);
       this._geocodeCoords(coords);
       this.setState({
-        marker: e.nativeEvent.coordinate,
+        coords: e.nativeEvent.coordinate,
         region: newRegion,
+      });
+      this.props.navigation.setParams({
+        coords: coords
       });
     }
   }
@@ -220,11 +230,6 @@ export default class DisplayLatLng extends React.Component {
       isLocationError = true;
     }
 
-    let isMarker = false;
-    if(this.state.maker) {
-      isMarker = true;
-    }
-
     return (
       <View style={styles.container}>
         <MapView
@@ -235,7 +240,7 @@ export default class DisplayLatLng extends React.Component {
           onRegionChange={region => this.onRegionChange(region)}
           onPress={(e) => this.onMapPress(e)}
         >
-          <MapView.Marker coordinate={this.state.marker}/>
+          <MapView.Marker coordinate={this.state.coords}/>
         </MapView>
         <SafeAreaView
           style={{position: 'absolute', top: 0, width: width}}
