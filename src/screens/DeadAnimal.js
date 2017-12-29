@@ -203,7 +203,6 @@ class DeadAnimalScreen extends React.Component {
       if (!snapshot) {
         this.setState({reportNumber: 0});
       }
-
     });
   }
 

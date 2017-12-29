@@ -1,20 +1,109 @@
 import React from 'react';
-import { Platform, StyleSheet, Text, View, ScrollView, TouchableOpacity, Button} from 'react-native';
-import { ScreenOrientation } from 'expo';
-import { SafeAreaView, StackNavigator, NavigationActions, TabNavigator } from 'react-navigation';
+import { StyleSheet, Text, TouchableOpacity, ScrollView, View } from 'react-native';
+import { SafeAreaView, StackNavigator, TabNavigator } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { MapView } from 'expo';
+import Fire from '../fire';
+import ReportTemplate from '../components/Report';
+import moment from 'moment';
 
 const cords = {
   latitude: 33.2543416,
   longitude: -97.15247219999998,
 };
 
-const ListTab = ({ navigation }) => (
-  <SafeAreaView>
-    <Text>List View</Text>
-  </SafeAreaView>
-);
+const ReportRoute = {
+  ReportScreen: {
+    screen: ReportTemplate,
+  },
+};
+
+class ReportList extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      reports: [],
+    }
+  }
+
+  componentDidMount() {
+    this.getLatest100Reports();
+  }
+
+
+  getLatest100Reports() {
+    return Fire.database().ref().child('reports').limitToLast(100).on('value', (snapshot) => {
+      let temp = [];
+      snapshot.forEach((child) => {
+        temp.unshift(child.val());
+      });
+      this.setState({ reports: temp });
+    });
+  }
+
+  render() {
+    const styles = StyleSheet.create({
+      item: {
+        paddingHorizontal: 20,
+        paddingVertical: 25,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flex: 1,
+        alignSelf: 'flex-start'
+      },
+      itemContainer: {
+        backgroundColor: '#fff',
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderBottomColor: '#ddd',
+      },
+      title: {
+        fontSize: 20,
+        color: '#444',
+      },
+      infoTextField: {
+        height: 40,
+        backgroundColor: 'white',
+        fontSize: 16,
+        paddingLeft: 20,
+        borderWidth: StyleSheet.hairlineWidth,
+        borderColor: '#ddd',
+      }
+    });
+
+    return (
+      <ScrollView style={{ flex: 1, backgroundColor: '#fff' }} contentInsetAdjustmentBehavior="automatic">
+        {console.log("in render: ")}
+        {console.log(this.state.reports)}
+        {Array.from(this.state.reports).map((report, index, arr) => (
+          <TouchableOpacity
+            key={index}
+            onPress={() => {
+              const { path, params, screen } = ReportRoute['ReportScreen'];
+              const { router } = screen;
+              const action = path && router.getActionForPathAndParams(path, params);
+              this.props.navigation.navigate('ReportScreen', {report: report}, action);
+            }}
+          >
+            <SafeAreaView
+              style={styles.itemContainer}
+              forceInset={{ vertical: 'never' }}
+            >
+              <View style={styles.item}>
+                <View>
+                  <Text style={styles.title}>{report.title}</Text>
+                  <Text>{report.address}</Text>
+                  <Text>{report.status + ' ' + moment(report.dateCreated, moment.ISO_8601).fromNow()}</Text>
+                </View>
+              </View>
+            </SafeAreaView>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    );
+  }
+}
 
 const MapTab = ({ navigation }) => (
   <MapView
@@ -30,7 +119,6 @@ const MapTab = ({ navigation }) => (
       coordinate={cords}
       title='issue name'
       description='address'
-      //onPress={() => navigation.navigate('Profile', { name: 'Jordan' })}
       onPress={() => navigation.navigate('ParkingLot')}
     />
   </MapView>
@@ -38,7 +126,7 @@ const MapTab = ({ navigation }) => (
 
 const RecentRequestsTabs = TabNavigator({
   ListTab: {
-    screen: ListTab,
+    screen: ReportList,
     path: '/list',
     navigationOptions: {
       tabBarLabel: 'List',
@@ -86,6 +174,7 @@ const RecentRequestsStack = StackNavigator({
       headerTitleStyle: styles.headerTitle
     }),
   },
+  ...ReportRoute,
 });
 
 const styles = StyleSheet.create({
