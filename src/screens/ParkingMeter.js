@@ -74,6 +74,7 @@ class ParkingMeterScreen extends React.Component {
       problemType: null,
       meterNum: null,
       reportNumber: null,
+      coords: null,
     };
   }
 
@@ -143,6 +144,7 @@ class ParkingMeterScreen extends React.Component {
     let reportData = {
       title: 'Parking Meter',
       deviceId: this.state.deviceId,
+      coords: this.state.coords,
       dateCreated: this.state.dateCreated,
       uid: Fire.auth().currentUser.uid,
       userIsAnon: this.state.userIsAnon,
@@ -158,8 +160,10 @@ class ParkingMeterScreen extends React.Component {
       lastName: this.state.lastName,
       email: this.state.email,
       phone: this.state.phone,
-      problemType: this.state.problemType,
-      meterNum: this.state.meterNum,
+      problemDetails: {
+        problemType: this.state.problemType,
+        meterNum: this.state.meterNum,
+      },
       status: 'submitted'
     };
 
@@ -201,6 +205,7 @@ class ParkingMeterScreen extends React.Component {
       problemType: null,
       meterNum: null,
       reportNumber: null,
+      coords: null,
     });
     this.props.navigation.goBack(null);
   };
@@ -213,12 +218,13 @@ class ParkingMeterScreen extends React.Component {
     }
   };
 
-  _getLocation = (address) => {
+  _getLocation = (address, coords) => {
     if (address) {
       let addressString = address[0].name.toString() + ", " + address[0].city.toString();
       this.setState({
         location: address,
         address: addressString,
+        coords: coords
       });
       this.props.navigation.goBack(null);
     }

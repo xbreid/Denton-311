@@ -111,6 +111,7 @@ class StreetSignScreen extends React.Component {
       signType: null,
       signProblem: null,
       reportNumber: null,
+      coords: null,
     };
   }
 
@@ -180,6 +181,7 @@ class StreetSignScreen extends React.Component {
     let reportData = {
       title: 'Street Sign',
       deviceId: this.state.deviceId,
+      coords: this.state.coords,
       dateCreated: this.state.dateCreated,
       uid: Fire.auth().currentUser.uid,
       userIsAnon: this.state.userIsAnon,
@@ -195,8 +197,10 @@ class StreetSignScreen extends React.Component {
       lastName: this.state.lastName,
       email: this.state.email,
       phone: this.state.phone,
-      signType: this.state.signType,
-      signProblem: this.state.signProblem,
+      problemDetails: {
+        signType: this.state.signType,
+        signProblem: this.state.signProblem,
+      },
       status: 'submitted'
     };
 
@@ -239,6 +243,7 @@ class StreetSignScreen extends React.Component {
       signType: null,
       signProblem: null,
       reportNumber: null,
+      coords: null,
     });
     this.props.navigation.goBack(null);
   };
@@ -251,12 +256,13 @@ class StreetSignScreen extends React.Component {
     }
   };
 
-  _getLocation = (address) => {
+  _getLocation = (address, coords) => {
     if (address) {
       let addressString = address[0].name.toString() + ", " + address[0].city.toString();
       this.setState({
         location: address,
         address: addressString,
+        coords: coords
       });
       this.props.navigation.goBack(null);
     }

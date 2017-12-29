@@ -87,6 +87,7 @@ class AbandonedVehicleScreen extends React.Component {
       vehicleType: null,
       make: null,
       reportNumber: null,
+      coords: null,
     };
   }
 
@@ -156,6 +157,7 @@ class AbandonedVehicleScreen extends React.Component {
     let reportData = {
       title: 'Abandoned Vehicle',
       deviceId: this.state.deviceId,
+      coords: this.state.coords,
       dateCreated: this.state.dateCreated,
       uid: Fire.auth().currentUser.uid,
       userIsAnon: this.state.userIsAnon,
@@ -171,9 +173,11 @@ class AbandonedVehicleScreen extends React.Component {
       lastName: this.state.lastName,
       email: this.state.email,
       phone: this.state.phone,
-      vehicleColor: this.state.vehicleColor,
-      vehicleType: this.state.vehicleType,
-      vehicleMake: this.state.make,
+      problemDetails: {
+        vehicleColor: this.state.vehicleColor,
+        vehicleType: this.state.vehicleType,
+        vehicleMake: this.state.make,
+      },
       status: 'submitted'
     };
 
@@ -217,6 +221,7 @@ class AbandonedVehicleScreen extends React.Component {
       vehicleType: null,
       make: null,
       reportNumber: null,
+      coords: null,
     });
     this.props.navigation.goBack(null);
   };
@@ -229,12 +234,13 @@ class AbandonedVehicleScreen extends React.Component {
     }
   };
 
-  _getLocation = (address) => {
+  _getLocation = (address, coords) => {
     if (address) {
       let addressString = address[0].name.toString() + ", " + address[0].city.toString();
       this.setState({
         location: address,
         address: addressString,
+        coords: coords
       });
       this.props.navigation.goBack(null);
     }

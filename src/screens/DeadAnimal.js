@@ -145,6 +145,7 @@ class DeadAnimalScreen extends React.Component {
       animalArea: null,
       animalWithin: null,
       reportNumber: null,
+      coords: null,
     };
   }
 
@@ -213,6 +214,7 @@ class DeadAnimalScreen extends React.Component {
     let reportData = {
       title: 'Dead Animal',
       deviceId: this.state.deviceId,
+      coords: this.state.coords,
       dateCreated: this.state.dateCreated,
       uid: Fire.auth().currentUser.uid,
       userIsAnon: this.state.userIsAnon,
@@ -273,6 +275,7 @@ class DeadAnimalScreen extends React.Component {
       animalArea: null,
       animalWithin: null,
       reportNumber: null,
+      coords: null,
     });
     this.props.navigation.goBack(null);
   };
@@ -285,12 +288,13 @@ class DeadAnimalScreen extends React.Component {
     }
   };
 
-  _getLocation = (address) => {
+  _getLocation = (address, coords) => {
     if (address) {
       let addressString = address[0].name.toString() + ", " + address[0].city.toString();
       this.setState({
         location: address,
         address: addressString,
+        coords: coords
       });
       this.props.navigation.goBack(null);
     }

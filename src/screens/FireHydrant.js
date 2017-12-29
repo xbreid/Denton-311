@@ -60,6 +60,7 @@ class FireHydrantScreen extends React.Component {
       phone: null,
       hydrantProblem: null,
       reportNumber: null,
+      coords: null,
     };
   }
 
@@ -129,6 +130,7 @@ class FireHydrantScreen extends React.Component {
     let reportData = {
       title: 'Fire Hydrant',
       deviceId: this.state.deviceId,
+      coords: this.state.coords,
       dateCreated: this.state.dateCreated,
       uid: Fire.auth().currentUser.uid,
       userIsAnon: this.state.userIsAnon,
@@ -144,7 +146,9 @@ class FireHydrantScreen extends React.Component {
       lastName: this.state.lastName,
       email: this.state.email,
       phone: this.state.phone,
-      hydrantProblem: this.state.hydrantProblem,
+      problemDetails: {
+        hydrantProblem: this.state.hydrantProblem,
+      },
       status: 'submitted'
     };
 
@@ -186,6 +190,7 @@ class FireHydrantScreen extends React.Component {
       phone: null,
       hydrantProblem: null,
       reportNumber: null,
+      coords: null,
     });
     this.props.navigation.goBack(null);
   };
@@ -198,12 +203,13 @@ class FireHydrantScreen extends React.Component {
     }
   };
 
-  _getLocation = (address) => {
+  _getLocation = (address, coords) => {
     if (address) {
       let addressString = address[0].name.toString() + ", " + address[0].city.toString();
       this.setState({
         location: address,
         address: addressString,
+        coords: coords
       });
       this.props.navigation.goBack(null);
     }

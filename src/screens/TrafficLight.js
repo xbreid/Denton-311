@@ -86,6 +86,7 @@ class TrafficLightScreen extends React.Component {
       signalDirection: null,
       signalProblem: null,
       reportNumber: null,
+      coords: null,
     };
   }
 
@@ -155,6 +156,7 @@ class TrafficLightScreen extends React.Component {
     let reportData = {
       title: 'Traffic Light',
       deviceId: this.state.deviceId,
+      coords: this.state.coords,
       dateCreated: this.state.dateCreated,
       uid: Fire.auth().currentUser.uid,
       userIsAnon: this.state.userIsAnon,
@@ -170,8 +172,10 @@ class TrafficLightScreen extends React.Component {
       lastName: this.state.lastName,
       email: this.state.email,
       phone: this.state.phone,
-      signalDirection: this.state.signalDirection,
-      signalProblem: this.state.signalProblem,
+      problemDetails: {
+        signalDirection: this.state.signalDirection,
+        signalProblem: this.state.signalProblem,
+      },
       status: 'submitted'
     };
 
@@ -214,6 +218,7 @@ class TrafficLightScreen extends React.Component {
       signalDirection: null,
       signalProblem: null,
       reportNumber: null,
+      coords: null,
     });
     this.props.navigation.goBack(null);
   };
@@ -247,12 +252,13 @@ class TrafficLightScreen extends React.Component {
     this.props.navigation.goBack(null);
   };
 
-  _getLocation = (address) => {
+  _getLocation = (address, coords) => {
     if (address) {
       let addressString = address[0].name.toString() + ", " + address[0].city.toString();
       this.setState({
         location: address,
         address: addressString,
+        coords: coords
       });
       this.props.navigation.goBack(null);
     }

@@ -35,6 +35,7 @@ class PotholeScreen extends React.Component {
       email: null,
       phone: null,
       reportNumber: null,
+      coords: null,
     };
   }
 
@@ -104,6 +105,7 @@ class PotholeScreen extends React.Component {
     let reportData = {
       title: 'Pothole',
       deviceId: this.state.deviceId,
+      coords: this.state.coords,
       dateCreated: this.state.dateCreated,
       uid: Fire.auth().currentUser.uid,
       userIsAnon: this.state.userIsAnon,
@@ -153,6 +155,7 @@ class PotholeScreen extends React.Component {
       email: null,
       phone: null,
       reportNumber: null,
+      coords: null,
     });
     this.props.navigation.goBack(null);
   };
@@ -165,12 +168,13 @@ class PotholeScreen extends React.Component {
     }
   };
 
-  _getLocation = (address) => {
+  _getLocation = (address, coords) => {
     if (address) {
       let addressString = address[0].name.toString() + ", " + address[0].city.toString();
       this.setState({
         location: address,
         address: addressString,
+        coords: coords
       });
       this.props.navigation.goBack(null);
     }

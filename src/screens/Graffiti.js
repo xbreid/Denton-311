@@ -118,6 +118,7 @@ class GraffitiScreen extends React.Component {
       surfaceType: null,
       heightFromGround: null,
       reportNumber: null,
+      coords: null,
     };
   }
 
@@ -187,6 +188,7 @@ class GraffitiScreen extends React.Component {
     let reportData = {
       title: 'Graffiti',
       deviceId: this.state.deviceId,
+      coords: this.state.coords,
       dateCreated: this.state.dateCreated,
       uid: Fire.auth().currentUser.uid,
       userIsAnon: this.state.userIsAnon,
@@ -202,9 +204,11 @@ class GraffitiScreen extends React.Component {
       lastName: this.state.lastName,
       email: this.state.email,
       phone: this.state.phone,
-      onType: this.state.onType,
-      surfaceType: this.state.surfaceType,
-      heightFromGround: this.state.heightFromGround,
+      problemDetails: {
+        onType: this.state.onType,
+        surfaceType: this.state.surfaceType,
+        heightFromGround: this.state.heightFromGround,
+      },
       status: 'submitted'
     };
 
@@ -248,6 +252,7 @@ class GraffitiScreen extends React.Component {
       surfaceType: null,
       heightFromGround: null,
       reportNumber: null,
+      coords: null,
     });
     this.props.navigation.goBack(null);
   };
@@ -260,12 +265,13 @@ class GraffitiScreen extends React.Component {
     }
   };
 
-  _getLocation = (address) => {
+  _getLocation = (address, coords) => {
     if (address) {
       let addressString = address[0].name.toString() + ", " + address[0].city.toString();
       this.setState({
         location: address,
         address: addressString,
+        coords: coords
       });
       this.props.navigation.goBack(null);
     }

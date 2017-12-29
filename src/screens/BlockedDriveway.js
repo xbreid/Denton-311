@@ -37,6 +37,7 @@ class BlockedDrivewayScreen extends React.Component {
       completelyBlocked: false,
       recurringProblem: false,
       reportNumber: null,
+      coords: null,
     };
   }
 
@@ -106,6 +107,7 @@ class BlockedDrivewayScreen extends React.Component {
     let reportData = {
       title: 'Blocked Driveway',
       deviceId: this.state.deviceId,
+      coords: this.state.coords,
       dateCreated: this.state.dateCreated,
       uid: Fire.auth().currentUser.uid,
       userIsAnon: this.state.userIsAnon,
@@ -121,8 +123,10 @@ class BlockedDrivewayScreen extends React.Component {
       lastName: this.state.lastName,
       email: this.state.email,
       phone: this.state.phone,
-      CompletelyBlocked: this.state.completelyBlocked,
-      RecurringProblem: this.state.recurringProblem,
+      problemDetails: {
+        CompletelyBlocked: this.state.completelyBlocked,
+        RecurringProblem: this.state.recurringProblem,
+      },
       status: 'submitted'
     };
 
@@ -159,6 +163,7 @@ class BlockedDrivewayScreen extends React.Component {
       CompletelyBlocked: false,
       RecurringProblem: false,
       reportNumber: null,
+      coords: null,
     });
     this.props.navigation.goBack(null);
   };
@@ -171,12 +176,13 @@ class BlockedDrivewayScreen extends React.Component {
     }
   };
 
-  _getLocation = (address) => {
+  _getLocation = (address, coords) => {
     if (address) {
       let addressString = address[0].name.toString() + ", " + address[0].city.toString();
       this.setState({
         location: address,
         address: addressString,
+        coords: coords
       });
       this.props.navigation.goBack(null);
     }

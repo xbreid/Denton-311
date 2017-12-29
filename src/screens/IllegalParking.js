@@ -71,6 +71,7 @@ class IllegalParkingScreen extends React.Component {
       parkingViolation: null,
       recurringProblem: false,
       reportNumber: null,
+      coords: null,
     };
   }
 
@@ -140,6 +141,7 @@ class IllegalParkingScreen extends React.Component {
     let reportData = {
       title: 'Illegal Parking',
       deviceId: this.state.deviceId,
+      coords: this.state.coords,
       dateCreated: this.state.dateCreated,
       uid: Fire.auth().currentUser.uid,
       userIsAnon: this.state.userIsAnon,
@@ -155,8 +157,10 @@ class IllegalParkingScreen extends React.Component {
       lastName: this.state.lastName,
       email: this.state.email,
       phone: this.state.phone,
-      parkingViolation: this.state.parkingViolation,
-      recurringProblem: this.state.recurringProblem,
+      problemDetails: {
+        parkingViolation: this.state.parkingViolation,
+        recurringProblem: this.state.recurringProblem,
+      },
       status: 'submitted'
     };
 
@@ -198,6 +202,7 @@ class IllegalParkingScreen extends React.Component {
       parkingViolation: null,
       recurringProblem: false,
       reportNumber: null,
+      coords: null,
     });
     this.props.navigation.goBack(null);
   };
@@ -210,12 +215,13 @@ class IllegalParkingScreen extends React.Component {
     }
   };
 
-  _getLocation = (address) => {
+  _getLocation = (address, coords) => {
     if (address) {
       let addressString = address[0].name.toString() + ", " + address[0].city.toString();
       this.setState({
         location: address,
         address: addressString,
+        coords: coords
       });
       this.props.navigation.goBack(null);
     }
