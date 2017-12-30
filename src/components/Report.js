@@ -7,6 +7,7 @@ import { SafeAreaView, StackNavigator, NavigationActions } from 'react-navigatio
 import { ImagePicker, Permissions, MapView, Location } from 'expo';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
+import moment from 'moment';
 
 
 export default class Report extends React.Component {
@@ -70,6 +71,21 @@ export default class Report extends React.Component {
             {!this.state.report.additionalDetails ? '' : this.state.report.additionalDetails}
             {' ' + this.state.report.address}
           </Text>
+        </View>
+        {
+         this.state.report.problemDetails ?
+           <View style={{alignItems: 'center', marginHorizontal: 20, marginVertical: 15}}>
+             {Object.keys(this.state.report.problemDetails).map((key) => {
+             return (
+               <Text>
+                 {key + ': ' + this.state.report.problemDetails[key]}
+               </Text>
+             )
+             })}
+          </View> : <Text/>
+        }
+        <View style={{alignItems: 'center', marginHorizontal: 20, marginVertical: 15}}>
+          <Text>{this.state.report.status + ' ' + moment(this.state.report.dateCreated, moment.ISO_8601).fromNow()}</Text>
         </View>
       </ScrollView>
     );
