@@ -4,6 +4,7 @@ import { ScreenOrientation } from 'expo';
 import { SafeAreaView, StackNavigator, NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ContactInfo from '../components/ContactInfo';
+import Fire from '../fire';
 
 class MyInfoScreen extends React.Component {
   constructor(props) {
@@ -48,7 +49,20 @@ class MyInfoScreen extends React.Component {
   }
 
   _saveDetails = () => {
-    console.log('submit info triggered');
+    let user = Fire.auth().currentUser;
+    user.updateProfile({
+      displayName: this.state.firstName + ' ' + this.state.lastName,
+      phoneNumber: this.state.phone
+    }).then(function() {
+      // Update successful.
+    }).catch(function(error) {
+      // An error happened.
+    });
+    user.updateEmail(this.state.email).then(function() {
+      // Update successful.
+    }).catch(function(error) {
+      // An error happened.
+    });
     this.props.navigation.goBack(null);
   };
 
