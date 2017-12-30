@@ -8,6 +8,7 @@ import ImageSelector from '../components/ImageSelector';
 import ContactInfo from '../components/ContactInfo';
 import Fire from '../fire';
 import ListSelector from '../components/ListSelector';
+import moment from 'moment';
 
 const LocationRoute = {
   LocationScreen: {
@@ -94,6 +95,8 @@ class StreetSignScreen extends React.Component {
 
     this.state = {
       additionalDetails: null,
+      dateCreated: null,
+      deviceId: null,
       address: null,
       imageOne: null,
       imageTwo: null,
@@ -107,6 +110,8 @@ class StreetSignScreen extends React.Component {
       phone: null,
       signType: null,
       signProblem: null,
+      reportNumber: null,
+      coords: null,
     };
   }
 
@@ -145,12 +150,69 @@ class StreetSignScreen extends React.Component {
         deviceId: Expo.Constants.deviceId,
         userIsAnon: user.isAnonymous,
         userId: user.uid,
+        dateCreated: moment().format(),
       });
     });
     this.props.navigation.setParams({
       handleSave: this._saveDetails,
       handleCancel: this._clearDetails,
     });
+    this.getLatestIssueId();
+  }
+
+  // might be a bug here
+  // if there is no query back for some reason, the report number will default to 0
+  getLatestIssueId() {
+    return Fire.database().ref().child('reports').limitToLast(1).on('value', (snapshot) => {
+      snapshot.forEach((child) => {
+        this.setState({reportNumber: child.val().reportNumber});
+      });
+      if (!snapshot) {
+        this.setState({reportNumber: 0});
+      }
+
+    });
+  }
+
+  writeNewReport() {
+    reportNum = this.state.reportNumber + 1;
+
+    // A report entry.
+    let reportData = {
+      title: 'Street Sign',
+      deviceId: this.state.deviceId,
+      coords: this.state.coords,
+      dateCreated: this.state.dateCreated,
+      uid: Fire.auth().currentUser.uid,
+      userIsAnon: this.state.userIsAnon,
+      reportNumber: reportNum,
+      additionalDetails: this.state.additionalDetails,
+      address: this.state.address,
+      imageOne: this.state.imageOne,
+      imageTwo: this.state.imageTwo,
+      imageThree: this.state.imageThree,
+      location: this.state.location,
+      submitPublicly: this.state.publicSwitch,
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      email: this.state.email,
+      phone: this.state.phone,
+      problemDetails: {
+        signType: this.state.signType,
+        signProblem: this.state.signProblem,
+      },
+      status: 'submitted'
+    };
+
+    // Get a key for a new Post.
+    let newReportKey = Fire.database().ref().child('reports').push().key;
+
+    // Write the new post's data simultaneously in the posts list and the user's post list.
+    let updates = {};
+    updates['/reports/' + newReportKey] = reportData;
+    updates['/user-reports/' + this.state.userId + '/' + newReportKey] = reportData;
+
+    return Fire.database().ref().update(updates);
   }
 
   _clearDetails = () => {
@@ -162,6 +224,7 @@ class StreetSignScreen extends React.Component {
     ));
     this.setState({
       deviceId: null,
+      dateCreated: null,
       userId: null,
       userIsAnon: null,
       issueId: null,
@@ -179,26 +242,30 @@ class StreetSignScreen extends React.Component {
       phone: null,
       signType: null,
       signProblem: null,
+      reportNumber: null,
+      coords: null,
     });
     this.props.navigation.goBack(null);
   };
 
   _saveDetails = () => {
-    console.log('submit report triggered for Street Sign');
-    console.log(this.state);
-    this.props.navigation.goBack(null);
-    this._clearDetails();
+    if (this.state.location) {
+      this.writeNewReport();
+      this.props.navigation.goBack(null);
+      this._clearDetails();
+    }
   };
 
-  _getLocation = (address) => {
-    console.log(address);
-    console.log(address[0].name.toString() + ", " + address[0].city.toString());
-    let addressString = address[0].name.toString() + ", " + address[0].city.toString();
-    this.setState({
-      location: address,
-      address: addressString,
-    });
-    this.props.navigation.goBack(null);
+  _getLocation = (address, coords) => {
+    if (address) {
+      let addressString = address[0].name.toString() + ", " + address[0].city.toString();
+      this.setState({
+        location: address,
+        address: addressString,
+        coords: coords
+      });
+      this.props.navigation.goBack(null);
+    }
   };
 
   _getContactInfo = (value, type) => {

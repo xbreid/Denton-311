@@ -5,7 +5,8 @@ import { Platform, Dimensions, StyleSheet, Text, View, Alert,
 import { ScreenOrientation } from 'expo';
 import { SafeAreaView, StackNavigator, NavigationActions } from 'react-navigation';
 import { ImagePicker, Permissions, MapView, Location } from 'expo';
-
+import ActionButton from 'react-native-action-button';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const { width, height } = Dimensions.get('window');
 
@@ -26,6 +27,7 @@ export default class DisplayLatLng extends React.Component {
       longitude: null,
       errorMessage: null,
       address: null,
+      coords: null,
       region: {
         latitude: LATITUDE,
         longitude: LONGITUDE,
@@ -54,7 +56,7 @@ export default class DisplayLatLng extends React.Component {
         </TouchableOpacity>
       ),
       headerRight: (
-        <TouchableOpacity style={{marginRight: 15}} onPress={() => params.saveLocation(params.address)} >
+        <TouchableOpacity style={{marginRight: 15}} onPress={() => params.saveLocation(params.address, params.coords)} >
           <Text style={{color: '#f3f3f3', font: 16, fontWeight: 'bold'}}>
             Done
           </Text>
@@ -64,7 +66,10 @@ export default class DisplayLatLng extends React.Component {
   };
 
   componentDidMount() {
-    this.props.navigation.setParams({ address: null });
+    this.props.navigation.setParams({
+      address: null,
+      coords: null,
+    });
   }
 
   _getLocationAsync = async () => {
@@ -98,18 +103,19 @@ export default class DisplayLatLng extends React.Component {
       this.setState({
         errorMessage: 'Your location is not in Denton, select location in Denton area'
       });
-      console.log('not in lat range');
     } else if (location.coords.longitude > (LONGITUDE + .12) || location.coords.longitude < (LONGITUDE - .12)) {
       this.setState({
         errorMessage: 'Your location is not in Denton, select location in Denton area'
       });
-      console.log('not in long range');
     } else {
       this.map.animateToRegion(newRegion);
       this._geocodeCoords(coords);
       this.setState({
-        marker: coords,
+        coords: coords,
         region: newRegion,
+      });
+      this.props.navigation.setParams({
+        coords: coords
       });
     }
   };
@@ -128,7 +134,9 @@ export default class DisplayLatLng extends React.Component {
       text: address,
       address: geocodeAddress
     });
-    this.props.navigation.setParams({ address: geocodeAddress});
+    this.props.navigation.setParams({
+      address: geocodeAddress
+    });
   };
 
   onRegionChange(region) {
@@ -165,8 +173,11 @@ export default class DisplayLatLng extends React.Component {
       this.map.animateToRegion(newRegion);
       this._geocodeCoords(coords);
       this.setState({
-        marker: e.nativeEvent.coordinate,
+        coords: e.nativeEvent.coordinate,
         region: newRegion,
+      });
+      this.props.navigation.setParams({
+        coords: coords
       });
     }
   }
@@ -208,17 +219,15 @@ export default class DisplayLatLng extends React.Component {
         margin: 7,
         borderRadius: 3,
         textAlign: 'center'
-      }
+      },
+      actionButtonIcon: {
+        color: '#333',
+      },
     });
 
     let isLocationError = false;
     if (this.state.errorMessage) {
       isLocationError = true;
-    }
-
-    let isMarker = false;
-    if(this.state.maker) {
-      isMarker = true;
     }
 
     return (
@@ -231,7 +240,7 @@ export default class DisplayLatLng extends React.Component {
           onRegionChange={region => this.onRegionChange(region)}
           onPress={(e) => this.onMapPress(e)}
         >
-          <MapView.Marker coordinate={this.state.marker}/>
+          <MapView.Marker coordinate={this.state.coords}/>
         </MapView>
         <SafeAreaView
           style={{position: 'absolute', top: 0, width: width}}
@@ -246,19 +255,13 @@ export default class DisplayLatLng extends React.Component {
             />
           </View>
         </SafeAreaView>
-        <View style={[styles.bubble, styles.latlng]}>
-          <Text style={{ textAlign: 'center' }}>
-            {this.state.region.latitude.toPrecision(7)},
-            {this.state.region.longitude.toPrecision(7)}
-          </Text>
-        </View>
-        <View style={[styles.bubble, styles.latlng]}>
-          <TouchableOpacity onPress={() => this._getLocationAsync()}>
-            <Text style={{ textAlign: 'center' }}>
-              Get Location
-            </Text>
-          </TouchableOpacity>
-        </View>
+        {/* Rest of the app comes ABOVE the action button component !*/}
+          <ActionButton
+            icon={<Icon name="md-locate" size="25" style={styles.actionButtonIcon} />}
+            buttonColor='#f3f3f3'
+            onPress={() => this._getLocationAsync()}
+            position="right"
+          />
         <View style={[styles.bubble, styles.latlng, {display: isLocationError ? '' : 'none'}]}>
           <Text style={{ textAlign: 'center' }}>
             {isLocationError ? this.state.errorMessage : ''}
