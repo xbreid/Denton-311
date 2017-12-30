@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, TextInput} from 'react-native';
-
+import Fire from '../fire';
 
 export default class ContactInfo extends React.Component {
   constructor(props) {
@@ -11,6 +11,19 @@ export default class ContactInfo extends React.Component {
       lastName: '',
       email: '',
       phone: ''
+    }
+  }
+
+  componentDidMount() {
+    let user = Fire.auth().currentUser;
+    console.log(user);
+    if (user.email) {
+      let name = user.displayName.split(" ");
+      this.setState({
+        firstName: name[0],
+        lastName: name[1],
+        email: user.email,
+      })
     }
   }
 
