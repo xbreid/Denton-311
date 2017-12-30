@@ -23,10 +23,8 @@ class ReportList extends React.Component {
   }
 
   componentDidMount() {
-    Fire.auth().onAuthStateChanged((user) => {
-      console.log(user);
-      this.getLatestReports(user.uid);
-    });
+    let user = Fire.auth().currentUser;
+    this.getLatestReports(user.uid);
   }
 
   getLatestReports(uid) {
