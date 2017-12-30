@@ -163,8 +163,8 @@ class ReportMap extends React.Component {
       <MapView
         style={{ flex: 1 }}
         initialRegion={{
-          latitude: 33.2543416,
-          longitude: -97.15247219999998,
+          latitude: 33.214840,
+          longitude: -97.133064,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
