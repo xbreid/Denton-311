@@ -2,15 +2,10 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, ScrollView, View } from 'react-native';
 import { SafeAreaView, StackNavigator, TabNavigator } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { MapView, Permissions, Location } from 'expo';
+import { MapView } from 'expo';
 import Fire from '../fire';
 import ReportTemplate from '../components/Report';
 import moment from 'moment';
-
-const cords = {
-  latitude: 33.2543416,
-  longitude: -97.15247219999998,
-};
 
 const ReportRoute = {
   ReportScreen: {
@@ -74,8 +69,6 @@ class ReportList extends React.Component {
 
     return (
       <ScrollView style={{ flex: 1, backgroundColor: '#fff' }} contentInsetAdjustmentBehavior="automatic">
-        {console.log("in render: ")}
-        {console.log(this.state.reports)}
         {Array.from(this.state.reports).map((report, index, arr) => (
           <TouchableOpacity
             key={index}
@@ -130,35 +123,6 @@ class ReportMap extends React.Component {
 
 
   render() {
-    const styles = StyleSheet.create({
-      item: {
-        paddingHorizontal: 20,
-        paddingVertical: 25,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        flex: 1,
-        alignSelf: 'flex-start'
-      },
-      itemContainer: {
-        backgroundColor: '#fff',
-        borderBottomWidth: StyleSheet.hairlineWidth,
-        borderBottomColor: '#ddd',
-      },
-      title: {
-        fontSize: 20,
-        color: '#444',
-      },
-      infoTextField: {
-        height: 40,
-        backgroundColor: 'white',
-        fontSize: 16,
-        paddingLeft: 20,
-        borderWidth: StyleSheet.hairlineWidth,
-        borderColor: '#ddd',
-      }
-    });
-
     return (
       <MapView
         style={{ flex: 1 }}
