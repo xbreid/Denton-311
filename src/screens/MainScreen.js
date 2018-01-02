@@ -81,7 +81,7 @@ const Main = StackNavigator({
         title: 'Denton 311',
         headerLeft: (
           <TouchableOpacity style={{paddingHorizontal: 15}} onPress={() => navigation.goBack(null)}>
-            <Icon name="md-refresh" color="#f3f3f3" size={24}/>
+            <Icon name="md-call" color="#f3f3f3" size={24}/>
           </TouchableOpacity>
         ),
         headerRight: (
