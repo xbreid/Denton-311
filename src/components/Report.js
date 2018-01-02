@@ -1,11 +1,5 @@
 import React from 'react';
-import { Platform, Dimensions, StyleSheet, Text, View, Alert,
-  KeyboardAvoidingView, ScrollView, TouchableOpacity, Button,
-  Image, TextInput, Switch } from 'react-native';
-import { ScreenOrientation } from 'expo';
-import { SafeAreaView, StackNavigator, NavigationActions } from 'react-navigation';
-import { ImagePicker, Permissions, MapView, Location } from 'expo';
-import ActionButton from 'react-native-action-button';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, SafeAreaView, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
 
@@ -66,6 +60,13 @@ export default class Report extends React.Component {
             {'#' + this.state.report.reportNumber}
           </Text>
         </View>
+        <SafeAreaView>
+        {
+          this.state.report.imageOne ?
+              <Image source={{uri: `data:image/jpg;base64,${this.state.report.imageOne}`}} style={{ height: 100, marginBottom: 10 }} />
+            : <Text/>
+        }
+        </SafeAreaView>
         <View style={{alignItems: 'center', marginHorizontal: 20, marginVertical: 15}}>
           <Text >
             {!this.state.report.additionalDetails ? '' : this.state.report.additionalDetails}
