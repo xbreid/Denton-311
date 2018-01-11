@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, ScrollView, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, ScrollView, View, Image } from 'react-native';
 import { SafeAreaView, StackNavigator, TabNavigator } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { MapView } from 'expo';
@@ -46,7 +46,7 @@ class ReportList extends React.Component {
         justifyContent: 'space-between',
         alignItems: 'center',
         flex: 1,
-        alignSelf: 'flex-start'
+        //alignSelf: 'flex-start'
       },
       itemContainer: {
         backgroundColor: '#fff',
@@ -89,6 +89,11 @@ class ReportList extends React.Component {
                   <Text>{report.address}</Text>
                   <Text>{report.status + ' ' + moment(report.dateCreated, moment.ISO_8601).fromNow()}</Text>
                 </View>
+                {
+                  report.imageOne ?
+                    <Image style={{ height: 75, width: 75 }} source={{uri: `data:image/jpg;base64,${report.imageOne}`}} />
+                    : <Text/>
+                }
               </View>
             </SafeAreaView>
           </TouchableOpacity>
