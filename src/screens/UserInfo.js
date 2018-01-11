@@ -80,7 +80,7 @@ class MyInfoScreen extends React.Component {
 
   render() {
     return(
-      <SafeAreaView style={{marginTop: 50 }}>
+      <SafeAreaView style={{marginTop: 35 }}>
         <ContactInfo saveContactInfo={this._getContactInfo}/>
       </SafeAreaView>
     );
