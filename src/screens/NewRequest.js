@@ -290,7 +290,7 @@ const styles = StyleSheet.create({
     color: '#999',
   },
   header: {
-    backgroundColor: '#4510A2'
+    backgroundColor: '#4f4380'
   },
   headerTitle: {
     color: 'white'

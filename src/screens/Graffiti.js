@@ -128,7 +128,7 @@ class GraffitiScreen extends React.Component {
     return {
       title: "Graffiti",
       headerStyle: {
-        backgroundColor: '#4510A2'
+        backgroundColor: '#4f4380'
       },
       headerTitleStyle: {
         color: 'white'

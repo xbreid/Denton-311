@@ -24,7 +24,7 @@ class MyInfoScreen extends React.Component {
     return {
       title: "My Info",
       headerStyle: {
-        backgroundColor: '#4510A2'
+        backgroundColor: '#4f4380'
       },
       headerTitleStyle: {
         color: 'white'

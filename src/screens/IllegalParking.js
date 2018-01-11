@@ -81,7 +81,7 @@ class IllegalParkingScreen extends React.Component {
     return {
       title: "Illegal Parking",
       headerStyle: {
-        backgroundColor: '#4510A2'
+        backgroundColor: '#4f4380'
       },
       headerTitleStyle: {
         color: 'white'

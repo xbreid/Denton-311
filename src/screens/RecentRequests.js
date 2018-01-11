@@ -206,7 +206,7 @@ const RecentRequestsStack = StackNavigator({
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: '#4510A2'
+    backgroundColor: '#4f4380'
   },
   headerTitle: {
     color: 'white'

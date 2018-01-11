@@ -43,7 +43,7 @@ export default class DisplayLatLng extends React.Component {
     return {
       title: "Issue Location",
       headerStyle: {
-        backgroundColor: '#4510A2'
+        backgroundColor: '#4f4380'
       },
       headerTitleStyle: {
         color: 'white'

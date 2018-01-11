@@ -155,7 +155,7 @@ class DeadAnimalScreen extends React.Component {
     return {
       title: "Dead Animal",
       headerStyle: {
-        backgroundColor: '#4510A2'
+        backgroundColor: '#4f4380'
       },
       headerTitleStyle: {
         color: 'white'

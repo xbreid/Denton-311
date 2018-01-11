@@ -70,7 +70,7 @@ class FireHydrantScreen extends React.Component {
     return {
       title: "Fire Hydrant",
       headerStyle: {
-        backgroundColor: '#4510A2'
+        backgroundColor: '#4f4380'
       },
       headerTitleStyle: {
         color: 'white'

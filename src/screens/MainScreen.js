@@ -1,7 +1,7 @@
 import React from 'react';
 import { Platform, StyleSheet, Text, View,
   ScrollView, TouchableOpacity, Button, StatusBar,
-  TouchableHighlight, Image } from 'react-native';
+  TouchableHighlight, Image, Alert } from 'react-native';
 import { ScreenOrientation } from 'expo';
 import { SafeAreaView, StackNavigator, NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -79,11 +79,6 @@ const Main = StackNavigator({
       screen: MainScreen,
       navigationOptions: ({navigation}) => ({
         title: 'Denton 311',
-        headerLeft: (
-          <TouchableOpacity style={{paddingHorizontal: 15}} onPress={() => navigation.goBack(null)}>
-            <Icon name="md-call" color="#f3f3f3" size={24}/>
-          </TouchableOpacity>
-        ),
         headerRight: (
           <TouchableOpacity style={{paddingHorizontal: 15}} onPress={() => navigation.navigate('NewRequest')}>
             <Icon name="md-add" color="#f3f3f3" size={24}/>
@@ -132,7 +127,7 @@ const styles = StyleSheet.create({
     marginLeft: 4
   },
   header: {
-    backgroundColor: '#4510A2'
+    backgroundColor: '#4f4380'
   },
   headerTitle: {
     color: 'white'
