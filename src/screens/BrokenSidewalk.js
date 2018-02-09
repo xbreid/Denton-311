@@ -43,7 +43,6 @@ class BrokenSidewalkScreen extends React.Component {
     this.state = {
       additionalDetails: null,
       deviceId: null,
-      dateCreated: null,
       address: null,
       imageOne: null,
       imageTwo: null,
@@ -96,7 +95,6 @@ class BrokenSidewalkScreen extends React.Component {
         deviceId: Expo.Constants.deviceId,
         userIsAnon: user.isAnonymous,
         userId: user.uid,
-        dateCreated: moment().format(),
       });
     });
     this.props.navigation.setParams({
@@ -128,7 +126,7 @@ class BrokenSidewalkScreen extends React.Component {
       title: 'Broken Sidewalk',
       deviceId: this.state.deviceId,
       coords: this.state.coords,
-      dateCreated: this.state.dateCreated,
+      dateCreated: moment().format(),
       uid: Fire.auth().currentUser.uid,
       userIsAnon: this.state.userIsAnon,
       reportNumber: reportNum,
@@ -169,7 +167,6 @@ class BrokenSidewalkScreen extends React.Component {
     ));
     this.setState({
       deviceId: null,
-      dateCreated: null,
       userId: null,
       userIsAnon: null,
       issueId: null,
