@@ -1,7 +1,7 @@
 import React from 'react';
 import { Platform, StyleSheet, Text, View,
   ScrollView, TouchableOpacity, Button, StatusBar,
-  TouchableHighlight, Image, Alert } from 'react-native';
+  TouchableHighlight, Image, Alert, NetInfo } from 'react-native';
 import { ScreenOrientation } from 'expo';
 import { SafeAreaView, StackNavigator, NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -40,6 +40,17 @@ const Routes = {
 
 const MainScreen = ({ navigation }) => (
   <ScrollView style={{ flex: 1, backgroundColor: '#f3f3f3' }}>
+    {Alert.alert(
+      'NOTICE\n',
+      'This app is currently in development and is testing look and feel of the interface. ' +
+      '\n\n NO reports are currently being submitted to the City of Denton. ' +
+      '\n\n If you should find any bugs or issues please send us an email with what you find.' +
+      '\n\n 311denton@gmail.com',
+      [
+        {text: 'Accept'},
+      ],
+      { cancelable: false }
+    )}
     <StatusBar
       barStyle="light-content"
     />
