@@ -149,7 +149,16 @@ class ReportMap extends React.Component {
               const action = path && router.getActionForPathAndParams(path, params);
               this.props.navigation.navigate('ReportScreen', {report: report}, action);
             }}
-          />
+          >
+            <MapView.Callout>
+              <View style={{   flexDirection: 'row', justifyContent: 'space-between'}}>
+                <Text>{report.title + '\n'}{report.address}</Text>
+                <TouchableOpacity style={{marginHorizontal: 7, marginTop: 5}}>
+                  <Icon name="ios-information-circle-outline" color="#4F8EF7" size={26}/>
+                </TouchableOpacity>
+              </View>
+            </MapView.Callout>
+          </MapView.Marker>
         ))}
       </MapView>
     );
