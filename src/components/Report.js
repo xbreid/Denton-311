@@ -19,7 +19,7 @@ export default class Report extends React.Component {
     return {
       title: "Report Details",
       headerStyle: {
-        backgroundColor: '#4510A2'
+        backgroundColor: '#4f4380'
       },
       headerTitleStyle: {
         color: 'white'

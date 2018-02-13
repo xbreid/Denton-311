@@ -19,7 +19,7 @@ export default class ListSelectorScreen extends React.Component {
     return {
       title: navigation.state.params.title,
       headerStyle: {
-        backgroundColor: '#4510A2'
+        backgroundColor: '#4f4380'
       },
       headerTitleStyle: {
         color: 'white'

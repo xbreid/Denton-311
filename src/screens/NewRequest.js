@@ -21,6 +21,7 @@ import ParkingMeterScreen from './ParkingMeter';
 import DamagedTreeScreen from './DamagedTree';
 import IllegalDumpingScreen from './IllegalDumping';
 import GraffitiScreen from './Graffiti';
+import OtherScreen from './Other';
 
 const Animals = {
   DeadAnimal: {
@@ -166,6 +167,17 @@ const Sanitation = {
   },
 };
 
+const Other = {
+  Other: {
+    name: 'Other',
+    image: require('../../assets/images/contract.png'),
+    screen: OtherScreen,
+    navigationOptions: ({navigation}) => ({
+      header: null,
+    }),
+  }
+};
+
 
 // Issue button component
 const IssueButton = (navigation, issueCat, issue, issueIndex, issueArr) => (
@@ -226,6 +238,12 @@ const RequestScreen = ({ navigation }) => (
         {Object.keys(Sanitation).map((issueCategory: string, i, arr) => (
           IssueButton(navigation, issueCategory, Sanitation[issueCategory], i, arr)
         ))}
+        <Text style={styles.categoryTitle}>
+          OTHER
+        </Text>
+        {Object.keys(Other).map((issueCategory: string, i, arr) => (
+          IssueButton(navigation, issueCategory, Other[issueCategory], i, arr)
+        ))}
       </View>
   </ScrollView>
 );
@@ -243,6 +261,7 @@ const MainStack = StackNavigator(
     ...ParkingVehicles,
     ...TreesPark,
     ...Sanitation,
+    ...Other,
     Index: {
       screen: RequestScreen,
       navigationOptions: ({navigation}) => ({
@@ -290,7 +309,7 @@ const styles = StyleSheet.create({
     color: '#999',
   },
   header: {
-    backgroundColor: '#4510A2'
+    backgroundColor: '#4f4380'
   },
   headerTitle: {
     color: 'white'

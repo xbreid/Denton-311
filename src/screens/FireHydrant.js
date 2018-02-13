@@ -45,7 +45,6 @@ class FireHydrantScreen extends React.Component {
 
     this.state = {
       additionalDetails: null,
-      dateCreated: null,
       deviceId: null,
       address: null,
       imageOne: null,
@@ -70,7 +69,7 @@ class FireHydrantScreen extends React.Component {
     return {
       title: "Fire Hydrant",
       headerStyle: {
-        backgroundColor: '#4510A2'
+        backgroundColor: '#4f4380'
       },
       headerTitleStyle: {
         color: 'white'
@@ -99,7 +98,6 @@ class FireHydrantScreen extends React.Component {
         deviceId: Expo.Constants.deviceId,
         userIsAnon: user.isAnonymous,
         userId: user.uid,
-        dateCreated: moment().format(),
       });
     });
     this.props.navigation.setParams({
@@ -131,7 +129,7 @@ class FireHydrantScreen extends React.Component {
       title: 'Fire Hydrant',
       deviceId: this.state.deviceId,
       coords: this.state.coords,
-      dateCreated: this.state.dateCreated,
+      dateCreated: moment().format(),
       uid: Fire.auth().currentUser.uid,
       userIsAnon: this.state.userIsAnon,
       reportNumber: reportNum,
@@ -172,7 +170,6 @@ class FireHydrantScreen extends React.Component {
     ));
     this.setState({
       deviceId: null,
-      dateCreated: null,
       userId: null,
       userIsAnon: null,
       issueId: null,

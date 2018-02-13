@@ -66,7 +66,6 @@ class LooseAnimalScreen extends React.Component {
 
     this.state = {
       additionalDetails: null,
-      dateCreated: null,
       deviceId: null,
       address: null,
       imageOne: null,
@@ -91,7 +90,7 @@ class LooseAnimalScreen extends React.Component {
     return {
       title: "Loose Animal",
       headerStyle: {
-        backgroundColor: '#4510A2'
+        backgroundColor: '#4f4380'
       },
       headerTitleStyle: {
         color: 'white'
@@ -120,7 +119,6 @@ class LooseAnimalScreen extends React.Component {
         deviceId: Expo.Constants.deviceId,
         userIsAnon: user.isAnonymous,
         userId: user.uid,
-        dateCreated: moment().format(),
       });
     });
     this.props.navigation.setParams({
@@ -152,7 +150,7 @@ class LooseAnimalScreen extends React.Component {
       title: 'Loose Animal',
       deviceId: this.state.deviceId,
       coords: this.state.coords,
-      dateCreated: this.state.dateCreated,
+      dateCreated: moment().format(),
       uid: Fire.auth().currentUser.uid,
       userIsAnon: this.state.userIsAnon,
       reportNumber: reportNum,

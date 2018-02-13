@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, ScrollView, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, ScrollView, View, Image } from 'react-native';
 import { SafeAreaView, StackNavigator, TabNavigator } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { MapView } from 'expo';
@@ -46,7 +46,7 @@ class ReportList extends React.Component {
         justifyContent: 'space-between',
         alignItems: 'center',
         flex: 1,
-        alignSelf: 'flex-start'
+        //alignSelf: 'flex-start'
       },
       itemContainer: {
         backgroundColor: '#fff',
@@ -89,6 +89,11 @@ class ReportList extends React.Component {
                   <Text>{report.address}</Text>
                   <Text>{report.status + ' ' + moment(report.dateCreated, moment.ISO_8601).fromNow()}</Text>
                 </View>
+                {
+                  report.imageOne ?
+                    <Image style={{ height: 75, width: 75 }} source={{uri: `data:image/jpg;base64,${report.imageOne}`}} />
+                    : <Text/>
+                }
               </View>
             </SafeAreaView>
           </TouchableOpacity>
@@ -144,7 +149,16 @@ class ReportMap extends React.Component {
               const action = path && router.getActionForPathAndParams(path, params);
               this.props.navigation.navigate('ReportScreen', {report: report}, action);
             }}
-          />
+          >
+            <MapView.Callout>
+              <View style={{   flexDirection: 'row', justifyContent: 'space-between'}}>
+                <Text>{report.title + '\n'}{report.address}</Text>
+                <TouchableOpacity style={{marginHorizontal: 7, marginTop: 5}}>
+                  <Icon name="ios-information-circle-outline" color="#4F8EF7" size={26}/>
+                </TouchableOpacity>
+              </View>
+            </MapView.Callout>
+          </MapView.Marker>
         ))}
       </MapView>
     );
@@ -206,7 +220,7 @@ const RecentRequestsStack = StackNavigator({
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: '#4510A2'
+    backgroundColor: '#4f4380'
   },
   headerTitle: {
     color: 'white'

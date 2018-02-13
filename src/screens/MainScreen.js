@@ -1,7 +1,7 @@
 import React from 'react';
 import { Platform, StyleSheet, Text, View,
   ScrollView, TouchableOpacity, Button, StatusBar,
-  TouchableHighlight, Image } from 'react-native';
+  TouchableHighlight, Image, Alert, NetInfo } from 'react-native';
 import { ScreenOrientation } from 'expo';
 import { SafeAreaView, StackNavigator, NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -10,6 +10,7 @@ import NewRequest from './NewRequest';
 import RecentRequests from './RecentRequests';
 import UserRequests from './UserRequests';
 import UserInfo from './UserInfo';
+import Info from './Info';
 
 const Routes = {
   NewRequest: {
@@ -35,11 +36,29 @@ const Routes = {
     description: 'Application Settings/User Info',
     icon: 'md-person',
     screen: UserInfo,
+  }
+};
+
+const Information = {
+  About: {
+    name: 'About',
+    screen: Info,
   },
 };
 
 const MainScreen = ({ navigation }) => (
   <ScrollView style={{ flex: 1, backgroundColor: '#f3f3f3' }}>
+    {Alert.alert(
+      'NOTICE\n',
+      'This app is currently in development and is testing look and feel of the interface. ' +
+      '\n\n NO reports are currently being submitted to the City of Denton. ' +
+      '\n\n If you should find any bugs or issues please send us an email with what you find.' +
+      '\n\n 311denton@gmail.com',
+      [
+        {text: 'Accept'},
+      ],
+      { cancelable: false }
+    )}
     <StatusBar
       barStyle="light-content"
     />
@@ -74,14 +93,16 @@ const MainScreen = ({ navigation }) => (
   </ScrollView>
 );
 
-const Main = StackNavigator({
+const Main = StackNavigator(
+  {
+    ...Information,
     Main: {
       screen: MainScreen,
       navigationOptions: ({navigation}) => ({
         title: 'Denton 311',
         headerLeft: (
-          <TouchableOpacity style={{paddingHorizontal: 15}} onPress={() => navigation.goBack(null)}>
-            <Icon name="md-call" color="#f3f3f3" size={24}/>
+          <TouchableOpacity style={{paddingHorizontal: 15}} onPress={() => navigation.navigate('About')}>
+            <Icon name="ios-information-circle-outline" color="#f3f3f3" size={24}/>
           </TouchableOpacity>
         ),
         headerRight: (
@@ -132,7 +153,7 @@ const styles = StyleSheet.create({
     marginLeft: 4
   },
   header: {
-    backgroundColor: '#4510A2'
+    backgroundColor: '#4f4380'
   },
   headerTitle: {
     color: 'white'

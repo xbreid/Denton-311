@@ -84,7 +84,7 @@ class ParkingMeterScreen extends React.Component {
     return {
       title: "Parking Meter",
       headerStyle: {
-        backgroundColor: '#4510A2'
+        backgroundColor: '#4f4380'
       },
       headerTitleStyle: {
         color: 'white'
@@ -113,7 +113,6 @@ class ParkingMeterScreen extends React.Component {
         deviceId: Expo.Constants.deviceId,
         userIsAnon: user.isAnonymous,
         userId: user.uid,
-        dateCreated: moment().format(),
       });
     });
     this.props.navigation.setParams({
@@ -145,7 +144,7 @@ class ParkingMeterScreen extends React.Component {
       title: 'Parking Meter',
       deviceId: this.state.deviceId,
       coords: this.state.coords,
-      dateCreated: this.state.dateCreated,
+      dateCreated: moment().format(),
       uid: Fire.auth().currentUser.uid,
       userIsAnon: this.state.userIsAnon,
       reportNumber: reportNum,

@@ -7,8 +7,6 @@ import DisplayLatLng from '../components/DisplayLatLng';
 import ImageSelector from '../components/ImageSelector';
 import ContactInfo from '../components/ContactInfo';
 import Fire from '../fire';
-import TravelDirectionScreen from '../components/TravelDirection';
-import ListSelector from '../components/ListSelector';
 import moment from 'moment';
 
 const LocationRoute = {
@@ -17,54 +15,7 @@ const LocationRoute = {
   },
 };
 
-const SignalProblemRoutes = {
-  AllOut: {
-    name: 'All out',
-  },
-  BulbOut: {
-    name: 'Bulb Out',
-  },
-  ConflictingSignal: {
-    name: 'Conflicting Signal',
-  },
-  Flashing: {
-    name: 'Flashing',
-  },
-  Knockdown: {
-    name: 'Knockdown',
-  },
-  SchoolFlasher: {
-    name: 'School Flasher',
-  },
-  Stuck: {
-    name: 'Stuck',
-  },
-  Timing: {
-    name: 'Timing',
-  },
-  Other: {
-    name: 'Other',
-  },
-};
-
-const SignalRoutes = {
-  SignalProblemScreen: {
-    screen: ListSelector,
-    display: 'Signal Problem?',
-    type: 'problem',
-    isSet: false,
-    value: null,
-    routes: SignalProblemRoutes
-  },
-  TravelDirectionScreen: {
-    screen: TravelDirectionScreen,
-    display: 'Direction of Travel?',
-    isSet: false,
-    value: null,
-  },
-};
-
-class TrafficLightScreen extends React.Component {
+class OtherScreen extends React.Component {
   constructor(props) {
     super(props);
 
@@ -82,8 +33,6 @@ class TrafficLightScreen extends React.Component {
       lastName: null,
       email: null,
       phone: null,
-      signalDirection: null,
-      signalProblem: null,
       reportNumber: null,
       coords: null,
     };
@@ -93,7 +42,7 @@ class TrafficLightScreen extends React.Component {
     const { params = {} } = navigation.state;
 
     return {
-      title: "Traffic Light",
+      title: "Other",
       headerStyle: {
         backgroundColor: '#4f4380'
       },
@@ -152,7 +101,7 @@ class TrafficLightScreen extends React.Component {
 
     // A report entry.
     let reportData = {
-      title: 'Traffic Light',
+      title: 'Other',
       deviceId: this.state.deviceId,
       coords: this.state.coords,
       dateCreated: moment().format(),
@@ -170,10 +119,6 @@ class TrafficLightScreen extends React.Component {
       lastName: this.state.lastName,
       email: this.state.email,
       phone: this.state.phone,
-      problemDetails: {
-        signalDirection: this.state.signalDirection,
-        signalProblem: this.state.signalProblem,
-      },
       status: 'submitted'
     };
 
@@ -189,12 +134,6 @@ class TrafficLightScreen extends React.Component {
   }
 
   _clearDetails = () => {
-    Object.keys(SignalRoutes).map((routeName: string) => (
-      SignalRoutes[routeName].isSet = false
-    ));
-    Object.keys(SignalRoutes).map((routeName: string) => (
-      SignalRoutes[routeName].value = null
-    ));
     this.setState({
       deviceId: null,
       userId: null,
@@ -212,8 +151,6 @@ class TrafficLightScreen extends React.Component {
       lastName: null,
       email: null,
       phone: null,
-      signalDirection: null,
-      signalProblem: null,
       reportNumber: null,
       coords: null,
     });
@@ -226,27 +163,6 @@ class TrafficLightScreen extends React.Component {
       this.props.navigation.goBack(null);
       this._clearDetails();
     }
-  };
-
-  _getSignalValue = (value, type) => {
-    if (type === 'direction') {
-      Object.keys(SignalRoutes).map((routeName: string, index) => (
-        SignalRoutes['TravelDirectionScreen'].isSet = true
-      ));
-      Object.keys(SignalRoutes).map((routeName: string) => (
-        SignalRoutes['TravelDirectionScreen'].value = value
-      ));
-      this.setState({signalDirection: value});
-    } else if (type === 'problem') {
-      Object.keys(SignalRoutes).map((routeName: string) => (
-        SignalRoutes['SignalProblemScreen'].isSet = true
-      ));
-      Object.keys(SignalRoutes).map((routeName: string) => (
-        SignalRoutes['SignalProblemScreen'].value = value
-      ));
-      this.setState({signalProblem: value});
-    }
-    this.props.navigation.goBack(null);
   };
 
   _getLocation = (address, coords) => {
@@ -376,46 +292,13 @@ class TrafficLightScreen extends React.Component {
             </SafeAreaView>
           </TouchableOpacity>
         ))}
-        <View style={{marginTop: 10}}>
-          {Object.keys(SignalRoutes).map((routeName: string) => (
-            <TouchableOpacity
-              key={routeName}
-              onPress={() => {
-                const { path, params, screen } = SignalRoutes[routeName];
-                const { router } = screen;
-                const action = path && router.getActionForPathAndParams(path, params);
-                this.props.navigation.navigate(
-                  routeName,
-                  {
-                    saveValues: this._getSignalValue,
-                    title: SignalRoutes[routeName].display,
-                    routes: SignalRoutes[routeName].routes,
-                    type: SignalRoutes[routeName].type
-                  },
-                  action,
-                );
-              }}
-            >
-              <SafeAreaView
-                style={[styles.itemContainer]}
-                forceInset={{ vertical: 'never' }}
-              >
-                <View style={styles.submitItem}>
-                  <Text style={styles.title}>
-                    {SignalRoutes[routeName].isSet ? SignalRoutes[routeName].value : SignalRoutes[routeName].display}
-                  </Text>
-                  <Ionicon name="ios-arrow-forward" style={{paddingHorizontal: 3}} color="#BDBDBD" size={22}/>
-                </View>
-              </SafeAreaView>
-            </TouchableOpacity>
-          ))}
-        </View>
         <TextInput
           style={{height: 40, backgroundColor: 'white', fontSize: 16, marginVertical: 10, paddingHorizontal: 20, paddingTop: 10}}
           onChangeText={(additionalDetails) => this.setState({additionalDetails})}
           placeholder="Additional Details (optional)"
           value={this.state.additionalDetails}
           multiline={true}
+          //returnKeyType={ "next" }
         />
         <SafeAreaView
           style={styles.itemContainer}
@@ -454,12 +337,11 @@ class TrafficLightScreen extends React.Component {
   }
 }
 
-const TrafficLightStack = StackNavigator(
+const Stack = StackNavigator(
   {
     ...LocationRoute,
-    ...SignalRoutes,
     Index: {
-      screen: TrafficLightScreen,
+      screen: OtherScreen,
     },
   },
   {
@@ -467,4 +349,4 @@ const TrafficLightStack = StackNavigator(
   }
 );
 
-export default TrafficLightStack;
+export default Stack;

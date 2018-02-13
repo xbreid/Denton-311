@@ -21,6 +21,7 @@ export default class ImageSelector extends React.Component {
       allowsEditing: true,
       aspect: [4, 3],
       base64: true,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images
     });
 
     console.log(result);
@@ -55,6 +56,7 @@ export default class ImageSelector extends React.Component {
       allowsEditing: false,
       aspect: [4, 3],
       base64: true,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images
     });
 
     console.log(result);
