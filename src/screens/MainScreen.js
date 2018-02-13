@@ -10,6 +10,7 @@ import NewRequest from './NewRequest';
 import RecentRequests from './RecentRequests';
 import UserRequests from './UserRequests';
 import UserInfo from './UserInfo';
+import Info from './Info';
 
 const Routes = {
   NewRequest: {
@@ -35,6 +36,13 @@ const Routes = {
     description: 'Application Settings/User Info',
     icon: 'md-person',
     screen: UserInfo,
+  }
+};
+
+const Information = {
+  About: {
+    name: 'About',
+    screen: Info,
   },
 };
 
@@ -85,11 +93,18 @@ const MainScreen = ({ navigation }) => (
   </ScrollView>
 );
 
-const Main = StackNavigator({
+const Main = StackNavigator(
+  {
+    ...Information,
     Main: {
       screen: MainScreen,
       navigationOptions: ({navigation}) => ({
         title: 'Denton 311',
+        headerLeft: (
+          <TouchableOpacity style={{paddingHorizontal: 15}} onPress={() => navigation.navigate('About')}>
+            <Icon name="ios-information-circle-outline" color="#f3f3f3" size={24}/>
+          </TouchableOpacity>
+        ),
         headerRight: (
           <TouchableOpacity style={{paddingHorizontal: 15}} onPress={() => navigation.navigate('NewRequest')}>
             <Icon name="md-add" color="#f3f3f3" size={24}/>
