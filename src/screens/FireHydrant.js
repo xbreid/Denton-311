@@ -127,6 +127,7 @@ class FireHydrantScreen extends React.Component {
     // A report entry.
     let reportData = {
       title: 'Fire Hydrant',
+      type: 'StreetsSidewalks',
       deviceId: this.state.deviceId,
       coords: this.state.coords,
       dateCreated: moment().format(),

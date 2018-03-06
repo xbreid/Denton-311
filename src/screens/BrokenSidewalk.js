@@ -124,6 +124,7 @@ class BrokenSidewalkScreen extends React.Component {
     // A report entry.
     let reportData = {
       title: 'Broken Sidewalk',
+      type: 'StreetsSidewalks',
       deviceId: this.state.deviceId,
       coords: this.state.coords,
       dateCreated: moment().format(),

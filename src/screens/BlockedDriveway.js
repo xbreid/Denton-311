@@ -104,6 +104,7 @@ class BlockedDrivewayScreen extends React.Component {
     // A report entry.
     let reportData = {
       title: 'Blocked Driveway',
+      type: 'ParkingVehicles',
       deviceId: this.state.deviceId,
       coords: this.state.coords,
       dateCreated: moment().format(),

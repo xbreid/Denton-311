@@ -185,6 +185,7 @@ class GraffitiScreen extends React.Component {
     // A report entry.
     let reportData = {
       title: 'Graffiti',
+      type: 'Sanitation',
       deviceId: this.state.deviceId,
       coords: this.state.coords,
       dateCreated: moment().format(),

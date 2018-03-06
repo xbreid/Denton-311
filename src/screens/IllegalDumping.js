@@ -125,6 +125,7 @@ class IllegalDumpingScreen extends React.Component {
     // A report entry.
     let reportData = {
       title: 'Illegal Dumping',
+      type: 'Sanitation',
       deviceId: this.state.deviceId,
       coords: this.state.coords,
       dateCreated: moment().format(),

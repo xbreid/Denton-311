@@ -153,6 +153,7 @@ class TrafficLightScreen extends React.Component {
     // A report entry.
     let reportData = {
       title: 'Traffic Light',
+      type: 'StreetsSidewalks',
       deviceId: this.state.deviceId,
       coords: this.state.coords,
       dateCreated: moment().format(),

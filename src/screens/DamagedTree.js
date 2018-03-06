@@ -154,6 +154,7 @@ class DamagedTreeScreen extends React.Component {
     // A report entry.
     let reportData = {
       title: 'Damaged Tree',
+      type: 'TreesPark',
       deviceId: this.state.deviceId,
       coords: this.state.coords,
       dateCreated: moment().format(),

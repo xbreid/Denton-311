@@ -211,6 +211,7 @@ class DeadAnimalScreen extends React.Component {
     // A report entry.
     let reportData = {
       title: 'Dead Animal',
+      type: 'Animals',
       deviceId: this.state.deviceId,
       coords: this.state.coords,
       dateCreated: moment().format(),

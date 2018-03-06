@@ -102,6 +102,7 @@ class OtherScreen extends React.Component {
     // A report entry.
     let reportData = {
       title: 'Other',
+      type: 'Other',
       deviceId: this.state.deviceId,
       coords: this.state.coords,
       dateCreated: moment().format(),

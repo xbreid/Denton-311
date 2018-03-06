@@ -139,6 +139,7 @@ class IllegalParkingScreen extends React.Component {
     // A report entry.
     let reportData = {
       title: 'Illegal Parking',
+      type: 'ParkingVehicles',
       deviceId: this.state.deviceId,
       coords: this.state.coords,
       dateCreated: moment().format(),

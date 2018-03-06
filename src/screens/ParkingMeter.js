@@ -142,6 +142,7 @@ class ParkingMeterScreen extends React.Component {
     // A report entry.
     let reportData = {
       title: 'Parking Meter',
+      type: 'ParkingVehicles',
       deviceId: this.state.deviceId,
       coords: this.state.coords,
       dateCreated: moment().format(),

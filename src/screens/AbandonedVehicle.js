@@ -154,6 +154,7 @@ class AbandonedVehicleScreen extends React.Component {
     // A report entry.
     let reportData = {
       title: 'Abandoned Vehicle',
+      type: 'ParkingVehicles',
       deviceId: this.state.deviceId,
       coords: this.state.coords,
       dateCreated: moment().format(),
