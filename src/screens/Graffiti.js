@@ -487,8 +487,8 @@ class GraffitiScreen extends React.Component {
             />
           </View>
         </SafeAreaView>
-        <SafeAreaView style={{display: !this.state.contactSwitch ? 'none' : ''}}>
-          <ContactInfo saveContactInfo={this._getContactInfo}/>
+        <SafeAreaView>
+          { this.state.contactSwitch ? <ContactInfo saveContactInfo={this._getContactInfo}/> : <Text/> }
         </SafeAreaView>
       </KeyboardAwareScrollView>
     );
