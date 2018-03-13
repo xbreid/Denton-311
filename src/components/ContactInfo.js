@@ -65,6 +65,7 @@ export default class ContactInfo extends React.Component {
           value={this.state.firstName}
           returnKeyType={ "next" }
           onSubmitEditing={() => { this.refs.LastName.focus() }}
+          underlineColorAndroid="#fff"
         />
         <TextInput
           ref="LastName"
@@ -74,6 +75,7 @@ export default class ContactInfo extends React.Component {
           value={this.state.lastName}
           returnKeyType={ "next" }
           onSubmitEditing={() => { this.refs.Email.focus() }}
+          underlineColorAndroid="#fff"
         />
         <TextInput
           ref="Email"
@@ -83,6 +85,7 @@ export default class ContactInfo extends React.Component {
           value={this.state.email}
           returnKeyType={ "next" }
           onSubmitEditing={() => { this.refs.Phone.focus() }}
+          underlineColorAndroid="#fff"
         />
         <TextInput
           ref="Phone"
@@ -91,6 +94,7 @@ export default class ContactInfo extends React.Component {
           placeholder="Phone"
           returnKeyType={ "done" }
           value={this.state.phone}
+          underlineColorAndroid="#fff"
         />
       </View>
     );
