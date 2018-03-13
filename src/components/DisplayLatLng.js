@@ -1,10 +1,12 @@
 import React from 'react';
 import { Platform, Dimensions, StyleSheet, Text, View, Alert,
   KeyboardAvoidingView, ScrollView, TouchableOpacity, Button,
-  Image, TextInput, Switch, TouchableHighlight } from 'react-native';
+  Image, TextInput, Switch, TouchableHighlight, NetInfo } from 'react-native';
 import { SafeAreaView, StackNavigator, NavigationActions } from 'react-navigation';
 import { ImagePicker, Permissions, MapView, Location } from 'expo';
 import TargetIcon from '../../assets/images/target.png';
+import SnackBar from 'react-native-snackbar-component';
+import Fire from '../fire.js';
 
 const { width, height } = Dimensions.get('window');
 
@@ -25,6 +27,7 @@ export default class DisplayLatLng extends React.Component {
       longitude: null,
       errorMessage: null,
       address: null,
+      status: true,
       coords: {
         latitude: 0,
         longitude: 0,
@@ -35,6 +38,7 @@ export default class DisplayLatLng extends React.Component {
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
       },
+
     };
   }
 
@@ -73,15 +77,34 @@ export default class DisplayLatLng extends React.Component {
   };
 
   componentDidMount() {
-    //this._getLocationAsync();
     this.props.navigation.setParams({
       address: null,
       coords: null,
       isDone: false,
     });
+
+    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
+    this.checkInetConnection();
   }
 
+  componentWillUnmount() {
+    NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectionChange);
+  }
+
+  checkInetConnection = () => {
+    NetInfo.isConnected.fetch().done(
+      (isConnected) => { this.setState({ status: isConnected }); }
+    );
+  };
+
+  handleConnectionChange = (isConnected) => {
+    this.setState({ status: isConnected });
+    //alert(`is connected: ${this.state.status}`);
+  };
+
   _getLocationAsync = async () => {
+    this.checkInetConnection();
+
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {
       this.setState({
@@ -130,6 +153,8 @@ export default class DisplayLatLng extends React.Component {
   };
 
   _geocodeCoords = async (location) => {
+    this.checkInetConnection();
+
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {
       this.setState({
@@ -156,6 +181,8 @@ export default class DisplayLatLng extends React.Component {
   }
 
   onMapPress(e) {
+    this.checkInetConnection();
+
     let newLatDelta = 0.0080;
     let newLongDelta = newLatDelta * ASPECT_RATIO;
 
@@ -300,13 +327,18 @@ export default class DisplayLatLng extends React.Component {
           >
             <Image style={styles.icon} source={TargetIcon}/>
           </TouchableHighlight>
-        {isLocationError ?
-          <View style={[styles.bubble, styles.latlng]}>
-            <Text style={{textAlign: 'center'}}>
-              {isLocationError ? this.state.errorMessage : ''}
-            </Text>
-          </View> : <Text/>
-        }
+        <SnackBar
+          visible={!this.state.status}
+          textMessage="No internet connection, please connect to the internet"
+          actionHandler={()=>{this.setState({status: !this.state.status})}}
+          actionText="Close"
+        />
+        <SnackBar
+          visible={isLocationError}
+          textMessage={this.state.errorMessage}
+          actionHandler={()=>{this.setState({errorMessage: null})}}
+          actionText="Close"
+        />
       </View>
     );
   }
