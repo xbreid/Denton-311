@@ -97,11 +97,17 @@ class ParkingMeterScreen extends React.Component {
         </TouchableOpacity>
       ),
       headerRight: (
-        <TouchableOpacity style={{marginRight: 15}} onPress={() => params.handleSave()} >
-          <Text style={{color: '#f3f3f3', font: 16, fontWeight: 'bold'}}>
-            Submit
-          </Text>
-        </TouchableOpacity>
+        [
+          params.canSubmit ?
+            <TouchableOpacity style={{marginRight: 15}} onPress={() => params.handleSave()} >
+              <Text style={{color: '#ffffff', font: 16, fontWeight: 'bold'}}>
+                Submit
+              </Text>
+            </TouchableOpacity> :
+            <Text style={{color: '#AAAFB4', font: 16, fontWeight: 'bold', marginRight: 15}}>
+              Submit
+            </Text>
+        ]
       )
     }
   };
@@ -118,6 +124,7 @@ class ParkingMeterScreen extends React.Component {
     this.props.navigation.setParams({
       handleSave: this._saveDetails,
       handleCancel: this._clearDetails,
+      canSubmit: false,
     });
     this.getLatestIssueId();
   }
@@ -226,6 +233,9 @@ class ParkingMeterScreen extends React.Component {
         address: addressString,
         coords: coords
       });
+      this.props.navigation.setParams({
+        canSubmit: true,
+      });
       this.props.navigation.goBack(null);
     }
   };
@@ -333,7 +343,12 @@ class ParkingMeterScreen extends React.Component {
     }
 
     return(
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView
+        enableOnAndroid="true"
+        contentContainerStyle={{ flexGrow: 1 }}
+        resetScrollToCoords={{ x: 0, y: 0 }}
+        scrollEnabled
+      >
         <ImageSelector saveImage={this._getImage} removeImage={this._deleteImage}/>
         {Object.keys(LocationRoute).map((routeName: string) => (
           <TouchableOpacity
@@ -439,6 +454,7 @@ class ParkingMeterScreen extends React.Component {
         <SafeAreaView>
           { this.state.contactSwitch ? <ContactInfo saveContactInfo={this._getContactInfo}/> : <Text/> }
         </SafeAreaView>
+        <View style={{ height: 60 }} />
       </KeyboardAwareScrollView>
     );
   }

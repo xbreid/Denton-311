@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, Switch } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Switch, NetInfo } from 'react-native';
 import { SafeAreaView, StackNavigator } from 'react-navigation';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -51,17 +51,23 @@ class PotholeScreen extends React.Component {
       },
       headerLeft: (
         <TouchableOpacity style={{marginLeft: 15}} onPress={() => params.handleCancel()}>
-          <Text style={{color: '#f3f3f3', font: 16, fontWeight: 'bold'}}>
+          <Text style={{color: '#ffffff', font: 16, fontWeight: 'bold'}}>
             Cancel
           </Text>
         </TouchableOpacity>
       ),
       headerRight: (
-        <TouchableOpacity style={{marginRight: 15}} onPress={() => params.handleSave()} >
-          <Text style={{color: '#f3f3f3', font: 16, fontWeight: 'bold'}}>
+        [
+          params.canSubmit ?
+          <TouchableOpacity style={{marginRight: 15}} onPress={() => params.handleSave()} >
+            <Text style={{color: '#ffffff', font: 16, fontWeight: 'bold'}}>
+              Submit
+            </Text>
+          </TouchableOpacity> :
+          <Text style={{color: '#AAAFB4', font: 16, fontWeight: 'bold', marginRight: 15}}>
             Submit
           </Text>
-        </TouchableOpacity>
+        ]
       )
     }
   };
@@ -78,6 +84,7 @@ class PotholeScreen extends React.Component {
     this.props.navigation.setParams({
       handleSave: this._saveDetails,
       handleCancel: this._clearDetails,
+      canSubmit: false,
     });
     this.getLatestIssueId();
   }
@@ -172,7 +179,10 @@ class PotholeScreen extends React.Component {
       this.setState({
         location: address,
         address: addressString,
-        coords: coords
+        coords: coords,
+      });
+      this.props.navigation.setParams({
+        canSubmit: true,
       });
       this.props.navigation.goBack(null);
     }
@@ -268,7 +278,12 @@ class PotholeScreen extends React.Component {
     }
 
     return(
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView
+        enableOnAndroid="true"
+        contentContainerStyle={{ flexGrow: 1 }}
+        resetScrollToCoords={{ x: 0, y: 0 }}
+        scrollEnabled
+      >
         <ImageSelector saveImage={this._getImage} removeImage={this._deleteImage}/>
         {Object.keys(LocationRoute).map((routeName: string) => (
           <TouchableOpacity
@@ -334,6 +349,7 @@ class PotholeScreen extends React.Component {
         <SafeAreaView>
           { this.state.contactSwitch ? <ContactInfo saveContactInfo={this._getContactInfo}/> : <Text/> }
         </SafeAreaView>
+        <View style={{ height: 60 }} />
       </KeyboardAwareScrollView>
     );
   }
