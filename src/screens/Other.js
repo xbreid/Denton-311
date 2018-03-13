@@ -300,6 +300,7 @@ class OtherScreen extends React.Component {
           value={this.state.additionalDetails}
           multiline={true}
           //returnKeyType={ "next" }
+          underlineColorAndroid="#fff"
         />
         <SafeAreaView
           style={styles.itemContainer}

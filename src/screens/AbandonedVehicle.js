@@ -428,6 +428,7 @@ class AbandonedVehicleScreen extends React.Component {
           placeholder="Additional Details (optional)"
           value={this.state.additionalDetails}
           multiline={true}
+          underlineColorAndroid="#fff"
           //returnKeyType={ "next" }
         />
         <SafeAreaView

@@ -399,6 +399,7 @@ class IllegalDumpingScreen extends React.Component {
           placeholder="Describe type, quantity, and location (optional)"
           value={this.state.additionalDetails}
           multiline={true}
+          underlineColorAndroid="#fff"
         />
         <SafeAreaView
           style={styles.itemContainer}
