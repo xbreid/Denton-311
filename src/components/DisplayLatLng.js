@@ -51,17 +51,23 @@ export default class DisplayLatLng extends React.Component {
       },
       headerLeft: (
         <TouchableOpacity style={{marginLeft: 15}} onPress={() => navigation.goBack(null)}>
-          <Text style={{color: '#f3f3f3', font: 16, fontWeight: 'bold'}}>
+          <Text style={{color: '#ffffff', font: 16, fontWeight: 'bold'}}>
             Cancel
           </Text>
         </TouchableOpacity>
       ),
       headerRight: (
-        <TouchableOpacity style={{marginRight: 15}} onPress={() => params.saveLocation(params.address, params.coords)} >
-          <Text style={{color: '#f3f3f3', font: 16, fontWeight: 'bold'}}>
-            Done
-          </Text>
-        </TouchableOpacity>
+        [
+          params.isDone ?
+            <TouchableOpacity style={{marginRight: 15}} onPress={() => params.saveLocation(params.address, params.coords)} >
+              <Text style={{color: '#ffffff', font: 16, fontWeight: 'bold'}}>
+                Done
+              </Text>
+            </TouchableOpacity> :
+            <Text style={{color: '#AAAFB4', font: 16, fontWeight: 'bold', marginRight: 15}}>
+              Done
+            </Text>
+        ]
       )
     }
   };
@@ -71,6 +77,7 @@ export default class DisplayLatLng extends React.Component {
     this.props.navigation.setParams({
       address: null,
       coords: null,
+      isDone: false,
     });
   }
 
@@ -115,7 +122,6 @@ export default class DisplayLatLng extends React.Component {
       this.setState({
         coords: coords,
         region: newRegion,
-        isCoords: true,
       });
       this.props.navigation.setParams({
         coords: coords
@@ -140,7 +146,8 @@ export default class DisplayLatLng extends React.Component {
       address: geocodeAddress
     });
     this.props.navigation.setParams({
-      address: geocodeAddress
+      address: geocodeAddress,
+      isDone: true,
     });
   };
 
