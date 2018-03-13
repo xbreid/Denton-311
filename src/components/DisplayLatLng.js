@@ -1,12 +1,10 @@
 import React from 'react';
 import { Platform, Dimensions, StyleSheet, Text, View, Alert,
   KeyboardAvoidingView, ScrollView, TouchableOpacity, Button,
-  Image, TextInput, Switch } from 'react-native';
-import { ScreenOrientation } from 'expo';
+  Image, TextInput, Switch, TouchableHighlight } from 'react-native';
 import { SafeAreaView, StackNavigator, NavigationActions } from 'react-navigation';
 import { ImagePicker, Permissions, MapView, Location } from 'expo';
-import ActionButton from 'react-native-action-button';
-import Icon from 'react-native-vector-icons/Ionicons';
+import TargetIcon from '../../assets/images/target.png';
 
 const { width, height } = Dimensions.get('window');
 
@@ -27,7 +25,10 @@ export default class DisplayLatLng extends React.Component {
       longitude: null,
       errorMessage: null,
       address: null,
-      coords: null,
+      coords: {
+        latitude: 0,
+        longitude: 0,
+      },
       region: {
         latitude: LATITUDE,
         longitude: LONGITUDE,
@@ -66,6 +67,7 @@ export default class DisplayLatLng extends React.Component {
   };
 
   componentDidMount() {
+    //this._getLocationAsync();
     this.props.navigation.setParams({
       address: null,
       coords: null,
@@ -113,6 +115,7 @@ export default class DisplayLatLng extends React.Component {
       this.setState({
         coords: coords,
         region: newRegion,
+        isCoords: true,
       });
       this.props.navigation.setParams({
         coords: coords
@@ -129,6 +132,8 @@ export default class DisplayLatLng extends React.Component {
     }
 
     let geocodeAddress = await Location.reverseGeocodeAsync(location);
+    console.log(geocodeAddress[0].name.toString().substr(0,geocodeAddress[0].name.toString().indexOf(' ')));
+    console.log(geocodeAddress[0].name.toString().substr(0,geocodeAddress[0].name.toString().indexOf('')));
     let address = geocodeAddress[0].name.toString() + ", " + geocodeAddress[0].city.toString();
     this.setState({
       text: address,
@@ -175,6 +180,7 @@ export default class DisplayLatLng extends React.Component {
       this.setState({
         coords: e.nativeEvent.coordinate,
         region: newRegion,
+        isCoords: true,
       });
       this.props.navigation.setParams({
         coords: coords
@@ -223,6 +229,30 @@ export default class DisplayLatLng extends React.Component {
       actionButtonIcon: {
         color: '#333',
       },
+      actionButton: {
+        backgroundColor: '#ffffff',
+        borderColor: '#f3f3f3',
+        borderWidth: 1,
+        height: 50,
+        width: 50,
+        borderRadius: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'absolute',
+        bottom: 20,
+        right: 20,
+        shadowColor: "#000000",
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+        shadowOffset: {
+          height: 1,
+          width: 0
+        }
+      },
+      icon: {
+        width: 25,
+        height: 25,
+      }
     });
 
     let isLocationError = false;
@@ -252,21 +282,24 @@ export default class DisplayLatLng extends React.Component {
               onChangeText={(text) => this.setState({text})}
               placeholder="Where is the issue?"
               value={this.state.text}
+              underlineColorAndroid="#fff"
             />
           </View>
         </SafeAreaView>
-        {/* Rest of the app comes ABOVE the action button component !*/}
-          <ActionButton
-            icon={<Icon name="md-locate" size="25" style={styles.actionButtonIcon} />}
-            buttonColor='#f3f3f3'
-            onPress={() => this._getLocationAsync()}
-            position="right"
-          />
-        <View style={[styles.bubble, styles.latlng, {display: isLocationError ? '' : 'none'}]}>
-          <Text style={{ textAlign: 'center' }}>
-            {isLocationError ? this.state.errorMessage : ''}
-          </Text>
-        </View>
+          <TouchableHighlight
+            style={styles.actionButton}
+            underlayColor='#f3f3f3'
+            onPress={()=>{this._getLocationAsync()}}
+          >
+            <Image style={styles.icon} source={TargetIcon}/>
+          </TouchableHighlight>
+        {isLocationError ?
+          <View style={[styles.bubble, styles.latlng]}>
+            <Text style={{textAlign: 'center'}}>
+              {isLocationError ? this.state.errorMessage : ''}
+            </Text>
+          </View> : <Text/>
+        }
       </View>
     );
   }
