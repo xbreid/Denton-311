@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, ScrollView, TouchableOpacity, Text, View, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { MailComposer } from 'expo';
 
 export default class Report extends React.Component {
   constructor(props) {
@@ -25,6 +26,20 @@ export default class Report extends React.Component {
       ),
     }
   };
+
+  _composeMail = async () => {
+
+    let { status } = await MailComposer.composeAsync({
+      recipients: ["311denton@gmail.com"],
+      subject: "Denton 311 Bugs and Feedback",
+    });
+    if (status !== 'sent') {
+      this.setState({
+        errorMessage: 'Mail Composer failed',
+      });
+    }
+  };
+
 
   render() {
     const styles = StyleSheet.create({
@@ -79,6 +94,18 @@ export default class Report extends React.Component {
             </View>
           </SafeAreaView>
         </View>
+        <TouchableOpacity style={{backgroundColor: '#ffffff', marginVertical: 10}} onPress={() => this._composeMail()}>
+          <SafeAreaView
+            forceInset={{ vertical: 'never' }}
+          >
+            <View style={styles.item}>
+              <Text style={styles.title}>
+                Bugs & Feedback
+              </Text>
+              <Icon name="ios-arrow-forward" style={{paddingHorizontal: 3}} color="#BDBDBD" size={22}/>
+            </View>
+          </SafeAreaView>
+        </TouchableOpacity>
         <View style={{margin: 15}}>
           <Text>
             Copyright © 2018
