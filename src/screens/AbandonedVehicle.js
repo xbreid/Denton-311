@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, Switch } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Switch, Alert } from 'react-native';
 import { SafeAreaView, StackNavigator } from 'react-navigation';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -141,6 +141,38 @@ class AbandonedVehicleScreen extends React.Component {
     this.getLatestIssueId();
   }
 
+  componentWillUnmount() {
+    Object.keys(AbandonedVehicleRoutes).map((routeName: string) => (
+      AbandonedVehicleRoutes[routeName].isSet = false
+    ));
+    Object.keys(AbandonedVehicleRoutes).map((routeName: string) => (
+      AbandonedVehicleRoutes[routeName].value = null
+    ));
+    this.setState({
+      deviceId: null,
+      userId: null,
+      userIsAnon: null,
+      issueId: null,
+      additionalDetails: null,
+      address: null,
+      imageOne: null,
+      imageTwo: null,
+      imageThree: null,
+      location: null,
+      publicSwitch: true,
+      contactSwitch: false,
+      firstName:null,
+      lastName: null,
+      email: null,
+      phone: null,
+      vehicleColor: null,
+      vehicleType: null,
+      make: null,
+      reportNumber: null,
+      coords: null,
+    });
+  }
+
   // might be a bug here
   // if there is no query back for some reason, the report number will default to 0
   getLatestIssueId() {
@@ -199,43 +231,21 @@ class AbandonedVehicleScreen extends React.Component {
   }
 
   _clearDetails = () => {
-    Object.keys(AbandonedVehicleRoutes).map((routeName: string) => (
-      AbandonedVehicleRoutes[routeName].isSet = false
-    ));
-    Object.keys(AbandonedVehicleRoutes).map((routeName: string) => (
-      AbandonedVehicleRoutes[routeName].value = null
-    ));
-    this.setState({
-      deviceId: null,
-      userId: null,
-      userIsAnon: null,
-      issueId: null,
-      additionalDetails: null,
-      address: null,
-      imageOne: null,
-      imageTwo: null,
-      imageThree: null,
-      location: null,
-      publicSwitch: true,
-      contactSwitch: false,
-      firstName:null,
-      lastName: null,
-      email: null,
-      phone: null,
-      vehicleColor: null,
-      vehicleType: null,
-      make: null,
-      reportNumber: null,
-      coords: null,
-    });
-    this.props.navigation.goBack(null);
+    Alert.alert(
+      'Exiting this form will delete thie information you have entered. Are you sure you want to exit?',
+      '',
+      [
+        {text: 'Dont Exit', onPress: () => { }, style: 'cancel'},
+        {text: 'Exit', onPress: () => { this.props.navigation.goBack(null) }},
+      ],
+      { cancelable: false }
+    );
   };
 
   _saveDetails = () => {
     if (this.state.location) {
       this.writeNewReport();
       this.props.navigation.goBack(null);
-      this._clearDetails();
     }
   };
 
