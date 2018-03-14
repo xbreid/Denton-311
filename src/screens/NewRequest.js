@@ -4,7 +4,6 @@ import { Platform, StyleSheet, Text, View, KeyboardAvoidingView,
 import { ScreenOrientation } from 'expo';
 import { SafeAreaView, StackNavigator, NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
-import TestClassScreen from './TestScreen';
 import DeadAnimalScreen from './DeadAnimal';
 import FoundAnimalScreen from './FoundAnimal';
 import LooseAnimalScreen from './LooseAnimal';

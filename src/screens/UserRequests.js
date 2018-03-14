@@ -60,13 +60,12 @@ class ReportList extends React.Component {
   render() {
     const styles = StyleSheet.create({
       item: {
-        paddingHorizontal: 20,
-        paddingVertical: 25,
+        paddingHorizontal: 10,
+        paddingVertical: 10,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         flex: 1,
-        //alignSelf: 'flex-start'
       },
       itemContainer: {
         backgroundColor: '#fff',
@@ -111,8 +110,8 @@ class ReportList extends React.Component {
                 </View>
                 {
                   report.imageOne ?
-                    <Image style={{ height: 75, width: 75 }} source={{uri: `data:image/jpg;base64,${report.imageOne}`}} />
-                    : <Text/>
+                    <Image style={{ height: 85, width: 85 }} source={{uri: `data:image/jpg;base64,${report.imageOne}`}} />
+                    : <Image style={{ height: 85, width: 85 }} source={{uri: `data:image/jpg;base64,${report.mapSnapshot}`}} />
                 }
               </View>
             </SafeAreaView>
