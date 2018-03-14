@@ -6,7 +6,7 @@ import { SafeAreaView, StackNavigator, NavigationActions } from 'react-navigatio
 import { ImagePicker, Permissions, MapView, Location } from 'expo';
 import TargetIcon from '../../assets/images/target.png';
 import SnackBar from 'react-native-snackbar-component';
-import Fire from '../fire.js';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const { width, height } = Dimensions.get('window');
 
@@ -177,6 +177,45 @@ export default class DisplayLatLng extends React.Component {
     });
   };
 
+  _geocodeAddress = async (address) => {
+    this.checkInetConnection();
+
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      this.setState({
+        errorMessage: 'Permission to access location was denied',
+      });
+    }
+
+    let newLatDelta = 0.0080;
+    let newLongDelta = newLatDelta * ASPECT_RATIO;
+
+    let geocode = await Location.geocodeAsync(address);
+
+    let coords = {
+      latitude: geocode[0].latitude,
+      longitude: geocode[0].longitude,
+    };
+
+    let newRegion = {
+      latitude: geocode[0].latitude,
+      longitude: geocode[0].longitude,
+      latitudeDelta: newLatDelta,
+      longitudeDelta: newLongDelta,
+    };
+
+    this.setState({
+      coords: coords,
+      region: newRegion,
+    });
+    this.props.navigation.setParams({
+      coords: coords,
+    });
+
+    this.map.animateToRegion(newRegion);
+    this._geocodeCoords(coords);
+  };
+
   takeSnapshot () {
     // 'takeSnapshot' takes a config object with the
     // following options
@@ -275,7 +314,8 @@ export default class DisplayLatLng extends React.Component {
         fontSize: 16,
         margin: 7,
         borderRadius: 3,
-        textAlign: 'center'
+        paddingHorizontal: 30,
+        //textAlign: 'center'
       },
       actionButtonIcon: {
         color: '#333',
@@ -334,7 +374,13 @@ export default class DisplayLatLng extends React.Component {
               placeholder="Where is the issue?"
               value={this.state.text}
               underlineColorAndroid="#fff"
+              returnKeyType={ "Done" }
+              onSubmitEditing={() => { this._geocodeAddress(this.state.text + ', Denton') }}
             />
+            <Icon name="md-search" style={{paddingTop: 10, paddingHorizontal: 15, position: 'absolute'}} color="grey" size={23}/>
+            <TouchableOpacity style={{right: 0, paddingTop: 10, paddingHorizontal: 15, position: 'absolute'}} onPress={() => this.setState({text: ''})}>
+              <Icon name="md-close" color="grey" size={23}/>
+            </TouchableOpacity>
           </View>
         </SafeAreaView>
           <TouchableHighlight
