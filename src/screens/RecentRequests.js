@@ -206,7 +206,7 @@ class ReportMap extends React.Component {
           }}
         >
           {Array.from(this.state.reports).map((report, index, arr) => (
-            <MapView.Marker
+            report.submitPublicly ? <MapView.Marker
               coordinate={report.coords}
               title={report.title}
               description={report.address}
@@ -225,7 +225,7 @@ class ReportMap extends React.Component {
                   </TouchableOpacity>
                 </View>
               </MapView.Callout>
-            </MapView.Marker>
+            </MapView.Marker> : null
           ))}
         </MapView>
         <SnackBar
