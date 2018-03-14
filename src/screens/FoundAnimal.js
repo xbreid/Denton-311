@@ -103,6 +103,7 @@ class FoundAnimalScreen extends React.Component {
       animalGender: null,
       reportNumber: null,
       coords: null,
+      mapSnapshot: null,
     };
   }
 
@@ -185,6 +186,7 @@ class FoundAnimalScreen extends React.Component {
       animalGender: null,
       reportNumber: null,
       coords: null,
+      mapSnapshot: null,
     });
   }
 
@@ -230,7 +232,8 @@ class FoundAnimalScreen extends React.Component {
         animalType: this.state.animalType,
         animalGender: this.state.animalGender,
       },
-      status: 'submitted'
+      status: 'submitted',
+      mapSnapshot: this.state.mapSnapshot,
     };
 
     // Get a key for a new Post.
@@ -263,13 +266,14 @@ class FoundAnimalScreen extends React.Component {
     }
   };
 
-  _getLocation = (address, coords) => {
+  _getLocation = (address, coords, mapSnapshot) => {
     if (address) {
       let addressString = address[0].name.toString() + ", " + address[0].city.toString();
       this.setState({
         location: address,
         address: addressString,
-        coords: coords
+        coords: coords,
+        mapSnapshot: mapSnapshot,
       });
       this.props.navigation.setParams({
         canSubmit: true,

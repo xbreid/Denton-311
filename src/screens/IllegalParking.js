@@ -72,6 +72,7 @@ class IllegalParkingScreen extends React.Component {
       recurringProblem: false,
       reportNumber: null,
       coords: null,
+      mapSnapshot: null,
     };
   }
 
@@ -154,6 +155,7 @@ class IllegalParkingScreen extends React.Component {
       recurringProblem: false,
       reportNumber: null,
       coords: null,
+      mapSnapshot: null,
     });
   }
 
@@ -199,7 +201,8 @@ class IllegalParkingScreen extends React.Component {
         parkingViolation: this.state.parkingViolation,
         recurringProblem: this.state.recurringProblem,
       },
-      status: 'submitted'
+      status: 'submitted',
+      mapSnapshot: this.state.mapSnapshot,
     };
 
     // Get a key for a new Post.
@@ -232,13 +235,14 @@ class IllegalParkingScreen extends React.Component {
     }
   };
 
-  _getLocation = (address, coords) => {
+  _getLocation = (address, coords, mapSnapshot) => {
     if (address) {
       let addressString = address[0].name.toString() + ", " + address[0].city.toString();
       this.setState({
         location: address,
         address: addressString,
-        coords: coords
+        coords: coords,
+        mapSnapshot: mapSnapshot,
       });
       this.props.navigation.setParams({
         canSubmit: true,

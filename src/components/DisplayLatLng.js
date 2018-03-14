@@ -63,7 +63,7 @@ export default class DisplayLatLng extends React.Component {
       headerRight: (
         [
           params.isDone ?
-            <TouchableOpacity style={{marginRight: 15}} onPress={() => params.saveLocation(params.address, params.coords)} >
+            <TouchableOpacity style={{marginRight: 15}} onPress={() => params.saveLocation(params.address, params.coords, params.mapSnapshot)} >
               <Text style={{color: '#ffffff', font: 16, fontWeight: 'bold'}}>
                 Done
               </Text>
@@ -170,11 +170,28 @@ export default class DisplayLatLng extends React.Component {
       text: address,
       address: geocodeAddress
     });
+    this.takeSnapshot();
     this.props.navigation.setParams({
       address: geocodeAddress,
       isDone: true,
     });
   };
+
+  takeSnapshot () {
+    // 'takeSnapshot' takes a config object with the
+    // following options
+    const snapshot = this.map.takeSnapshot({
+      height: 100,     // optional, when omitted the view-height is used
+      format: 'png',   // image formats: 'png', 'jpg' (default: 'png')
+      result: 'base64'   // result types: 'file', 'base64' (default: 'file')
+    });
+    snapshot.then((uri) => {
+      //this.setState({ mapSnapshot: uri });
+      this.props.navigation.setParams({
+        mapSnapshot: uri,
+      });
+    });
+  }
 
   onRegionChange(region) {
     this.setState({ region });

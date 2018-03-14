@@ -35,6 +35,7 @@ class PotholeScreen extends React.Component {
       phone: null,
       reportNumber: null,
       coords: null,
+      mapSnapshot: null,
     };
   }
 
@@ -109,6 +110,7 @@ class PotholeScreen extends React.Component {
       phone: null,
       reportNumber: null,
       coords: null,
+      mapSnapshot: null,
     });
   }
 
@@ -122,7 +124,6 @@ class PotholeScreen extends React.Component {
       if (!snapshot) {
         this.setState({reportNumber: 0});
       }
-
     });
   }
 
@@ -150,7 +151,8 @@ class PotholeScreen extends React.Component {
       lastName: this.state.lastName,
       email: this.state.email,
       phone: this.state.phone,
-      status: 'submitted'
+      status: 'submitted',
+      mapSnapshot: this.state.mapSnapshot,
     };
 
     // Get a key for a new Post.
@@ -183,13 +185,14 @@ class PotholeScreen extends React.Component {
     }
   };
 
-  _getLocation = (address, coords) => {
+  _getLocation = (address, coords, mapSnapshot) => {
     if (address) {
       let addressString = address[0].name.toString() + ", " + address[0].city.toString();
       this.setState({
         location: address,
         address: addressString,
         coords: coords,
+        mapSnapshot: mapSnapshot,
       });
       this.props.navigation.setParams({
         canSubmit: true,

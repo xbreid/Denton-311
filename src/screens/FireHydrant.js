@@ -60,6 +60,7 @@ class FireHydrantScreen extends React.Component {
       hydrantProblem: null,
       reportNumber: null,
       coords: null,
+      mapSnapshot: null,
     };
   }
 
@@ -141,6 +142,7 @@ class FireHydrantScreen extends React.Component {
       hydrantProblem: null,
       reportNumber: null,
       coords: null,
+      mapSnapshot: null,
     });
   }
 
@@ -185,7 +187,8 @@ class FireHydrantScreen extends React.Component {
       problemDetails: {
         hydrantProblem: this.state.hydrantProblem,
       },
-      status: 'submitted'
+      status: 'submitted',
+      mapSnapshot: this.state.mapSnapshot,
     };
 
     // Get a key for a new Post.
@@ -218,13 +221,14 @@ class FireHydrantScreen extends React.Component {
     }
   };
 
-  _getLocation = (address, coords) => {
+  _getLocation = (address, coords, mapSnapshot) => {
     if (address) {
       let addressString = address[0].name.toString() + ", " + address[0].city.toString();
       this.setState({
         location: address,
         address: addressString,
-        coords: coords
+        coords: coords,
+        mapSnapshot: mapSnapshot,
       });
       this.props.navigation.setParams({
         canSubmit: true,

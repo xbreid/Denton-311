@@ -66,6 +66,7 @@ class StreetLightScreen extends React.Component {
       lightProblem: null,
       reportNumber: null,
       coords: null,
+      mapSnapshot: null,
     };
   }
 
@@ -147,6 +148,7 @@ class StreetLightScreen extends React.Component {
       lightProblem: null,
       reportNumber: null,
       coords: null,
+      mapSnapshot: null,
     });
   }
 
@@ -191,7 +193,8 @@ class StreetLightScreen extends React.Component {
       problemDetails: {
         lightProblem: this.state.lightProblem,
       },
-      status: 'submitted'
+      status: 'submitted',
+      mapSnapshot: this.state.mapSnapshot,
     };
 
     // Get a key for a new Post.
@@ -224,13 +227,14 @@ class StreetLightScreen extends React.Component {
     }
   };
 
-  _getLocation = (address, coords) => {
+  _getLocation = (address, coords, mapSnapshot) => {
     if (address) {
       let addressString = address[0].name.toString() + ", " + address[0].city.toString();
       this.setState({
         location: address,
         address: addressString,
-        coords: coords
+        coords: coords,
+        mapSnapshot: mapSnapshot,
       });
       this.props.navigation.setParams({
         canSubmit: true,
