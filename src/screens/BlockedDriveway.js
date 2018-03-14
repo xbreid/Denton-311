@@ -157,8 +157,8 @@ class BlockedDrivewayScreen extends React.Component {
       email: this.state.email,
       phone: this.state.phone,
       problemDetails: {
-        CompletelyBlocked: this.state.completelyBlocked,
-        RecurringProblem: this.state.recurringProblem,
+        'Completely Blocked': this.state.completelyBlocked,
+        'Recurring Problem': this.state.recurringProblem,
       },
       status: 'submitted',
       mapSnapshot: this.state.mapSnapshot,

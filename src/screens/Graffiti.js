@@ -245,9 +245,9 @@ class GraffitiScreen extends React.Component {
       email: this.state.email,
       phone: this.state.phone,
       problemDetails: {
-        onType: this.state.onType,
-        surfaceType: this.state.surfaceType,
-        heightFromGround: this.state.heightFromGround,
+        'On Type': this.state.onType,
+        'Surface Type': this.state.surfaceType,
+        'Height From Ground': this.state.heightFromGround,
       },
       status: 'submitted',
       mapSnapshot: this.state.mapSnapshot,

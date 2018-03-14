@@ -212,7 +212,7 @@ class DamagedTreeScreen extends React.Component {
       email: this.state.email,
       phone: this.state.phone,
       problemDetails: {
-        problemType: this.state.problemType,
+        'Problem Type': this.state.problemType,
       },
       status: 'submitted',
       mapSnapshot: this.state.mapSnapshot,

@@ -237,8 +237,8 @@ class StreetSignScreen extends React.Component {
       email: this.state.email,
       phone: this.state.phone,
       problemDetails: {
-        signType: this.state.signType,
-        signProblem: this.state.signProblem,
+        'Sign Type': this.state.signType,
+        'Sign Problem': this.state.signProblem,
       },
       status: 'submitted',
       mapSnapshot: this.state.mapSnapshot,

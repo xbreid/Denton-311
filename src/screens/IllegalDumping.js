@@ -184,8 +184,8 @@ class IllegalDumpingScreen extends React.Component {
       email: this.state.email,
       phone: this.state.phone,
       problemDetails: {
-        dumpingViolation: this.state.dumpingViolation,
-        recurringProblem: this.state.recurringProblem,
+        'Dumping Violation': this.state.dumpingViolation,
+        'Recurring Problem': this.state.recurringProblem,
       },
       status: 'submitted',
       mapSnapshot: this.state.mapSnapshot,

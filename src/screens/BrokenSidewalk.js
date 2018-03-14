@@ -182,7 +182,7 @@ class BrokenSidewalkScreen extends React.Component {
       email: this.state.email,
       phone: this.state.phone,
       problemDetails: {
-        sidewalkProblem: this.state.sidewalkProblem,
+        'Sidewalk Problem': this.state.sidewalkProblem,
       },
       status: 'submitted',
       mapSnapshot: this.state.mapSnapshot,

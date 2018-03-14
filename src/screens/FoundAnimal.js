@@ -229,8 +229,8 @@ class FoundAnimalScreen extends React.Component {
       email: this.state.email,
       phone: this.state.phone,
       problemDetails: {
-        animalType: this.state.animalType,
-        animalGender: this.state.animalGender,
+        'Animal Type': this.state.animalType,
+        'Animal Gender': this.state.animalGender,
       },
       status: 'submitted',
       mapSnapshot: this.state.mapSnapshot,

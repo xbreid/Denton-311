@@ -198,8 +198,8 @@ class IllegalParkingScreen extends React.Component {
       email: this.state.email,
       phone: this.state.phone,
       problemDetails: {
-        parkingViolation: this.state.parkingViolation,
-        recurringProblem: this.state.recurringProblem,
+        'Parking Violation': this.state.parkingViolation,
+        'Recurring Problem': this.state.recurringProblem,
       },
       status: 'submitted',
       mapSnapshot: this.state.mapSnapshot,

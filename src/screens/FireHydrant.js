@@ -185,7 +185,7 @@ class FireHydrantScreen extends React.Component {
       email: this.state.email,
       phone: this.state.phone,
       problemDetails: {
-        hydrantProblem: this.state.hydrantProblem,
+        'Hydrant Problem': this.state.hydrantProblem,
       },
       status: 'submitted',
       mapSnapshot: this.state.mapSnapshot,

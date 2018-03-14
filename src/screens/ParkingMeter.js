@@ -201,8 +201,8 @@ class ParkingMeterScreen extends React.Component {
       email: this.state.email,
       phone: this.state.phone,
       problemDetails: {
-        problemType: this.state.problemType,
-        meterNum: this.state.meterNum,
+        'Problem Type': this.state.problemType,
+        'Meter Number': this.state.meterNum,
       },
       status: 'submitted',
       mapSnapshot: this.state.mapSnapshot,

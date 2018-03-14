@@ -214,9 +214,9 @@ class AbandonedVehicleScreen extends React.Component {
       email: this.state.email,
       phone: this.state.phone,
       problemDetails: {
-        vehicleColor: this.state.vehicleColor,
-        vehicleType: this.state.vehicleType,
-        vehicleMake: this.state.make,
+        'Vehicle Color': this.state.vehicleColor,
+        'Vehicle Type': this.state.vehicleType,
+        'Vehicle Make': this.state.make,
       },
       status: 'submitted',
       mapSnapshot: this.state.mapSnapshot,

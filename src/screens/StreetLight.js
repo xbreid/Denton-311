@@ -191,7 +191,7 @@ class StreetLightScreen extends React.Component {
       email: this.state.email,
       phone: this.state.phone,
       problemDetails: {
-        lightProblem: this.state.lightProblem,
+        'Light Problem': this.state.lightProblem,
       },
       status: 'submitted',
       mapSnapshot: this.state.mapSnapshot,

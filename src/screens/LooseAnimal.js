@@ -207,7 +207,7 @@ class LooseAnimalScreen extends React.Component {
       email: this.state.email,
       phone: this.state.phone,
       problemDetails: {
-        animalType: this.state.animalType,
+        'Animal Type': this.state.animalType,
       },
       status: 'submitted',
       mapSnapshot: this.state.mapSnapshot,

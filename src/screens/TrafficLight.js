@@ -212,8 +212,8 @@ class TrafficLightScreen extends React.Component {
       email: this.state.email,
       phone: this.state.phone,
       problemDetails: {
-        signalDirection: this.state.signalDirection,
-        signalProblem: this.state.signalProblem,
+        'Signal Direction': this.state.signalDirection,
+        'Signal Problem': this.state.signalProblem,
       },
       status: 'submitted',
       mapSnapshot: this.state.mapSnapshot,
