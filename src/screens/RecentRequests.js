@@ -97,7 +97,8 @@ class ReportList extends React.Component {
       <ScrollView style={{ flex: 1, backgroundColor: '#fff' }} contentInsetAdjustmentBehavior="automatic">
         <View>
         {Array.from(this.state.reports).map((report, index, arr) => (
-          <TouchableOpacity
+          report.submitPublicly ?
+            <TouchableOpacity
             key={index}
             onPress={() => {
               const { path, params, screen } = ReportRoute['ReportScreen'];
@@ -123,7 +124,7 @@ class ReportList extends React.Component {
                 }
               </View>
             </SafeAreaView>
-          </TouchableOpacity>
+          </TouchableOpacity> : null
         ))}
         <SnackBar
           visible={!this.state.status}
