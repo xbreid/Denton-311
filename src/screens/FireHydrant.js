@@ -267,6 +267,14 @@ class FireHydrantScreen extends React.Component {
   };
 
   _onContactSwitchChange = () => {
+    if (this.state.contactSwitch) {
+      this.setState({
+        firstName: null,
+        lastName: null,
+        email: null,
+        phone: null,
+      })
+    }
     this.setState({ contactSwitch: !this.state.contactSwitch });
   };
 
