@@ -163,8 +163,12 @@ export default class DisplayLatLng extends React.Component {
     }
 
     let geocodeAddress = await Location.reverseGeocodeAsync(location);
-    console.log(geocodeAddress[0].name.toString().substr(0,geocodeAddress[0].name.toString().indexOf(' ')));
-    console.log(geocodeAddress[0].name.toString().substr(0,geocodeAddress[0].name.toString().indexOf('')));
+    // Platform.OS === 'ios' ?
+    //   addressString = address[0].name.toString() + ", " + address[0].city.toString() :
+    //   address[0].name.toString() === address[0].street.toString() ?
+    //     addressString = address[0].name.toString() + ", " + address[0].city.toString()  :
+    //     addressString = address[0].name.toString() + " " + address[0].street.toString()
+    //       + ", " + address[0].city.toString();
     let address = geocodeAddress[0].name.toString() + ", " + geocodeAddress[0].city.toString();
     this.setState({
       text: address,
@@ -216,7 +220,7 @@ export default class DisplayLatLng extends React.Component {
     this._geocodeCoords(coords);
   };
 
-  takeSnapshot () {
+  takeSnapshot = () => {
     // 'takeSnapshot' takes a config object with the
     // following options
     const snapshot = this.map.takeSnapshot({
@@ -230,7 +234,7 @@ export default class DisplayLatLng extends React.Component {
         mapSnapshot: uri,
       });
     });
-  }
+  };
 
   onRegionChange(region) {
     this.setState({ region });
