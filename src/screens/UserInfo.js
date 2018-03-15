@@ -5,6 +5,7 @@ import { SafeAreaView, StackNavigator, NavigationActions } from 'react-navigatio
 import Icon from 'react-native-vector-icons/Ionicons';
 import ContactInfo from '../components/ContactInfo';
 import Fire from '../fire';
+import moment from 'moment';
 
 class MyInfoScreen extends React.Component {
   constructor(props) {
@@ -48,6 +49,33 @@ class MyInfoScreen extends React.Component {
     this.props.navigation.setParams({ handleSave: this._saveDetails});
   }
 
+  writeProfile() {
+    // A report entry.
+    let reportData = {
+      deviceId: Expo.Constants.deviceId,
+      dateCreated: moment().format(),
+      uid: Fire.auth().currentUser.uid,
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      email: this.state.email,
+      phone: this.state.phone,
+    };
+
+    let newKey = Fire.database().ref().child('user-profiles').push().key;
+
+    // Write the new post's data simultaneously in the posts list and the user's post list.
+    let updates = {};
+    updates['/user-profiles/' + Fire.auth().currentUser.uid] = reportData;
+
+    return Fire.database().ref().update(updates);
+  }
+
+  getUserProfile(uid) {
+    return Fire.database().ref('/user-profiles/' + uid).once('value', (snapshot) => {
+      console.log(snapshot.val());
+    });
+  }
+
   _saveDetails = () => {
     let user = Fire.auth().currentUser;
     user.updateProfile({
@@ -63,6 +91,9 @@ class MyInfoScreen extends React.Component {
     }).catch(function(error) {
       // An error happened.
     });
+
+    //this.getUserProfile(Fire.auth().currentUser.uid);
+    this.writeProfile();
     this.props.navigation.goBack(null);
   };
 

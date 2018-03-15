@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, Switch } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Switch, Alert } from 'react-native';
 import { SafeAreaView, StackNavigator } from 'react-navigation';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -118,6 +118,7 @@ class GraffitiScreen extends React.Component {
       heightFromGround: null,
       reportNumber: null,
       coords: null,
+      mapSnapshot: null,
     };
   }
 
@@ -140,11 +141,17 @@ class GraffitiScreen extends React.Component {
         </TouchableOpacity>
       ),
       headerRight: (
-        <TouchableOpacity style={{marginRight: 15}} onPress={() => params.handleSave()} >
-          <Text style={{color: '#f3f3f3', font: 16, fontWeight: 'bold'}}>
-            Submit
-          </Text>
-        </TouchableOpacity>
+        [
+          params.canSubmit ?
+            <TouchableOpacity style={{marginRight: 15}} onPress={() => params.handleSave()} >
+              <Text style={{color: '#ffffff', font: 16, fontWeight: 'bold'}}>
+                Submit
+              </Text>
+            </TouchableOpacity> :
+            <Text style={{color: '#AAAFB4', font: 16, fontWeight: 'bold', marginRight: 15}}>
+              Submit
+            </Text>
+        ]
       )
     }
   };
@@ -161,67 +168,12 @@ class GraffitiScreen extends React.Component {
     this.props.navigation.setParams({
       handleSave: this._saveDetails,
       handleCancel: this._clearDetails,
+      canSubmit: false,
     });
     this.getLatestIssueId();
   }
 
-  // might be a bug here
-  // if there is no query back for some reason, the report number will default to 0
-  getLatestIssueId() {
-    return Fire.database().ref().child('reports').limitToLast(1).on('value', (snapshot) => {
-      snapshot.forEach((child) => {
-        this.setState({reportNumber: child.val().reportNumber});
-      });
-      if (!snapshot) {
-        this.setState({reportNumber: 0});
-      }
-
-    });
-  }
-
-  writeNewReport() {
-    reportNum = this.state.reportNumber + 1;
-
-    // A report entry.
-    let reportData = {
-      title: 'Graffiti',
-      deviceId: this.state.deviceId,
-      coords: this.state.coords,
-      dateCreated: moment().format(),
-      uid: Fire.auth().currentUser.uid,
-      userIsAnon: this.state.userIsAnon,
-      reportNumber: reportNum,
-      additionalDetails: this.state.additionalDetails,
-      address: this.state.address,
-      imageOne: this.state.imageOne,
-      imageTwo: this.state.imageTwo,
-      imageThree: this.state.imageThree,
-      location: this.state.location,
-      submitPublicly: this.state.publicSwitch,
-      firstName: this.state.firstName,
-      lastName: this.state.lastName,
-      email: this.state.email,
-      phone: this.state.phone,
-      problemDetails: {
-        onType: this.state.onType,
-        surfaceType: this.state.surfaceType,
-        heightFromGround: this.state.heightFromGround,
-      },
-      status: 'submitted'
-    };
-
-    // Get a key for a new Post.
-    let newReportKey = Fire.database().ref().child('reports').push().key;
-
-    // Write the new post's data simultaneously in the posts list and the user's post list.
-    let updates = {};
-    updates['/reports/' + newReportKey] = reportData;
-    updates['/user-reports/' + this.state.userId + '/' + newReportKey] = reportData;
-
-    return Fire.database().ref().update(updates);
-  }
-
-  _clearDetails = () => {
+  componentWillUnmount() {
     Object.keys(Routes).map((routeName: string) => (
       Routes[routeName].isSet = false
     ));
@@ -250,25 +202,98 @@ class GraffitiScreen extends React.Component {
       heightFromGround: null,
       reportNumber: null,
       coords: null,
+      mapSnapshot: null,
     });
-    this.props.navigation.goBack(null);
+  }
+
+  // might be a bug here
+  // if there is no query back for some reason, the report number will default to 0
+  getLatestIssueId() {
+    return Fire.database().ref().child('reports').limitToLast(1).on('value', (snapshot) => {
+      snapshot.forEach((child) => {
+        this.setState({reportNumber: child.val().reportNumber});
+      });
+      if (!snapshot) {
+        this.setState({reportNumber: 0});
+      }
+
+    });
+  }
+
+  writeNewReport() {
+    reportNum = this.state.reportNumber + 1;
+
+    // A report entry.
+    let reportData = {
+      title: 'Graffiti',
+      type: 'Sanitation',
+      deviceId: this.state.deviceId,
+      coords: this.state.coords,
+      dateCreated: moment().format(),
+      uid: Fire.auth().currentUser.uid,
+      userIsAnon: this.state.userIsAnon,
+      reportNumber: reportNum,
+      additionalDetails: this.state.additionalDetails,
+      address: this.state.address,
+      imageOne: this.state.imageOne,
+      imageTwo: this.state.imageTwo,
+      imageThree: this.state.imageThree,
+      location: this.state.location,
+      submitPublicly: this.state.publicSwitch,
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      email: this.state.email,
+      phone: this.state.phone,
+      problemDetails: {
+        'On Type': this.state.onType,
+        'Surface Type': this.state.surfaceType,
+        'Height From Ground': this.state.heightFromGround,
+      },
+      status: 'submitted',
+      mapSnapshot: this.state.mapSnapshot,
+    };
+
+    // Get a key for a new Post.
+    let newReportKey = Fire.database().ref().child('reports').push().key;
+
+    // Write the new post's data simultaneously in the posts list and the user's post list.
+    let updates = {};
+    updates['/reports/' + newReportKey] = reportData;
+    updates['/user-reports/' + this.state.userId + '/' + newReportKey] = reportData;
+
+    return Fire.database().ref().update(updates);
+  }
+
+  _clearDetails = () => {
+    Alert.alert(
+      'Exiting this form will delete thie information you have entered. Are you sure you want to exit?',
+      '',
+      [
+        {text: 'Dont Exit', onPress: () => { }, style: 'cancel'},
+        {text: 'Exit', onPress: () => { this.props.navigation.goBack(null) }},
+      ],
+      { cancelable: false }
+    );
   };
 
   _saveDetails = () => {
     if (this.state.location) {
       this.writeNewReport();
       this.props.navigation.goBack(null);
-      this._clearDetails();
     }
   };
 
-  _getLocation = (address, coords) => {
+  _getLocation = (address, coords, mapSnapshot) => {
     if (address) {
       let addressString = address[0].name.toString() + ", " + address[0].city.toString();
       this.setState({
         location: address,
         address: addressString,
-        coords: coords
+        coords: coords,
+        mapSnapshot: mapSnapshot,
+      });
+      this.props.navigation.setParams({
+        canSubmit: true,
       });
       this.props.navigation.goBack(null);
     }
@@ -312,6 +337,14 @@ class GraffitiScreen extends React.Component {
   };
 
   _onContactSwitchChange = () => {
+    if (this.state.contactSwitch) {
+      this.setState({
+        firstName: null,
+        lastName: null,
+        email: null,
+        phone: null,
+      })
+    }
     this.setState({ contactSwitch: !this.state.contactSwitch });
   };
 
@@ -385,7 +418,12 @@ class GraffitiScreen extends React.Component {
     }
 
     return(
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView
+        enableOnAndroid="true"
+        contentContainerStyle={{ flexGrow: 1 }}
+        resetScrollToCoords={{ x: 0, y: 0 }}
+        scrollEnabled
+      >
         <ImageSelector saveImage={this._getImage} removeImage={this._deleteImage}/>
         {Object.keys(LocationRoute).map((routeName: string) => (
           <TouchableOpacity
@@ -456,6 +494,7 @@ class GraffitiScreen extends React.Component {
           placeholder="Additional Details (optional)"
           value={this.state.additionalDetails}
           multiline={true}
+          underlineColorAndroid="#fff"
         />
         <SafeAreaView
           style={styles.itemContainer}
@@ -486,9 +525,10 @@ class GraffitiScreen extends React.Component {
             />
           </View>
         </SafeAreaView>
-        <SafeAreaView style={{display: !this.state.contactSwitch ? 'none' : ''}}>
-          <ContactInfo saveContactInfo={this._getContactInfo}/>
+        <SafeAreaView>
+          { this.state.contactSwitch ? <ContactInfo saveContactInfo={this._getContactInfo}/> : <Text/> }
         </SafeAreaView>
+        <View style={{ height: 60 }} />
       </KeyboardAwareScrollView>
     );
   }

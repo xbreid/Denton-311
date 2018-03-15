@@ -1,11 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, ScrollView, View, Image } from 'react-native';
-import { SafeAreaView, StackNavigator, TabNavigator } from 'react-navigation';
+import { StyleSheet, Text, TouchableOpacity, ScrollView, View, Image, NetInfo } from 'react-native';
+import { SafeAreaView, StackNavigator, TabNavigator, TabBarBottom } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { MapView } from 'expo';
 import Fire from '../fire';
 import ReportTemplate from '../components/Report';
 import moment from 'moment';
+import SnackBar from 'react-native-snackbar-component';
 
 const ReportRoute = {
   ReportScreen: {
@@ -19,13 +20,32 @@ class ReportList extends React.Component {
 
     this.state = {
       reports: [],
+      status: true,
     }
   }
 
   componentDidMount() {
+    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
+    this.checkInetConnection();
+
     let user = Fire.auth().currentUser;
     this.getLatestReports(user.uid);
   }
+
+  componentWillUnmount() {
+    NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectionChange);
+  }
+
+  checkInetConnection = () => {
+    NetInfo.isConnected.fetch().done(
+      (isConnected) => { this.setState({ status: isConnected }); }
+    );
+  };
+
+  handleConnectionChange = (isConnected) => {
+    this.setState({ status: isConnected });
+    //alert(`is connected: ${this.state.status}`);
+  };
 
   getLatestReports(uid) {
     return Fire.database().ref().child('user-reports/' + uid).limitToLast(100).on('value', (snapshot) => {
@@ -40,13 +60,12 @@ class ReportList extends React.Component {
   render() {
     const styles = StyleSheet.create({
       item: {
-        paddingHorizontal: 20,
-        paddingVertical: 25,
+        paddingHorizontal: 10,
+        paddingVertical: 10,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         flex: 1,
-        //alignSelf: 'flex-start'
       },
       itemContainer: {
         backgroundColor: '#fff',
@@ -91,13 +110,20 @@ class ReportList extends React.Component {
                 </View>
                 {
                   report.imageOne ?
-                    <Image style={{ height: 75, width: 75 }} source={{uri: `data:image/jpg;base64,${report.imageOne}`}} />
-                    : <Text/>
+                    <Image style={{ height: 85, width: 85 }} source={{uri: `data:image/jpg;base64,${report.imageOne}`}} />
+                    : <Image style={{ height: 85, width: 85 }} source={{uri: `data:image/jpg;base64,${report.mapSnapshot}`}} />
                 }
               </View>
             </SafeAreaView>
           </TouchableOpacity>
         ))}
+        <SnackBar
+          visible={!this.state.status}
+          textMessage="No internet connection, please connect to the internet"
+          actionHandler={()=>{this.setState({status: !this.state.status})}}
+          actionText="Close"
+          position="top"
+        />
       </ScrollView>
     );
   }
@@ -108,16 +134,35 @@ class ReportMap extends React.Component {
     super(props);
 
     this.state = {
-      reports: []
+      reports: [],
+      status: true,
     }
   }
 
   componentDidMount() {
+    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
+    this.checkInetConnection();
+
     Fire.auth().onAuthStateChanged((user) => {
       console.log(user);
       this.getLatestReports(user.uid);
     });
   }
+
+  componentWillUnmount() {
+    NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectionChange);
+  }
+
+  checkInetConnection = () => {
+    NetInfo.isConnected.fetch().done(
+      (isConnected) => { this.setState({ status: isConnected }); }
+    );
+  };
+
+  handleConnectionChange = (isConnected) => {
+    this.setState({ status: isConnected });
+    //alert(`is connected: ${this.state.status}`);
+  };
 
   getLatestReports(uid) {
     return Fire.database().ref().child('user-reports/' + uid).limitToLast(100).on('value', (snapshot) => {
@@ -131,39 +176,60 @@ class ReportMap extends React.Component {
 
 
   render() {
+    const styles = StyleSheet.create({
+      container: {
+        ...StyleSheet.absoluteFillObject,
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+      },
+      map: {
+        ...StyleSheet.absoluteFillObject,
+      },
+    });
+
     return (
-      <MapView
-        style={{ flex: 1 }}
-        initialRegion={{
-          latitude: 33.214840,
-          longitude: -97.133064,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-      >
-        {Array.from(this.state.reports).map((report, index, arr) => (
-          <MapView.Marker
-            coordinate={report.coords}
-            title={report.title}
-            description={report.address}
-            onCalloutPress={() => {
-              const { path, params, screen } = ReportRoute['ReportScreen'];
-              const { router } = screen;
-              const action = path && router.getActionForPathAndParams(path, params);
-              this.props.navigation.navigate('ReportScreen', {report: report}, action);
-            }}
-          >
-            <MapView.Callout>
-              <View style={{   flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text>{report.title + '\n'}{report.address}</Text>
-                <TouchableOpacity style={{marginHorizontal: 7, marginTop: 5}}>
-                  <Icon name="ios-information-circle-outline" color="#4F8EF7" size={26}/>
-                </TouchableOpacity>
-              </View>
-            </MapView.Callout>
-          </MapView.Marker>
-        ))}
-      </MapView>
+      <View style={styles.container}>
+        <MapView
+          ref={ref => { this.map = ref; }}
+          style={styles.map}
+          initialRegion={{
+            latitude: 33.214840,
+            longitude: -97.133064,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        >
+          {Array.from(this.state.reports).map((report, index, arr) => (
+            <MapView.Marker
+              coordinate={report.coords}
+              title={report.title}
+              description={report.address}
+              onCalloutPress={() => {
+                const { path, params, screen } = ReportRoute['ReportScreen'];
+                const { router } = screen;
+                const action = path && router.getActionForPathAndParams(path, params);
+                this.props.navigation.navigate('ReportScreen', {report: report}, action);
+              }}
+            >
+              <MapView.Callout>
+                <View style={{   flexDirection: 'row', justifyContent: 'space-between'}}>
+                  <Text>{report.title + '\n'}{report.address}</Text>
+                  <TouchableOpacity style={{marginHorizontal: 7, marginTop: 5}}>
+                    <Icon name="ios-information-circle-outline" color="#4F8EF7" size={26}/>
+                  </TouchableOpacity>
+                </View>
+              </MapView.Callout>
+            </MapView.Marker>
+          ))}
+        </MapView>
+        <SnackBar
+          visible={!this.state.status}
+          textMessage="No internet connection, please connect to the internet"
+          actionHandler={()=>{this.setState({status: !this.state.status})}}
+          actionText="Close"
+          position="top"
+        />
+      </View>
     );
   }
 }
@@ -197,6 +263,12 @@ const Tabs = TabNavigator({
       ),
     }
   }
+},{
+  tabBarComponent: TabBarBottom,
+  tabBarPosition: 'bottom',
+  swipeEnabled: false,
+  animationEnabled: false,
+  backBehavior: 'none',
 });
 
 const Stack = StackNavigator({

@@ -1,15 +1,40 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, SafeAreaView, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Image, ScrollView, Dimensions } from 'react-native';
+import { Constants } from 'expo';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
+import Carousel from './Carousel';
 
+const { width } = Dimensions.get('window');
+const height = width * 0.3;
+
+const styles = StyleSheet.create({
+  titleContainer: {
+    paddingHorizontal: 15,
+    paddingVertical: 15,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  container: {
+    flex: 1,
+  },
+  scrollContainer: {
+    height,
+  },
+  image: {
+    width,
+    height,
+  },
+});
 
 export default class Report extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      report: {}
+      report: {},
+      images: [],
     };
   }
 
@@ -35,21 +60,42 @@ export default class Report extends React.Component {
   componentDidMount() {
     this.props.navigation.setParams({ address: null });
     this.setState({ report: this.props.navigation.state.params.report});
+    this.loadImages(this.props.navigation.state.params.report);
   }
 
 
+  loadImages = (report) => {
+    if (report.imageOne) {
+      this.state.images.push({
+        source: {
+          uri: `data:image/jpg;base64,${report.imageOne}`
+        },
+      })
+    }
+    if (report.imageTwo) {
+      this.state.images.push({
+        source: {
+          uri: `data:image/jpg;base64,${report.imageTwo}`
+        },
+      })
+    }
+    if (report.imageThree) {
+      this.state.images.push({
+        source: {
+          uri: `data:image/jpg;base64,${report.imageThree}`
+        },
+      })
+    }
+    if (report.mapSnapshot) {
+      this.state.images.push({
+        source: {
+          uri: `data:image/jpg;base64,${report.mapSnapshot}`
+        },
+      })
+    }
+  };
+
   render() {
-    const styles = StyleSheet.create({
-      titleContainer: {
-        paddingHorizontal: 15,
-        paddingVertical: 15,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-      }
-    });
-
-
     return (
       <ScrollView>
         <View style={styles.titleContainer}>
@@ -60,13 +106,9 @@ export default class Report extends React.Component {
             {'#' + this.state.report.reportNumber}
           </Text>
         </View>
-        <SafeAreaView>
-        {
-          this.state.report.imageOne ?
-              <Image source={{uri: `data:image/jpg;base64,${this.state.report.imageOne}`}} style={{ height: 100, marginBottom: 10 }} />
-            : <Text/>
-        }
-        </SafeAreaView>
+        <View style={styles.container}>
+          <Carousel images={this.state.images} />
+        </View>
         <View style={{alignItems: 'center', marginHorizontal: 20, marginVertical: 15}}>
           <Text >
             {!this.state.report.additionalDetails ? '' : this.state.report.additionalDetails}

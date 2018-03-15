@@ -1,11 +1,11 @@
 import React from 'react';
 import { Platform, Dimensions, StyleSheet, Text, View, Alert,
   KeyboardAvoidingView, ScrollView, TouchableOpacity, Button,
-  Image, TextInput, Switch } from 'react-native';
-import { ScreenOrientation } from 'expo';
+  Image, TextInput, Switch, TouchableHighlight, NetInfo } from 'react-native';
 import { SafeAreaView, StackNavigator, NavigationActions } from 'react-navigation';
 import { ImagePicker, Permissions, MapView, Location } from 'expo';
-import ActionButton from 'react-native-action-button';
+import TargetIcon from '../../assets/images/target.png';
+import SnackBar from 'react-native-snackbar-component';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const { width, height } = Dimensions.get('window');
@@ -27,13 +27,18 @@ export default class DisplayLatLng extends React.Component {
       longitude: null,
       errorMessage: null,
       address: null,
-      coords: null,
+      status: true,
+      coords: {
+        latitude: 0,
+        longitude: 0,
+      },
       region: {
         latitude: LATITUDE,
         longitude: LONGITUDE,
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
       },
+
     };
   }
 
@@ -50,17 +55,23 @@ export default class DisplayLatLng extends React.Component {
       },
       headerLeft: (
         <TouchableOpacity style={{marginLeft: 15}} onPress={() => navigation.goBack(null)}>
-          <Text style={{color: '#f3f3f3', font: 16, fontWeight: 'bold'}}>
+          <Text style={{color: '#ffffff', font: 16, fontWeight: 'bold'}}>
             Cancel
           </Text>
         </TouchableOpacity>
       ),
       headerRight: (
-        <TouchableOpacity style={{marginRight: 15}} onPress={() => params.saveLocation(params.address, params.coords)} >
-          <Text style={{color: '#f3f3f3', font: 16, fontWeight: 'bold'}}>
-            Done
-          </Text>
-        </TouchableOpacity>
+        [
+          params.isDone ?
+            <TouchableOpacity style={{marginRight: 15}} onPress={() => params.saveLocation(params.address, params.coords, params.mapSnapshot)} >
+              <Text style={{color: '#ffffff', font: 16, fontWeight: 'bold'}}>
+                Done
+              </Text>
+            </TouchableOpacity> :
+            <Text style={{color: '#AAAFB4', font: 16, fontWeight: 'bold', marginRight: 15}}>
+              Done
+            </Text>
+        ]
       )
     }
   };
@@ -69,10 +80,31 @@ export default class DisplayLatLng extends React.Component {
     this.props.navigation.setParams({
       address: null,
       coords: null,
+      isDone: false,
     });
+
+    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
+    this.checkInetConnection();
   }
 
+  componentWillUnmount() {
+    NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectionChange);
+  }
+
+  checkInetConnection = () => {
+    NetInfo.isConnected.fetch().done(
+      (isConnected) => { this.setState({ status: isConnected }); }
+    );
+  };
+
+  handleConnectionChange = (isConnected) => {
+    this.setState({ status: isConnected });
+    //alert(`is connected: ${this.state.status}`);
+  };
+
   _getLocationAsync = async () => {
+    this.checkInetConnection();
+
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {
       this.setState({
@@ -121,6 +153,8 @@ export default class DisplayLatLng extends React.Component {
   };
 
   _geocodeCoords = async (location) => {
+    this.checkInetConnection();
+
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {
       this.setState({
@@ -129,13 +163,76 @@ export default class DisplayLatLng extends React.Component {
     }
 
     let geocodeAddress = await Location.reverseGeocodeAsync(location);
+    // Platform.OS === 'ios' ?
+    //   addressString = address[0].name.toString() + ", " + address[0].city.toString() :
+    //   address[0].name.toString() === address[0].street.toString() ?
+    //     addressString = address[0].name.toString() + ", " + address[0].city.toString()  :
+    //     addressString = address[0].name.toString() + " " + address[0].street.toString()
+    //       + ", " + address[0].city.toString();
     let address = geocodeAddress[0].name.toString() + ", " + geocodeAddress[0].city.toString();
     this.setState({
       text: address,
       address: geocodeAddress
     });
+    this.takeSnapshot();
     this.props.navigation.setParams({
-      address: geocodeAddress
+      address: geocodeAddress,
+      isDone: true,
+    });
+  };
+
+  _geocodeAddress = async (address) => {
+    this.checkInetConnection();
+
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      this.setState({
+        errorMessage: 'Permission to access location was denied',
+      });
+    }
+
+    let newLatDelta = 0.0080;
+    let newLongDelta = newLatDelta * ASPECT_RATIO;
+
+    let geocode = await Location.geocodeAsync(address);
+
+    let coords = {
+      latitude: geocode[0].latitude,
+      longitude: geocode[0].longitude,
+    };
+
+    let newRegion = {
+      latitude: geocode[0].latitude,
+      longitude: geocode[0].longitude,
+      latitudeDelta: newLatDelta,
+      longitudeDelta: newLongDelta,
+    };
+
+    this.setState({
+      coords: coords,
+      region: newRegion,
+    });
+    this.props.navigation.setParams({
+      coords: coords,
+    });
+
+    this.map.animateToRegion(newRegion);
+    this._geocodeCoords(coords);
+  };
+
+  takeSnapshot = () => {
+    // 'takeSnapshot' takes a config object with the
+    // following options
+    const snapshot = this.map.takeSnapshot({
+      height: 100,     // optional, when omitted the view-height is used
+      format: 'png',   // image formats: 'png', 'jpg' (default: 'png')
+      result: 'base64'   // result types: 'file', 'base64' (default: 'file')
+    });
+    snapshot.then((uri) => {
+      //this.setState({ mapSnapshot: uri });
+      this.props.navigation.setParams({
+        mapSnapshot: uri,
+      });
     });
   };
 
@@ -144,6 +241,8 @@ export default class DisplayLatLng extends React.Component {
   }
 
   onMapPress(e) {
+    this.checkInetConnection();
+
     let newLatDelta = 0.0080;
     let newLongDelta = newLatDelta * ASPECT_RATIO;
 
@@ -175,6 +274,7 @@ export default class DisplayLatLng extends React.Component {
       this.setState({
         coords: e.nativeEvent.coordinate,
         region: newRegion,
+        isCoords: true,
       });
       this.props.navigation.setParams({
         coords: coords
@@ -218,11 +318,36 @@ export default class DisplayLatLng extends React.Component {
         fontSize: 16,
         margin: 7,
         borderRadius: 3,
-        textAlign: 'center'
+        paddingHorizontal: 30,
+        //textAlign: 'center'
       },
       actionButtonIcon: {
         color: '#333',
       },
+      actionButton: {
+        backgroundColor: '#ffffff',
+        borderColor: '#f3f3f3',
+        borderWidth: 1,
+        height: 50,
+        width: 50,
+        borderRadius: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'absolute',
+        bottom: 20,
+        right: 20,
+        shadowColor: "#000000",
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+        shadowOffset: {
+          height: 1,
+          width: 0
+        }
+      },
+      icon: {
+        width: 25,
+        height: 25,
+      }
     });
 
     let isLocationError = false;
@@ -252,21 +377,35 @@ export default class DisplayLatLng extends React.Component {
               onChangeText={(text) => this.setState({text})}
               placeholder="Where is the issue?"
               value={this.state.text}
+              underlineColorAndroid="#fff"
+              returnKeyType={ "Done" }
+              onSubmitEditing={() => { this._geocodeAddress(this.state.text + ', Denton') }}
             />
+            <Icon name="md-search" style={{paddingTop: 10, paddingHorizontal: 15, position: 'absolute'}} color="grey" size={23}/>
+            <TouchableOpacity style={{right: 0, paddingTop: 10, paddingHorizontal: 15, position: 'absolute'}} onPress={() => this.setState({text: ''})}>
+              <Icon name="md-close" color="grey" size={23}/>
+            </TouchableOpacity>
           </View>
         </SafeAreaView>
-        {/* Rest of the app comes ABOVE the action button component !*/}
-          <ActionButton
-            icon={<Icon name="md-locate" size="25" style={styles.actionButtonIcon} />}
-            buttonColor='#f3f3f3'
-            onPress={() => this._getLocationAsync()}
-            position="right"
-          />
-        <View style={[styles.bubble, styles.latlng, {display: isLocationError ? '' : 'none'}]}>
-          <Text style={{ textAlign: 'center' }}>
-            {isLocationError ? this.state.errorMessage : ''}
-          </Text>
-        </View>
+          <TouchableHighlight
+            style={styles.actionButton}
+            underlayColor='#f3f3f3'
+            onPress={()=>{this._getLocationAsync()}}
+          >
+            <Image style={styles.icon} source={TargetIcon}/>
+          </TouchableHighlight>
+        <SnackBar
+          visible={!this.state.status}
+          textMessage="No internet connection, please connect to the internet"
+          actionHandler={()=>{this.setState({status: !this.state.status})}}
+          actionText="Close"
+        />
+        <SnackBar
+          visible={isLocationError}
+          textMessage={this.state.errorMessage}
+          actionHandler={()=>{this.setState({errorMessage: null})}}
+          actionText="Close"
+        />
       </View>
     );
   }

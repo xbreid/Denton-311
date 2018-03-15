@@ -1,8 +1,8 @@
 import React from 'react';
 import { Platform, StyleSheet, Text, View,
   ScrollView, TouchableOpacity, Button, StatusBar,
-  TouchableHighlight, Image, Alert, NetInfo } from 'react-native';
-import { ScreenOrientation } from 'expo';
+  TouchableHighlight, Image, Alert, NetInfo, Dimensions } from 'react-native';
+import { ScreenOrientation, Constants } from 'expo';
 import { SafeAreaView, StackNavigator, NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -11,6 +11,9 @@ import RecentRequests from './RecentRequests';
 import UserRequests from './UserRequests';
 import UserInfo from './UserInfo';
 import Info from './Info';
+
+const { width, height } = Dimensions.get('window');
+const buttonHeight = (height - Constants.statusBarHeight) * 0.25;
 
 const Routes = {
   NewRequest: {
@@ -50,8 +53,8 @@ const MainScreen = ({ navigation }) => (
   <ScrollView style={{ flex: 1, backgroundColor: '#f3f3f3' }}>
     {Alert.alert(
       'NOTICE\n',
-      'This app is currently in development and is testing look and feel of the interface. ' +
-      '\n\n NO reports are currently being submitted to the City of Denton. ' +
+      'This app is currently in development and testing. ' +
+      '\n\n NO reports are currently being submitted directly to the City of Denton. ' +
       '\n\n If you should find any bugs or issues please send us an email with what you find.' +
       '\n\n 311denton@gmail.com',
       [
@@ -77,7 +80,7 @@ const MainScreen = ({ navigation }) => (
           style={styles.itemContainer}
           forceInset={{ vertical: 'never' }}
         >
-          <View style={{ paddingVertical: 13  }}>
+          <View style={{ justifyContent: 'center'  }}>
             <Icon name={Routes[routeName].icon} color="#333" size={50}/>
           </View>
           <View style={styles.item}>
@@ -123,16 +126,18 @@ const Main = StackNavigator(
 const styles = StyleSheet.create({
   item: {
     paddingHorizontal: 20,
-    paddingVertical: 12,
     alignItems: 'flex-start',
+    justifyItems: 'center',
+    justifyContent: 'center',
   },
   itemContainer: {
     backgroundColor: '#fff',
     flexDirection: 'row',
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: '#ddd',
-    paddingHorizontal: 40,
-    paddingVertical: 35
+    height: buttonHeight,
+    width: width,
+    paddingHorizontal: 30,
   },
   image: {
     width: 120,
@@ -150,7 +155,7 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 13,
     color: '#999',
-    marginLeft: 4
+    marginLeft: 7
   },
   header: {
     backgroundColor: '#4f4380'

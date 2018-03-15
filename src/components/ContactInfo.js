@@ -17,14 +17,29 @@ export default class ContactInfo extends React.Component {
   componentDidMount() {
     let user = Fire.auth().currentUser;
     console.log(user);
-    if (user.email) {
-      let name = user.displayName.split(" ");
-      this.setState({
-        firstName: name[0],
-        lastName: name[1],
-        email: user.email,
-      })
+
+    if (!this.getUserProfile(Fire.auth().currentUser.uid)) {
+      console.log('no user profile');
+      if (user.email) {
+        let name = user.displayName.split(" ");
+        this.setState({
+          firstName: name[0],
+          lastName: name[1],
+          email: user.email,
+        })
+      }
     }
+  }
+
+  getUserProfile(uid) {
+    return Fire.database().ref('/user-profiles/' + uid).once('value', (snapshot) => {
+      if (snapshot.val()) {
+        this._setContactInfo(snapshot.val().firstName, "firstName");
+        this._setContactInfo(snapshot.val().lastName, "lastName");
+        this._setContactInfo(snapshot.val().email, "email");
+        this._setContactInfo(snapshot.val().phone, "phone");
+      }
+    });
   }
 
   _setContactInfo = (value, type) => {
@@ -65,6 +80,7 @@ export default class ContactInfo extends React.Component {
           value={this.state.firstName}
           returnKeyType={ "next" }
           onSubmitEditing={() => { this.refs.LastName.focus() }}
+          underlineColorAndroid="#fff"
         />
         <TextInput
           ref="LastName"
@@ -74,6 +90,7 @@ export default class ContactInfo extends React.Component {
           value={this.state.lastName}
           returnKeyType={ "next" }
           onSubmitEditing={() => { this.refs.Email.focus() }}
+          underlineColorAndroid="#fff"
         />
         <TextInput
           ref="Email"
@@ -83,6 +100,7 @@ export default class ContactInfo extends React.Component {
           value={this.state.email}
           returnKeyType={ "next" }
           onSubmitEditing={() => { this.refs.Phone.focus() }}
+          underlineColorAndroid="#fff"
         />
         <TextInput
           ref="Phone"
@@ -91,6 +109,7 @@ export default class ContactInfo extends React.Component {
           placeholder="Phone"
           returnKeyType={ "done" }
           value={this.state.phone}
+          underlineColorAndroid="#fff"
         />
       </View>
     );

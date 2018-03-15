@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, Switch } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Switch, Alert } from 'react-native';
 import { SafeAreaView, StackNavigator } from 'react-navigation';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -35,6 +35,7 @@ class OtherScreen extends React.Component {
       phone: null,
       reportNumber: null,
       coords: null,
+      mapSnapshot: null,
     };
   }
 
@@ -57,11 +58,17 @@ class OtherScreen extends React.Component {
         </TouchableOpacity>
       ),
       headerRight: (
-        <TouchableOpacity style={{marginRight: 15}} onPress={() => params.handleSave()} >
-          <Text style={{color: '#f3f3f3', font: 16, fontWeight: 'bold'}}>
-            Submit
-          </Text>
-        </TouchableOpacity>
+        [
+          params.canSubmit ?
+            <TouchableOpacity style={{marginRight: 15}} onPress={() => params.handleSave()} >
+              <Text style={{color: '#ffffff', font: 16, fontWeight: 'bold'}}>
+                Submit
+              </Text>
+            </TouchableOpacity> :
+            <Text style={{color: '#AAAFB4', font: 16, fontWeight: 'bold', marginRight: 15}}>
+              Submit
+            </Text>
+        ]
       )
     }
   };
@@ -78,8 +85,33 @@ class OtherScreen extends React.Component {
     this.props.navigation.setParams({
       handleSave: this._saveDetails,
       handleCancel: this._clearDetails,
+      canSubmit: false,
     });
     this.getLatestIssueId();
+  }
+
+  componentWillUnmount() {
+    this.setState({
+      deviceId: null,
+      userId: null,
+      userIsAnon: null,
+      issueId: null,
+      additionalDetails: null,
+      address: null,
+      imageOne: null,
+      imageTwo: null,
+      imageThree: null,
+      location: null,
+      publicSwitch: true,
+      contactSwitch: false,
+      firstName:null,
+      lastName: null,
+      email: null,
+      phone: null,
+      reportNumber: null,
+      coords: null,
+      mapSnapshot: null,
+    });
   }
 
   // might be a bug here
@@ -102,6 +134,7 @@ class OtherScreen extends React.Component {
     // A report entry.
     let reportData = {
       title: 'Other',
+      type: 'Other',
       deviceId: this.state.deviceId,
       coords: this.state.coords,
       dateCreated: moment().format(),
@@ -119,7 +152,8 @@ class OtherScreen extends React.Component {
       lastName: this.state.lastName,
       email: this.state.email,
       phone: this.state.phone,
-      status: 'submitted'
+      status: 'submitted',
+      mapSnapshot: this.state.mapSnapshot,
     };
 
     // Get a key for a new Post.
@@ -134,44 +168,35 @@ class OtherScreen extends React.Component {
   }
 
   _clearDetails = () => {
-    this.setState({
-      deviceId: null,
-      userId: null,
-      userIsAnon: null,
-      issueId: null,
-      additionalDetails: null,
-      address: null,
-      imageOne: null,
-      imageTwo: null,
-      imageThree: null,
-      location: null,
-      publicSwitch: true,
-      contactSwitch: false,
-      firstName:null,
-      lastName: null,
-      email: null,
-      phone: null,
-      reportNumber: null,
-      coords: null,
-    });
-    this.props.navigation.goBack(null);
+    Alert.alert(
+      'Exiting this form will delete thie information you have entered. Are you sure you want to exit?',
+      '',
+      [
+        {text: 'Dont Exit', onPress: () => { }, style: 'cancel'},
+        {text: 'Exit', onPress: () => { this.props.navigation.goBack(null) }},
+      ],
+      { cancelable: false }
+    );
   };
 
   _saveDetails = () => {
     if (this.state.location) {
       this.writeNewReport();
       this.props.navigation.goBack(null);
-      this._clearDetails();
     }
   };
 
-  _getLocation = (address, coords) => {
+  _getLocation = (address, coords, mapSnapshot) => {
     if (address) {
       let addressString = address[0].name.toString() + ", " + address[0].city.toString();
       this.setState({
         location: address,
         address: addressString,
-        coords: coords
+        coords: coords,
+        mapSnapshot: mapSnapshot,
+      });
+      this.props.navigation.setParams({
+        canSubmit: true,
       });
       this.props.navigation.goBack(null);
     }
@@ -194,6 +219,14 @@ class OtherScreen extends React.Component {
   };
 
   _onContactSwitchChange = () => {
+    if (this.state.contactSwitch) {
+      this.setState({
+        firstName: null,
+        lastName: null,
+        email: null,
+        phone: null,
+      })
+    }
     this.setState({ contactSwitch: !this.state.contactSwitch });
   };
 
@@ -267,7 +300,12 @@ class OtherScreen extends React.Component {
     }
 
     return(
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView
+        enableOnAndroid="true"
+        contentContainerStyle={{ flexGrow: 1 }}
+        resetScrollToCoords={{ x: 0, y: 0 }}
+        scrollEnabled
+      >
         <ImageSelector saveImage={this._getImage} removeImage={this._deleteImage}/>
         {Object.keys(LocationRoute).map((routeName: string) => (
           <TouchableOpacity
@@ -299,6 +337,7 @@ class OtherScreen extends React.Component {
           value={this.state.additionalDetails}
           multiline={true}
           //returnKeyType={ "next" }
+          underlineColorAndroid="#fff"
         />
         <SafeAreaView
           style={styles.itemContainer}
@@ -329,9 +368,10 @@ class OtherScreen extends React.Component {
             />
           </View>
         </SafeAreaView>
-        <SafeAreaView style={{display: !this.state.contactSwitch ? 'none' : ''}}>
-          <ContactInfo saveContactInfo={this._getContactInfo}/>
+        <SafeAreaView>
+          { this.state.contactSwitch ? <ContactInfo saveContactInfo={this._getContactInfo}/> : <Text/> }
         </SafeAreaView>
+        <View style={{ height: 60 }} />
       </KeyboardAwareScrollView>
     );
   }
