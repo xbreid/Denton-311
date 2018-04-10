@@ -70,7 +70,7 @@ const AnimalRoutes = {
     type: 'type',
     isSet: false,
     value: null,
-    routes: AnimalGenderRoutes,
+    routes: AnimalTypeRoutes,
   },
   AnimalGenderScreen: {
     screen: ListSelector,
@@ -78,7 +78,7 @@ const AnimalRoutes = {
     type: 'gender',
     isSet: false,
     value: null,
-    routes: AnimalTypeRoutes
+    routes: AnimalGenderRoutes
   },
 };
 class FoundAnimalScreen extends React.Component {
