@@ -114,7 +114,7 @@ class ReportList extends React.Component {
               <View style={styles.item}>
                 <View>
                   <Text style={styles.title}>{report.title}</Text>
-                  <Text>{report.address}</Text>
+                  <Text>{report.address.length > 25 ? report.address.substr(0, 25) + "..." : report.address}</Text>
                   <Text>{report.status + ' ' + moment(report.dateCreated, moment.ISO_8601).fromNow()}</Text>
                 </View>
                 {
