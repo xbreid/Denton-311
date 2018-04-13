@@ -75,7 +75,6 @@ class OtherScreen extends React.Component {
 
   componentDidMount() {
     Fire.auth().onAuthStateChanged((user) => {
-      console.log(user);
       this.setState({
         deviceId: Expo.Constants.deviceId,
         userIsAnon: user.isAnonymous,
