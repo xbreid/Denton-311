@@ -4,6 +4,7 @@ import { ScreenOrientation } from 'expo';
 import { SafeAreaView, StackNavigator } from 'react-navigation';
 import Fire from './src/fire';
 import * as firebase from 'firebase';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 ScreenOrientation.allow(ScreenOrientation.Orientation.PORTRAIT_UP);
 
@@ -12,7 +13,7 @@ import NewRequest from './src/screens/NewRequest';
 import RecentRequests from './src/screens/RecentRequests';
 import UserRequests from './src/screens/UserRequests';
 import UserInfo from './src/screens/UserInfo';
-
+import ConfirmReport from './src/screens/ConfirmReport';
 
 const Routes = {
   MainScreen: {
@@ -42,9 +43,16 @@ const Routes = {
   },
 };
 
+const Confirmation = {
+  ConfirmReport: {
+    screen: ConfirmReport,
+  },
+};
+
 const AppNavigator = StackNavigator(
   {
     ...Routes,
+    ...Confirmation,
   },
   {
     initialRouteName: 'MainScreen',
