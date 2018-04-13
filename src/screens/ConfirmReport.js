@@ -61,16 +61,3 @@ export default class ConfirmReport extends React.Component {
     )
   }
 }
-
-// const Stack = StackNavigator(
-//   {
-//     Index: {
-//       screen: ConfirmReport,
-//     },
-//   },
-//   {
-//     initialRouteName: 'Index',
-//   }
-// );
-//
-// export default Stack;
