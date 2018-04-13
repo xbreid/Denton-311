@@ -267,7 +267,7 @@ const MainStack = StackNavigator(
         title: 'New Request',
         headerLeft: (headerBack(navigation)),
         headerStyle: styles.header,
-        headerTitleStyle: styles.headerTitle
+        headerTitleStyle: styles.headerTitle,
       }),
     },
   },

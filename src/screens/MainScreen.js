@@ -114,7 +114,7 @@ const Main = StackNavigator(
           </TouchableOpacity>
         ),
         headerStyle: styles.header,
-        headerTitleStyle: styles.headerTitle
+        headerTitleStyle: styles.headerTitle,
       }),
     },
   },
