@@ -44,7 +44,6 @@ class ReportList extends React.Component {
 
   handleConnectionChange = (isConnected) => {
     this.setState({ status: isConnected });
-    //alert(`is connected: ${this.state.status}`);
   };
 
   getLatestReports(uid) {
