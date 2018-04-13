@@ -55,7 +55,7 @@ export default class ConfirmReport extends React.Component {
               NavigationActions.navigate({ routeName: 'MainScreen'})
             ]
           }))}>
-          <Text>Go Back</Text>
+          <Text style={{color: "#4F8EF7"}}>Go Back</Text>
         </TouchableOpacity>
       </View>
     )
