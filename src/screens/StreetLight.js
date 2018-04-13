@@ -223,7 +223,7 @@ class StreetLightScreen extends React.Component {
   _saveDetails = () => {
     if (this.state.location) {
       this.writeNewReport();
-      this.props.navigation.goBack(null);
+      this.props.navigation.navigate('ConfirmReport', { reportId: this.state.reportNumber + 1 });
     }
   };
 
