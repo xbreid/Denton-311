@@ -34,7 +34,6 @@ export default class Carousel extends React.Component {
         </View>
       );
     }
-    console.log('Please provide images');
     return null;
   }
 }
