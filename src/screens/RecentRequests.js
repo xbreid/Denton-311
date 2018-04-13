@@ -25,14 +25,6 @@ class ReportList extends React.Component {
   }
 
   componentDidMount() {
-    // let connectedRef = Fire.database().ref(".info/connected");
-    // connectedRef.on("value", function(snap) {
-    //   if (snap.val() === true) {
-    //     alert("connected.");
-    //   } else {
-    //     alert("not connected");
-    //   }
-    // });
     NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
     this.checkInetConnection();
     this.getLatest100Reports();
@@ -50,7 +42,6 @@ class ReportList extends React.Component {
 
   handleConnectionChange = (isConnected) => {
     this.setState({ status: isConnected });
-    //alert(`is connected: ${this.state.status}`);
   };
 
 
@@ -167,7 +158,6 @@ class ReportMap extends React.Component {
 
   handleConnectionChange = (isConnected) => {
     this.setState({ status: isConnected });
-    //alert(`is connected: ${this.state.status}`);
   };
 
   getLatest100Reports() {
@@ -233,7 +223,6 @@ class ReportMap extends React.Component {
           textMessage="No internet connection, please connect to the internet"
           actionHandler={()=>{this.setState({status: !this.state.status})}}
           actionText="Close"
-          //position="top"
         />
       </View>
     );
