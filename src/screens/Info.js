@@ -81,7 +81,7 @@ export default class Report extends React.Component {
                 Version
               </Text>
               <Text>
-                0.1.0
+                1.0.0
               </Text>
             </View>
             <View style={styles.item}>
@@ -89,7 +89,7 @@ export default class Report extends React.Component {
                 Build
               </Text>
               <Text>
-                0000
+                0135
               </Text>
             </View>
           </SafeAreaView>

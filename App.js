@@ -4,6 +4,7 @@ import { ScreenOrientation } from 'expo';
 import { SafeAreaView, StackNavigator } from 'react-navigation';
 import Fire from './src/fire';
 import * as firebase from 'firebase';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 ScreenOrientation.allow(ScreenOrientation.Orientation.PORTRAIT_UP);
 
@@ -12,7 +13,7 @@ import NewRequest from './src/screens/NewRequest';
 import RecentRequests from './src/screens/RecentRequests';
 import UserRequests from './src/screens/UserRequests';
 import UserInfo from './src/screens/UserInfo';
-
+import ConfirmReport from './src/screens/ConfirmReport';
 
 const Routes = {
   MainScreen: {
@@ -42,9 +43,16 @@ const Routes = {
   },
 };
 
+const Confirmation = {
+  ConfirmReport: {
+    screen: ConfirmReport,
+  },
+};
+
 const AppNavigator = StackNavigator(
   {
     ...Routes,
+    ...Confirmation,
   },
   {
     initialRouteName: 'MainScreen',
@@ -57,19 +65,15 @@ export default class App extends React.Component {
     Fire.auth().onAuthStateChanged(function(user) {
       if (user) {
         // User is signed in.
-        console.log(user);
         let isAnonymous = user.isAnonymous;
         let uid = user.uid;
-        // ...
       } else {
         // user is logged out somehow, sign them back in
         Fire.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
           .then(function() {
             // Existing and future Auth states are now persisted in the device
             // local storage.
-            // ...
             // New sign-in will be persisted with local persistence.
-            console.log('setting persistence, logging in');
             return Fire.auth().signInAnonymously();
           })
           .catch(function(error) {
@@ -78,7 +82,6 @@ export default class App extends React.Component {
             let errorMessage = error.message;
           });
       }
-      // ...
     });
   }
 

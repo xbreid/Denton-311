@@ -25,14 +25,6 @@ class ReportList extends React.Component {
   }
 
   componentDidMount() {
-    // let connectedRef = Fire.database().ref(".info/connected");
-    // connectedRef.on("value", function(snap) {
-    //   if (snap.val() === true) {
-    //     alert("connected.");
-    //   } else {
-    //     alert("not connected");
-    //   }
-    // });
     NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
     this.checkInetConnection();
     this.getLatest100Reports();
@@ -50,7 +42,6 @@ class ReportList extends React.Component {
 
   handleConnectionChange = (isConnected) => {
     this.setState({ status: isConnected });
-    //alert(`is connected: ${this.state.status}`);
   };
 
 
@@ -114,7 +105,7 @@ class ReportList extends React.Component {
               <View style={styles.item}>
                 <View>
                   <Text style={styles.title}>{report.title}</Text>
-                  <Text>{report.address}</Text>
+                  <Text>{report.address.length > 25 ? report.address.substr(0, 25) + "..." : report.address}</Text>
                   <Text>{report.status + ' ' + moment(report.dateCreated, moment.ISO_8601).fromNow()}</Text>
                 </View>
                 {
@@ -167,7 +158,6 @@ class ReportMap extends React.Component {
 
   handleConnectionChange = (isConnected) => {
     this.setState({ status: isConnected });
-    //alert(`is connected: ${this.state.status}`);
   };
 
   getLatest100Reports() {
@@ -233,7 +223,6 @@ class ReportMap extends React.Component {
           textMessage="No internet connection, please connect to the internet"
           actionHandler={()=>{this.setState({status: !this.state.status})}}
           actionText="Close"
-          //position="top"
         />
       </View>
     );

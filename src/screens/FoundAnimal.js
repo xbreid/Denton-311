@@ -70,7 +70,7 @@ const AnimalRoutes = {
     type: 'type',
     isSet: false,
     value: null,
-    routes: AnimalGenderRoutes,
+    routes: AnimalTypeRoutes,
   },
   AnimalGenderScreen: {
     screen: ListSelector,
@@ -78,7 +78,7 @@ const AnimalRoutes = {
     type: 'gender',
     isSet: false,
     value: null,
-    routes: AnimalTypeRoutes
+    routes: AnimalGenderRoutes
   },
 };
 class FoundAnimalScreen extends React.Component {
@@ -143,7 +143,6 @@ class FoundAnimalScreen extends React.Component {
 
   componentDidMount() {
     Fire.auth().onAuthStateChanged((user) => {
-      console.log(user);
       this.setState({
         deviceId: Expo.Constants.deviceId,
         userIsAnon: user.isAnonymous,
@@ -262,7 +261,7 @@ class FoundAnimalScreen extends React.Component {
   _saveDetails = () => {
     if (this.state.location) {
       this.writeNewReport();
-      this.props.navigation.goBack(null);
+      this.props.navigation.navigate('ConfirmReport', { reportId: this.state.reportNumber + 1 });
     }
   };
 

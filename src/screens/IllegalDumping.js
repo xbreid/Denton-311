@@ -98,7 +98,6 @@ class IllegalDumpingScreen extends React.Component {
 
   componentDidMount() {
     Fire.auth().onAuthStateChanged((user) => {
-      console.log(user);
       this.setState({
         deviceId: Expo.Constants.deviceId,
         userIsAnon: user.isAnonymous,
@@ -217,7 +216,7 @@ class IllegalDumpingScreen extends React.Component {
   _saveDetails = () => {
     if (this.state.location) {
       this.writeNewReport();
-      this.props.navigation.goBack(null);
+      this.props.navigation.navigate('ConfirmReport', { reportId: this.state.reportNumber + 1 });
     }
   };
 
